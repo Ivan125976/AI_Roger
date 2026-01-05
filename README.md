@@ -3,6 +3,8 @@
 
 Copyright (c) 2025 Axolotl512 Защищено лицензией MIT
 
+ИИ который идиально подойдет для встройки в робота
+
 Данная нейросеть написана на .NET (Quecto Roger 1 и ниже по архитектуре LP — .NET 8.0, Quecto Roger 2 и выше по архитектуре MLP — .NET 9.0)
 
 Инструкция к Quecto Roger 2.0 / Yocto Roger 2.1
