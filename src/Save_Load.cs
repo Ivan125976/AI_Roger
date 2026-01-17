@@ -67,7 +67,11 @@ namespace Yocto_Roger_2._1
         public static void LoadRoger()
         {
             if (!File.Exists(Parameters.roger2))
-                throw new FileNotFoundException("Roger file not found");
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Roger file not found");
+                Console.ForegroundColor= ConsoleColor.Gray;
+            }
 
             int input = 0, middle = 0, output = 0;
             int aiVersion = -1;
@@ -131,7 +135,11 @@ namespace Yocto_Roger_2._1
             }
 
             if (aiVersion != 2)
-                throw new Exception($"Unsupported AI version: {aiVersion}");
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Unsupported Roger Version! You need a Roger 2.0 file");
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
 
             NeuralNetwork.inputNeurons = new double[input];
             NeuralNetwork.middleNeurons = new double[middle];
