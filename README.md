@@ -15,7 +15,7 @@ Copyright (c) 2025 Axolotl512. Лицензия: MIT.
 ## Запуск  Yocto Roger 2.1 на Windows
 
 1. Установите .NET 9.0.
-2. Перейдите в по пути: Yocto_Roger_v._2._1/Yocto_Roger_v._2._1/bin/Release/net9.0
+2. Перейдите в по пути: `Yocto_Roger_v._2._1/Yocto_Roger_v._2._1/bin/Release/net9.0`
 3. Запустите `Yocto Roger v.2.1.exe`.
 4. Отредактируйте файл знаний (knowledge.know) или создайте собственный (подробнее в wiki).
 
