@@ -2,7 +2,7 @@
 
 Моя нейросеть, которую я улучшаю каждый день.
 
-Copyright (c) 2025 Axolotl512, Death_script. Лицензия: MIT.
+Copyright (c) 2025 Axolotl512, death_script. Лицензия: MIT.
 
 ИИ, который подходит для встройки в робота.
 
