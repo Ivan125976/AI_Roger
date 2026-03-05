@@ -6,7 +6,7 @@
     <RootNamespace>Yocto_Roger_2._1</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <StartupObject>Yocto_Roger_v._2._1.UI</StartupObject>
+    <StartupObject>Yocto_Roger_2._1.UI</StartupObject>
     <ApplicationIcon>Untitled.ico</ApplicationIcon>
   </PropertyGroup>
 

@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Yocto_Roger_v._2._1;
-
-namespace Yocto_Roger_2._1
+﻿namespace Yocto_Roger_2._1
 {
 
     /*
@@ -35,7 +26,7 @@ namespace Yocto_Roger_2._1
             output_neurons
          */
 
-        static public void setUpPins()
+        static public void SetUpPins()
         {
             int i = 0;
 
@@ -73,7 +64,7 @@ namespace Yocto_Roger_2._1
 
                         case 3:
                             Console.Write(answers[i]);
-                            pins["input_neurons"] =  Convert.ToInt32(Console.ReadLine());
+                            pins["input_neurons"] = Convert.ToInt32(Console.ReadLine());
                             i++;
                             break;
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+﻿using System.Globalization;
 using Yocto_Roger_v._2._1;
 
 namespace Yocto_Roger_2._1
@@ -20,7 +17,7 @@ namespace Yocto_Roger_2._1
             }
             while (File.Exists(fileName));
 
-            using StreamWriter writer = new StreamWriter(fileName);
+            using StreamWriter writer = new(fileName);
 
             writer.WriteLine("[roger]");
             writer.WriteLine($"AIversion = {Parameters.version}");
@@ -70,7 +67,7 @@ namespace Yocto_Roger_2._1
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Roger file not found");
-                Console.ForegroundColor= ConsoleColor.Gray;
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
 
             int input = 0, middle = 0, output = 0;

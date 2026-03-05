@@ -1,34 +1,24 @@
-﻿using System;
-using System.ComponentModel.Design;
-using System.Data;
-using System.Diagnostics;
-using System.IO;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading;
-using System.Transactions;
-using Yocto_Roger_2._1;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using Yocto_Roger_2._1;
 
 namespace Yocto_Roger_v._2._1
 {
 
     internal class AIMath
     {
-        static public Random rand = new Random();
+        static public Random rand = new();
         public static void Rounding(ref double[] neurons)
         {
             for (int i = 0; i < neurons.Length; i++)
                 neurons[i] = (int)Math.Round(neurons[i]);
         }
-        public static double sigmoida(double value) //активация
+        public static double Sigmoida(double value) //активация
         {
             double answer = 1.0 / (1.0 + Math.Exp(-value));
             if (Parameters.isDebug)
                 Console.WriteLine("Sigmoida> " + answer);
             return answer;
         }
-        public static int writeOutput(double[] binary) //двиучное в десятичное
+        public static int WriteOutput(double[] binary) //двиучное в десятичное
         {
             int result = 0;
             for (int i = 0; i < binary.Length; i++)

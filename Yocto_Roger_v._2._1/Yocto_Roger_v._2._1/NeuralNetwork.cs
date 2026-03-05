@@ -1,14 +1,4 @@
-﻿using System;
-using System.ComponentModel.Design;
-using System.Data;
-using System.Diagnostics;
-using System.IO;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading;
-using System.Transactions;
-using Yocto_Roger_2._1;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using Yocto_Roger_2._1;
 
 namespace Yocto_Roger_v._2._1
 {
@@ -32,21 +22,21 @@ namespace Yocto_Roger_v._2._1
             switch (mode)
             {
                 case 0:
-                Console.WriteLine("SetUp education array...");
-                educationArray = new int[UI.CountLines(Parameters.knowledgeFile), 3];
-                Console.WriteLine("Read knowledge...");
-                Training.writeEducationArray(ref educationArray, Parameters.knowledgeFile);
-                Console.WriteLine("Set up Weights... (1/2)");
-                Training.setUpWeights(ref weights1);
-                Console.WriteLine("Set up Weights... (2/2)");
-                Training.setUpWeights(ref weights2);
-                Console.WriteLine("Set up Biases... (1/2)");
-                Training.setUpBiases(ref bias1);
-                Console.WriteLine("Set up Biases... (2/2)");
-                Training.setUpBiases(ref bias2);
-                Console.WriteLine("Education. This make takes few minutes.");
-                UI.sendMessage(ConsoleColor.DarkRed, "Education Roger... This may take a few minutes.");
-                Training.educationWithTeacher();
+                    Console.WriteLine("SetUp education array...");
+                    educationArray = new int[UI.CountLines(Parameters.knowledgeFile), 3];
+                    Console.WriteLine("Read knowledge...");
+                    Training.WriteEducationArray(ref educationArray, Parameters.knowledgeFile);
+                    Console.WriteLine("Set up Weights... (1/2)");
+                    Training.SetUpWeights(ref weights1);
+                    Console.WriteLine("Set up Weights... (2/2)");
+                    Training.SetUpWeights(ref weights2);
+                    Console.WriteLine("Set up Biases... (1/2)");
+                    Training.SetUpBiases(ref bias1);
+                    Console.WriteLine("Set up Biases... (2/2)");
+                    Training.SetUpBiases(ref bias2);
+                    Console.WriteLine("Education. This make takes few minutes.");
+                    UI.SendMessage(ConsoleColor.DarkRed, "Education Roger... This may take a few minutes.");
+                    Training.EducationWithTeacher();
                     Array.Clear(educationArray, 0, educationArray.Length);
                     break;
 
@@ -58,24 +48,24 @@ namespace Yocto_Roger_v._2._1
             Console.WriteLine("Hello! I'm Roger, the MLP AI from Emotion!");
             while (true)
             {
-                UI.sendMessage(ConsoleColor.DarkGreen, "Ready.   >>> Enter SAVE for saving Roger to .roger2 file");
+                UI.SendMessage(ConsoleColor.DarkGreen, "Ready.   >>> Enter SAVE for saving Roger to .roger2 file");
                 AIMath.WriteInput(ref inputNeurons);
-                UI.sendMessage(ConsoleColor.DarkRed, "Calculation neurons... (1/2)");
-                sumWeights(ref weights1, ref inputNeurons, ref middleNeurons, bias1);
-                UI.sendMessage(ConsoleColor.DarkRed, "Calculation neurons... (2/2)");
-                sumWeights(ref weights2, ref middleNeurons, ref outputNeurons, bias2);
-                UI.sendMessage(ConsoleColor.DarkRed, "Rounding...");
+                UI.SendMessage(ConsoleColor.DarkRed, "Calculation neurons... (1/2)");
+                SumWeights(ref weights1, ref inputNeurons, ref middleNeurons, bias1);
+                UI.SendMessage(ConsoleColor.DarkRed, "Calculation neurons... (2/2)");
+                SumWeights(ref weights2, ref middleNeurons, ref outputNeurons, bias2);
+                UI.SendMessage(ConsoleColor.DarkRed, "Rounding...");
                 AIMath.Rounding(ref outputNeurons);
-                UI.sendMessage(ConsoleColor.DarkRed, "Almost ready...");
-                Console.WriteLine($"I think it's {AIMath.writeOutput(outputNeurons)}");
+                UI.SendMessage(ConsoleColor.DarkRed, "Almost ready...");
+                Console.WriteLine($"I think it's {AIMath.WriteOutput(outputNeurons)}");
                 Console.WriteLine("Press any key to continue...");
-                UI.sendMessage(ConsoleColor.Magenta, "Waiting.");
+                UI.SendMessage(ConsoleColor.Magenta, "Waiting.");
                 Console.ReadKey();
                 Console.Clear();
             }
         }
 
-        public static float[] generateDropOut()
+        public static float[] GenerateDropOut()
         {
             float[] masks = new float[Parameters.middleNeuronsCount];
             float keepProb = 1.00f - (Parameters.DropOutPercent * 0.01f);
@@ -95,11 +85,11 @@ namespace Yocto_Roger_v._2._1
                     else
                         masks[i] = 1.0f / keepProb;
                 }
-            }    
+            }
             return masks;
         }
 
-        public static void sumWeights(ref double[,] oldweights, ref double[] oldNeurons, ref double[] newNeurons, double[] biases) //нахождение новых нейронов
+        public static void SumWeights(ref double[,] oldweights, ref double[] oldNeurons, ref double[] newNeurons, double[] biases) //нахождение новых нейронов
         {
             if (Parameters.isDebug)
                 Console.Write("Sum of weights - ");
@@ -109,7 +99,7 @@ namespace Yocto_Roger_v._2._1
                 for (int j = 0; j < oldNeurons.Length; j++)
                     temp += oldweights[j, i] * oldNeurons[j];
                 temp += biases[i];
-                newNeurons[i] = AIMath.sigmoida(temp);
+                newNeurons[i] = AIMath.Sigmoida(temp);
                 if (Parameters.isDebug)
                     Console.Write(newNeurons[i] + " ");
             }

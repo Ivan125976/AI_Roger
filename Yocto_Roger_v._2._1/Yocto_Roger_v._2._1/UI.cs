@@ -1,15 +1,7 @@
-﻿using System;
-using System.ComponentModel.Design;
-using System.Data;
-using System.IO;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading;
-using System.Transactions;
-using Yocto_Roger_2._1;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using System.Text;
+using Yocto_Roger_v._2._1;
 
-namespace Yocto_Roger_v._2._1
+namespace Yocto_Roger_2._1
 /* 
 Yocto Roger 2.1 ;)
 ***************
@@ -23,18 +15,18 @@ Yocto Roger 2.1 ;)
 {
     public class UI
     {
-        static void Main(string[] args)
+        static void Main()
         {
             Console.WriteLine("Configuring console...");
             Console.InputEncoding = Encoding.UTF8;
             Console.OutputEncoding = Encoding.UTF8;
             Console.CursorVisible = false;
-            sendMessage(ConsoleColor.Magenta, "Emotion ;) 2026    Yocto Roger v.2.1");
+            SendMessage(ConsoleColor.Magenta, "Emotion ;) 2026    Yocto Roger v.2.1");
             Thread.Sleep(3000);
             if (Parameters.isDebug == false)
-                sendMessage(ConsoleColor.DarkMagenta, "Welcome to the RogerHub! v.2.1.2");
+                SendMessage(ConsoleColor.DarkMagenta, "Welcome to the RogerHub! v.2.1.2");
             else
-                sendMessage(ConsoleColor.DarkMagenta, "Welcome to the RogerHub! v.2.1.2 DEBUG MODE");
+                SendMessage(ConsoleColor.DarkMagenta, "Welcome to the RogerHub! v.2.1.2 DEBUG MODE");
             int i = 0;
             while (true)
             {
@@ -63,12 +55,12 @@ Yocto Roger 2.1 ;)
                             break;
 
                         case 3:
-                            setUp();
+                            SetUp();
                             break;
 
                         case 4:
-                            sendMessage(ConsoleColor.DarkGreen, "You're in the  RRNN's settings ;)");
-                            RRNNs.setUpPins();
+                            SendMessage(ConsoleColor.DarkGreen, "You're in the  RRNN's settings ;)");
+                            RRNNs.SetUpPins();
                             break;
 
                         case 5:
@@ -120,7 +112,7 @@ Yocto Roger 2.1 ;)
             return count;
         }
 
-        public static void sendMessage(ConsoleColor color, string message)
+        public static void SendMessage(ConsoleColor color, string message)
         {
             int cursorX = Console.CursorLeft;
             int cursorY = Console.CursorTop;
@@ -137,7 +129,7 @@ Yocto Roger 2.1 ;)
             Console.BackgroundColor = ConsoleColor.Black;
         }
 
-        public static void setUp()
+        public static void SetUp()
         {
             Console.Clear();
 
@@ -172,17 +164,17 @@ Yocto Roger 2.1 ;)
                         Console.WriteLine("*KNOWLEDGE PARAMETER*");
                         Console.Write("STRING> Enter new knowledge file...");
                         userInput = Console.ReadLine();
-                        if(File.Exists(userInput))
+                        if (File.Exists(userInput))
                         {
                             Parameters.knowledgeFile = userInput;
                         }
                         else
                         {
-                            Console.ForegroundColor= ConsoleColor.Red;
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("Knowledge file doesn't exists");
                             Console.ForegroundColor = ConsoleColor.Gray;
                         }
-                            break;
+                        break;
 
                     case "3":
                         Console.Clear();

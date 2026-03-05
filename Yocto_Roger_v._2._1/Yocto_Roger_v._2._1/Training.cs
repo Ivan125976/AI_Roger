@@ -1,20 +1,10 @@
-﻿using System;
-using System.ComponentModel.Design;
-using System.Data;
-using System.Diagnostics;
-using System.IO;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading;
-using System.Transactions;
-using Yocto_Roger_v._2._1;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using Yocto_Roger_v._2._1;
 
 namespace Yocto_Roger_2._1
 {
     public class Training
     {
-        public static void setUpBiases(ref double[] biases) //рандомное заполнение массива сдвигов
+        public static void SetUpBiases(ref double[] biases) //рандомное заполнение массива сдвигов
         {
             for (int i = 0; i < biases.Length; i++)
             {
@@ -25,7 +15,7 @@ namespace Yocto_Roger_2._1
                 Console.WriteLine("The biases have been successfully adjusted!");
         }
 
-        public static void setUpWeights(ref double[,] weights)
+        public static void SetUpWeights(ref double[,] weights)
         {
             for (int i = 0; i < weights.GetLength(0); i++)
             {
@@ -39,7 +29,7 @@ namespace Yocto_Roger_2._1
                 Console.WriteLine("The weights have been successfully adjusted!");
         }
 
-        public static void writeEducationArray(ref int[,] education, string path) //записывание данных из файла в переменную
+        public static void WriteEducationArray(ref int[,] education, string path) //записывание данных из файла в переменную
         {
             var lines = File.ReadAllLines(path);
 
@@ -53,7 +43,7 @@ namespace Yocto_Roger_2._1
             }
         }
 
-        public static void educationWithTeacher() //обучение с поддержкой DropOut и deadParts
+        public static void EducationWithTeacher() //обучение с поддержкой DropOut и deadParts
         {
             double[] errorOut = new double[NeuralNetwork.outputNeurons.Length];
             double[] errorMid = new double[NeuralNetwork.middleNeurons.Length];
@@ -63,7 +53,7 @@ namespace Yocto_Roger_2._1
 
             for (int z = 0; z < Parameters.passes; z++)
             {
-                float[] dropOutMasks = NeuralNetwork.generateDropOut();
+                float[] dropOutMasks = NeuralNetwork.GenerateDropOut();
 
                 for (int i = 0; i < NeuralNetwork.educationArray.GetLength(0); i++)
                 {
@@ -84,12 +74,12 @@ namespace Yocto_Roger_2._1
                     }
 
                     AIMath.WriteInput(ref NeuralNetwork.inputNeurons, NeuralNetwork.educationArray[i, 0], NeuralNetwork.educationArray[i, 1]);
-                    NeuralNetwork.sumWeights(ref NeuralNetwork.weights1, ref NeuralNetwork.inputNeurons, ref NeuralNetwork.middleNeurons, NeuralNetwork.bias1);
-                        for (int l = 0; l < NeuralNetwork.middleNeurons.Length; l++) //DropOut 
-                        {
-                            NeuralNetwork.middleNeurons[l] *= dropOutMasks[l];
-                        }
-                    NeuralNetwork.sumWeights(ref NeuralNetwork.weights2, ref NeuralNetwork.middleNeurons, ref NeuralNetwork.outputNeurons, NeuralNetwork.bias2);
+                    NeuralNetwork.SumWeights(ref NeuralNetwork.weights1, ref NeuralNetwork.inputNeurons, ref NeuralNetwork.middleNeurons, NeuralNetwork.bias1);
+                    for (int l = 0; l < NeuralNetwork.middleNeurons.Length; l++) //DropOut 
+                    {
+                        NeuralNetwork.middleNeurons[l] *= dropOutMasks[l];
+                    }
+                    NeuralNetwork.SumWeights(ref NeuralNetwork.weights2, ref NeuralNetwork.middleNeurons, ref NeuralNetwork.outputNeurons, NeuralNetwork.bias2);
 
 
                     for (int j = 0; j < NeuralNetwork.outputNeurons.Length; j++)

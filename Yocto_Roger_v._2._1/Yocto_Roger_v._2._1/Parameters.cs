@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Yocto_Roger_v._2._1
+﻿namespace Yocto_Roger_v._2._1
 {
     public class Parameters
     {
