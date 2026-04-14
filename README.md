@@ -1,4 +1,4 @@
-[Swith to english reamde](https://github.com/Ivan125976/AI_Roger/edit/main/README-en.md)
+[Swith to English readme](https://github.com/Ivan125976/AI_Roger/edit/main/README-en.md)
 
 # Roger
 
