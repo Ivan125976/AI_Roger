@@ -30,7 +30,7 @@ Yocto Roger 2.1 ;)
             int i = 0;
             while (true)
             {
-                Console.Write(" 1. Start Roger in training mode \n 2. Start Roger from the .roger file \n 3. Options for training mode \n 4. RRNNs settings \n 5. Exit of RogerHub \n >>> ");
+                Console.Write(" 1. Start Roger in training mode \n 2. Start Roger from the .roger file \n 3. Options for training mode \n 4. RRNNs settings (on development) \n 5. Exit of RogerHub \n >>> ");
                 if (int.TryParse(Console.ReadLine(), out int value))
                 {
                     switch (value)
@@ -68,7 +68,7 @@ Yocto Roger 2.1 ;)
                             break;
 
                         default:
-                            switch (i)
+                            switch (i++)
                             {
                                 case 0:
                                     Console.WriteLine("What?");
@@ -90,7 +90,6 @@ Yocto Roger 2.1 ;)
                                     Environment.Exit(0);
                                     break;
                             }
-                            i++;
                             break;
                     }
                 }
