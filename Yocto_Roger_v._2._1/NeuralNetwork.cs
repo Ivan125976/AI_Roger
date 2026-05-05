@@ -2,11 +2,11 @@
 {
     internal class NeuralNetwork
     {
-        public static int[,] educationArray;
+        public static int[,]? educationArray;
 
-        public static double[] inputNeurons = new double[14];
+        public static double[] inputNeurons = new double[Parameters.inputNeuronsCount];
         public static double[] middleNeurons = new double[Parameters.middleNeuronsCount];
-        public static double[] outputNeurons = new double[8];
+        public static double[] outputNeurons = new double[Parameters.outputNeuronsCount];
 
         public static double[,] weights1 = new double[inputNeurons.Length, middleNeurons.Length];
         public static double[,] weights2 = new double[middleNeurons.Length, outputNeurons.Length];
