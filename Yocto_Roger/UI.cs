@@ -20,15 +20,22 @@ Copyright 2025-2026 Emotion Corp. License
             Console.CursorVisible = false;
             SendMessage(ConsoleColor.Magenta, "Emotion ;) 2026    Yocto Roger");
             Thread.Sleep(3000);
-            if (Parameters.isDebug == false)
-                SendMessage(ConsoleColor.DarkMagenta, $"Welcome to the RogerHub! v.{Parameters.version}{Parameters.revision}");
-            else
-                SendMessage(ConsoleColor.DarkMagenta, $"Welcome to the RogerHub! v.{Parameters.version}{Parameters.revision} DEBUG MODE");
             int i = 0;
             while (true)
             {
-                SendWarning("!WARNING! This project is still in the development stage.");
-                Console.Write(" 1. Start Roger in training mode \n 2. Start Roger from the .roger file \n 3. Options for training mode \n 4. RRNNs settings \n 5. Exit of RogerHub \n >>> ");
+                Console.Clear();
+                if (Parameters.isDebug == false)
+                    SendMessage(ConsoleColor.DarkMagenta, $"Welcome to the RogerHub! v.{Parameters.version}{Parameters.revision} DEV");
+                else
+                    SendMessage(ConsoleColor.DarkMagenta, $"Welcome to the RogerHub! v.{Parameters.version}{Parameters.revision} DEV DEBUG MODE");
+                SendWarning("This project is still in the development stage.");
+                SendWarning("This is a BETA build. Some functionality may not work. Have fun testing :D");
+                Console.Write(" " +
+                    "1. Start Roger in training mode \n " +
+                    "2. Start Roger from the .roger file \n " +
+                    "3. Options for training mode \n " +
+                    "4. RRNNs settings \n " +
+                    "5. Exit of RogerHub \n >>> ");
                 if (int.TryParse(Console.ReadLine(), out int value))
                 {
                     switch (value)
@@ -120,31 +127,67 @@ Copyright 2025-2026 Emotion Corp. License
 
         public static void SetUp()
         {
-            Console.Clear();
-
             string userInput = "";
             int i = 0;
             while (i == 0)
             {
-                Console.Write($"RogerHub Training Options \n 1. Number of middle neurons...{Parameters.middleNeuronsCount} \n 2. Knowledge file...{Parameters.knowledgeFile} \n 3. DropOut sys percent...{Parameters.DropOutPercent}% \n 4. Learning Rate...{Parameters.learningRate} \n 5. Passes...{Parameters.passes} \n 6. Exit \n >>>");
+                Console.Clear();
+                Console.Write($"RogerHub Training Options \n " +
+                    $"1. Number of input neurons...{Parameters.inputNeuronsCount} \n " +
+                    $"2. Number of middle neurons (all middle layers)...{Parameters.middleNeuronsCount} \n " +
+                    $"3. Number of output neurons...{Parameters.outputNeuronsCount} \n " +
+                    $"4. \n " +
+                    $"5. Knowledge file...{Parameters.knowledgeFile} \n " +
+                    $"6. DropOut sys percent...{Parameters.DropOutPercent}% (0% - disable DropOut)\n " +
+                    $"7. Learning Rate...{Parameters.learningRate} \n " +
+                    $"8. Passes...{Parameters.passes} \n " +
+                    $"9. Exit \n >>>");
                 string choice = Console.ReadLine();
                 switch (choice)
                 {
                     case "1":
                         Console.Clear();
-                        Console.WriteLine("*MIDDLE NEURONS PARAMETER*");
-                        Console.Write("INT16> Enter new middle neurons number (> 0)...");
+                        Console.WriteLine("*INPUT NEURONS PARAMETER*");
+                        Console.Write("INT32> Enter new middle neurons number (> 0)...");
                         userInput = Console.ReadLine();
-                        if (int.TryParse(userInput, out int userInputChecked))
+                        if (int.TryParse(userInput, out int userInputChecked1))
                         {
-                            if (userInputChecked > 0)
-                                Parameters.middleNeuronsCount = userInputChecked;
+                            if (userInputChecked1 > 0)
+                                Parameters.inputNeuronsCount = userInputChecked1;
                             else
                                 SendError("Value out of range.");
                         }
                         break;
 
                     case "2":
+                        Console.Clear();
+                        Console.WriteLine("*MIDDLE NEURONS PARAMETER*");
+                        Console.Write("INT32> Enter new middle neurons number (> 0)...");
+                        userInput = Console.ReadLine();
+                        if (int.TryParse(userInput, out int userInputChecked2))
+                        {
+                            if (userInputChecked2 > 0)
+                                Parameters.middleNeuronsCount = userInputChecked2;
+                            else
+                                SendError("Value out of range.");
+                        }
+                        break;
+
+                    case "3":
+                        Console.Clear();
+                        Console.WriteLine("*OUTPUT NEURONS PARAMETER*");
+                        Console.Write("INT32> Enter new middle neurons number (> 0)...");
+                        userInput = Console.ReadLine();
+                        if (int.TryParse(userInput, out int userInputChecked3))
+                        {
+                            if (userInputChecked3 > 0)
+                                Parameters.outputNeuronsCount = userInputChecked3;
+                            else
+                                SendError("Value out of range.");
+                        }
+                        break;
+
+                    case "5":
                         Console.Clear();
                         Console.WriteLine("*KNOWLEDGE PARAMETER*");
                         Console.Write("STRING> Enter new knowledge file...");
@@ -157,7 +200,7 @@ Copyright 2025-2026 Emotion Corp. License
                             SendError("Knowledge file doesn't exists");
                         break;
 
-                    case "3":
+                    case "6":
                         Console.Clear();
                         Console.WriteLine("*DROPOUT PERCENT PARAMETER*");
                         Console.Write("INT16> Enter new DropOut percent (0–70)... ");
@@ -173,7 +216,7 @@ Copyright 2025-2026 Emotion Corp. License
                             SendError("Invalid input.");
                         break;
 
-                    case "4":
+                    case "7":
                         Console.Clear();
                         Console.WriteLine("*LEARNING RATE PARAMETER*");
                         Console.Write("INT32> Enter new learning rate (0.001 – 1.0)... ");
@@ -189,7 +232,7 @@ Copyright 2025-2026 Emotion Corp. License
                             SendError("Invalid input.");
                         break;
 
-                    case "5":
+                    case "8":
                         Console.Clear();
                         Console.WriteLine("*PASSES PARAMETER*");
                         Console.Write("INT16> Enter passes count (> 0)... ");
@@ -205,7 +248,7 @@ Copyright 2025-2026 Emotion Corp. License
                             SendError("Invalid input.");
                         break;
 
-                    case "6":
+                    case "9":
                         i++;
                         break;
                 }
@@ -215,15 +258,17 @@ Copyright 2025-2026 Emotion Corp. License
         public static void SendWarning(string message = "Warning!")
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(message);
+            Console.WriteLine("WARNING>" + message);
             Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         public static void SendError(string message = "Error!")
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(message);
+            Console.WriteLine("ERROR>" + message);
             Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Press any key to continue");
+            Console.ReadKey();
         }
     }
 }

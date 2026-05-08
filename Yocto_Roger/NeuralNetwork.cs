@@ -8,11 +8,12 @@
         public static double[] middleNeurons = new double[Parameters.middleNeuronsCount];
         public static double[] outputNeurons = new double[Parameters.outputNeuronsCount];
 
-        public static double[,] weights1 = new double[inputNeurons.Length, middleNeurons.Length];
-        public static double[,] weights2 = new double[middleNeurons.Length, outputNeurons.Length];
+        public static double[,] inputWeights = new double[inputNeurons.Length, middleNeurons.Length];
+        public static double[][,] middleWeights = new double[Parameters.layers][,];
+        public static double[,] outputWeights = new double[middleNeurons.Length, outputNeurons.Length];
 
-        public static double[] bias1 = new double[middleNeurons.Length];
-        public static double[] bias2 = new double[outputNeurons.Length];
+        public static double[,] Mbias = new double[middleNeurons.Length,Parameters.layers];
+        public static double[] Obias = new double[outputNeurons.Length];
 
         public static void StartAI(int mode)
         {
@@ -24,14 +25,9 @@
                     educationArray = new int[UI.CountLines(Parameters.knowledgeFile), 3];
                     Console.WriteLine("Read knowledge...");
                     Training.WriteEducationArray(ref educationArray, Parameters.knowledgeFile);
-                    Console.WriteLine("Set up Weights... (1/2)");
-                    Training.SetUpWeights(ref weights1);
-                    Console.WriteLine("Set up Weights... (2/2)");
-                    Training.SetUpWeights(ref weights2);
-                    Console.WriteLine("Set up Biases... (1/2)");
-                    Training.SetUpBiases(ref bias1);
-                    Console.WriteLine("Set up Biases... (2/2)");
-                    Training.SetUpBiases(ref bias2);
+                    Console.WriteLine($"Слои: {Parameters.layers}, {middleWeights.Length}");
+                    //TODO: настройка весов и сдвигов
+                    while(true) { }
                     Console.WriteLine("Education. This make takes few minutes.");
                     UI.SendMessage(ConsoleColor.DarkRed, "Education Roger... This may take a few minutes.");
                     Training.EducationWithTeacher();
@@ -48,10 +44,8 @@
             {
                 UI.SendMessage(ConsoleColor.DarkGreen, "Ready.   >>> Enter SAVE for saving Roger to .roger2 file");
                 AIMath.WriteInput(ref inputNeurons);
-                UI.SendMessage(ConsoleColor.DarkRed, "Calculation neurons... (1/2)");
-                SumWeights(ref weights1, ref inputNeurons, ref middleNeurons, bias1);
-                UI.SendMessage(ConsoleColor.DarkRed, "Calculation neurons... (2/2)");
-                SumWeights(ref weights2, ref middleNeurons, ref outputNeurons, bias2);
+                UI.SendMessage(ConsoleColor.DarkRed, "Calculation neurons...");
+                //TODO: Складывание весов
                 UI.SendMessage(ConsoleColor.DarkRed, "Rounding...");
                 AIMath.Rounding(ref outputNeurons);
                 UI.SendMessage(ConsoleColor.DarkRed, "Almost ready...");
