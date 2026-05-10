@@ -12,7 +12,7 @@
         public static double[][,] middleWeights = new double[Parameters.layers][,];
         public static double[,] outputWeights = new double[middleNeurons.Length, outputNeurons.Length];
 
-        public static double[,] Mbias = new double[middleNeurons.Length,Parameters.layers];
+        public static double[,] Mbias = new double[Parameters.Mlayers, middleNeurons.Length];
         public static double[] Obias = new double[outputNeurons.Length];
 
         public static void StartAI(int mode)
@@ -21,14 +21,20 @@
             switch (mode)
             {
                 case 0:
-                    Console.WriteLine("SetUp education array...");
+                    Console.Write("SetUp education array...");
                     educationArray = new int[UI.CountLines(Parameters.knowledgeFile), Parameters.inputNeuronsCount]; //TODO: формат .know2
-                    Console.WriteLine("Read knowledge...");
+                    Console.WriteLine("done");
+                    Console.Write("Read knowledge...");
                     Training.WriteEducationArray(ref educationArray, Parameters.knowledgeFile);
-                    Console.WriteLine($"Слои: {Parameters.layers}, {middleWeights.Length}");
-                    //TODO: настройка весов и сдвигов
-                    while(true) { }
+                    Console.WriteLine("done");
+                    Console.Write("Initialization biases...");
+                    Training.SetUpBiases(ref Mbias);
+                    Training.SetUpBiases(ref Obias);
+                    Console.Write("done");
+                    //TODO: настройка весов
+                    while (true) { }
                     Console.WriteLine("Education. This make takes few minutes.");
+                    //TODO: Обучение
                     UI.SendMessage(ConsoleColor.DarkRed, "Education Roger... This may take a few minutes.");
                     Training.EducationWithTeacher();
                     Array.Clear(educationArray, 0, educationArray.Length);

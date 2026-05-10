@@ -4,10 +4,32 @@
     {
         public static void SetUpBiases(ref double[] biases) //рандомное заполнение массива сдвигов
         {
+            if (Parameters.isDebug)
+                Console.Write($"biases[] = \n");
             for (int i = 0; i < biases.Length; i++)
             {
                 biases[i] = AIMath.rand.NextDouble() * 0.2 - 0.1;
-                biases[i] = Math.Clamp(biases[i], -3.0, 3.0);
+                if (Parameters.isDebug)
+                    Console.Write($"{biases[i]} ");
+            }
+            if (Parameters.isDebug)
+                Console.WriteLine("\nThe biases have been successfully adjusted!");
+        }
+
+        public static void SetUpBiases(ref double[,] biases) //рандомное заполнение двухмерного массива сдвигов
+        {
+            if (Parameters.isDebug)
+                Console.Write($"biases[,] = \n");
+            for (int i = 0; i < biases.GetLength(0); i++)
+            {
+                for (int j = 0; j < biases.GetLength(1);  j++)
+                {
+                    biases[i,j] = AIMath.rand.NextDouble() * 0.2 - 0.1;
+                    if (Parameters.isDebug)
+                        Console.Write($"{biases[i, j]} ");
+                }
+                if(Parameters.isDebug)
+                    Console.WriteLine();
             }
             if (Parameters.isDebug)
                 Console.WriteLine("The biases have been successfully adjusted!");
@@ -20,7 +42,6 @@
                 for (int j = 0; j < weights.GetLength(1); j++)
                 {
                     weights[i, j] = AIMath.rand.NextDouble() * 0.2 - 0.1;
-                    weights[i, j] = Math.Clamp(weights[i, j], -3.0, 3.0);
                 }
             }
             if (Parameters.isDebug)
@@ -28,6 +49,7 @@
         }
 
         public static void WriteEducationArray(ref int[,] education, string path) //записывание данных из файла в переменную
+            //TODO: Переделать под формат .know2
         {
             var lines = File.ReadAllLines(path);
 
@@ -36,8 +58,8 @@
                 string line = lines[row].Replace("-", "").Trim();
                 var parts = line.Split(' ');
 
-                for (int col = 0; col < 3; col++)
-                    education[row, col] = int.Parse(parts[col]);
+                //for (int col = 0; col < 3; col++)
+                    //education[row, col] = int.Parse(parts[col]);
             }
         }
 

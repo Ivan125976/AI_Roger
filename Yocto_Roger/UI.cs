@@ -47,7 +47,7 @@ Copyright 2025-2026 Emotion Corp. License
 
                         case 2:
                             Console.Clear();
-                            Console.Write("1. Place the .roger2 file in the folder with Yocto Roger 2.1.exe\n2. Enter the file name .roger2 (with extension)\n>>> ");
+                            Console.Write("1. Place the .roger2 file in the folder with Yocto Roger.exe\n2. Enter the file name .roger2 (with extension)\n>>> ");
                             Parameters.roger2 = Console.ReadLine();
                             if (File.Exists(Parameters.roger2))
                                 NeuralNetwork.StartAI(1);
@@ -151,7 +151,7 @@ Copyright 2025-2026 Emotion Corp. License
                     case "1":
                         Console.Clear();
                         Console.WriteLine("*INPUT NEURONS PARAMETER*");
-                        Console.Write("INT32> Enter new middle neurons number (> 0)...");
+                        Console.Write("INT32> Enter new count of input neurons (> 0)...");
                         userInput = Console.ReadLine();
                         if (int.TryParse(userInput, out int userInputChecked1))
                         {
@@ -165,7 +165,7 @@ Copyright 2025-2026 Emotion Corp. License
                     case "2":
                         Console.Clear();
                         Console.WriteLine("*MIDDLE NEURONS PARAMETER*");
-                        Console.Write("INT32> Enter new middle neurons number (> 0)...");
+                        Console.Write("INT32> Enter new count of middle neurons (> 0)...");
                         userInput = Console.ReadLine();
                         if (int.TryParse(userInput, out int userInputChecked2))
                         {
@@ -179,7 +179,7 @@ Copyright 2025-2026 Emotion Corp. License
                     case "3":
                         Console.Clear();
                         Console.WriteLine("*OUTPUT NEURONS PARAMETER*");
-                        Console.Write("INT32> Enter new middle neurons number (> 0)...");
+                        Console.Write("INT32> Enter new count of output neurons (> 0)...");
                         userInput = Console.ReadLine();
                         if (int.TryParse(userInput, out int userInputChecked3))
                         {
@@ -197,8 +197,11 @@ Copyright 2025-2026 Emotion Corp. License
                         userInput = Console.ReadLine();
                         if (int.TryParse(userInput, out int layersCount))
                         {
-                            if (layersCount > 3)
+                            if (layersCount > 2)
+                            {
                                 Parameters.layers = layersCount;
+                                Parameters.Mlayers = layersCount - 2;
+                            }
                             else
                                 SendError("Value out of range.");
                         }
@@ -220,7 +223,7 @@ Copyright 2025-2026 Emotion Corp. License
                     case "6":
                         Console.Clear();
                         Console.WriteLine("*DROPOUT PERCENT PARAMETER*");
-                        Console.Write("INT16> Enter new DropOut percent (0–70)... ");
+                        Console.Write("FLOAT> Enter new DropOut percent (0–70)... ");
                         userInput = Console.ReadLine();
                         if (int.TryParse(userInput, out int newDrop))
                         {
@@ -236,7 +239,7 @@ Copyright 2025-2026 Emotion Corp. License
                     case "7":
                         Console.Clear();
                         Console.WriteLine("*LEARNING RATE PARAMETER*");
-                        Console.Write("INT32> Enter new learning rate (0.001 – 1.0)... ");
+                        Console.Write("FLOAT> Enter new learning rate (0,0 – 1,0)... ");
                         userInput = Console.ReadLine();
                         if (float.TryParse(userInput, out float newLR))
                         {
@@ -252,7 +255,7 @@ Copyright 2025-2026 Emotion Corp. License
                     case "8":
                         Console.Clear();
                         Console.WriteLine("*PASSES PARAMETER*");
-                        Console.Write("INT16> Enter passes count (> 0)... ");
+                        Console.Write("INT32> Enter count of passes (> 0)... ");
                         userInput = Console.ReadLine();
                         if (int.TryParse(userInput, out int newPasses))
                         {
