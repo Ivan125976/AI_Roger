@@ -23,23 +23,24 @@
                 case 0:
                     Console.Write("SetUp education array...");
                     educationArray = new int[UI.CountLines(Parameters.knowledgeFile), Parameters.inputNeuronsCount]; //TODO: формат .know2
-                    Console.WriteLine("done");
+                    UI.SendMessage("done");
                     Console.Write("Read knowledge...");
                     Training.WriteEducationArray(ref educationArray, Parameters.knowledgeFile);
-                    Console.WriteLine("done");
+                    UI.SendMessage("done");
                     Console.Write("Initialization biases...");
-                    Training.SetUpBiases(ref Mbias);
-                    Training.SetUpBiases(ref Obias);
-                    Console.WriteLine("done");
+                    Biases.Init(ref Mbias);
+                    Biases.Init(ref Obias);
+                    UI.SendMessage("done");
                     Console.Write("Initialization weights...");
-                    Training.SetUpWeights(ref inputWeights);
-                    Training.SetUpWeights(ref outputWeights);
-                    Training.SetUpWeights(ref middleWeights);
-                    Console.WriteLine("done");
+                    Weights.Init(ref inputWeights);
+                    Weights.Init(ref outputWeights);
+                    Weights.Init(ref middleWeights);
+                    UI.SendMessage("done");
+                    UI.SendMessage("\nInitialization complete");
                     while (true) { }
                     Console.WriteLine("Education. This make takes few minutes.");
                     //TODO: Обучение
-                    UI.SendMessage(ConsoleColor.DarkRed, "Education Roger... This may take a few minutes.");
+                    UI.DrawLine(ConsoleColor.DarkRed, "Education Roger... This may take a few minutes.");
                     Training.EducationWithTeacher();
                     Array.Clear(educationArray, 0, educationArray.Length);
                     break;
@@ -52,16 +53,16 @@
             Console.WriteLine("Hello! I'm Roger, the MLP AI from Emotion!");
             while (true)
             {
-                UI.SendMessage(ConsoleColor.DarkGreen, "Ready.   >>> Enter SAVE for saving Roger to .roger2 file");
+                UI.DrawLine(ConsoleColor.DarkGreen, "Ready.   >>> Enter SAVE for saving Roger to .roger2 file");
                 AIMath.WriteInput(ref inputNeurons);
-                UI.SendMessage(ConsoleColor.DarkRed, "Calculation neurons...");
+                UI.DrawLine(ConsoleColor.DarkRed, "Calculation neurons...");
                 //TODO: Складывание весов
-                UI.SendMessage(ConsoleColor.DarkRed, "Rounding...");
+                UI.DrawLine(ConsoleColor.DarkRed, "Rounding...");
                 AIMath.Rounding(ref outputNeurons);
-                UI.SendMessage(ConsoleColor.DarkRed, "Almost ready...");
+                UI.DrawLine(ConsoleColor.DarkRed, "Almost ready...");
                 Console.WriteLine($"I think it's {AIMath.WriteOutput(outputNeurons)}");
                 Console.WriteLine("Press any key to continue...");
-                UI.SendMessage(ConsoleColor.Magenta, "Waiting.");
+                UI.DrawLine(ConsoleColor.Magenta, "Waiting.");
                 Console.ReadKey();
                 Console.Clear();
             }

@@ -18,16 +18,16 @@ Copyright 2025-2026 Emotion Corp. License
             Console.InputEncoding = Encoding.UTF8;
             Console.OutputEncoding = Encoding.UTF8;
             Console.CursorVisible = false;
-            SendMessage(ConsoleColor.Magenta, "Emotion ;) 2026    Yocto Roger");
+            DrawLine(ConsoleColor.Magenta, "Emotion ;) 2026    Yocto Roger");
             Thread.Sleep(3000);
             int i = 0;
             while (true)
             {
                 Console.Clear();
                 if (Parameters.isDebug == false)
-                    SendMessage(ConsoleColor.DarkMagenta, $"Welcome to the RogerHub! v.{Parameters.version}{Parameters.revision} DEV");
+                    DrawLine(ConsoleColor.DarkMagenta, $"Welcome to the RogerHub! v.{Parameters.version}{Parameters.revision} DEV");
                 else
-                    SendMessage(ConsoleColor.DarkMagenta, $"Welcome to the RogerHub! v.{Parameters.version}{Parameters.revision} DEV DEBUG MODE");
+                    DrawLine(ConsoleColor.DarkMagenta, $"Welcome to the RogerHub! v.{Parameters.version}{Parameters.revision} DEV DEBUG MODE");
                 SendWarning("This project is still in the development stage.");
                 SendWarning("This is a BETA build. Some functionality may not work. Have fun testing :D");
                 Console.Write(" " +
@@ -107,7 +107,7 @@ Copyright 2025-2026 Emotion Corp. License
             return count;
         }
 
-        public static void SendMessage(ConsoleColor color, string message)
+        public static void DrawLine(ConsoleColor color, string message)
         {
             int cursorX = Console.CursorLeft;
             int cursorY = Console.CursorTop;
@@ -273,6 +273,13 @@ Copyright 2025-2026 Emotion Corp. License
                         break;
                 }
             }
+        }
+
+        public static void SendMessage(string message = "done")
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write(message + "\n");
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         public static void SendWarning(string message = "Warning!")
