@@ -119,7 +119,7 @@ Copyright 2025-2026 Emotion Corp. License
                 Console.Write(" ");
 
             Console.SetCursorPosition(0, Console.WindowHeight - 1);
-            Console.Write(message);
+            Console.Write($"{message}              {DateTime.Now:T}"); // Я знаю, это очень примитивный вывод даты но я очень долго возился и не смог сделать корректный вывод даты кроме этого варианта, там математики слишком много, я считать не умею
             Console.SetCursorPosition(cursorX, cursorY);
             Console.BackgroundColor = ConsoleColor.Black;
         }
