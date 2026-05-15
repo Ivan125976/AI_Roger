@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System.Text;
+﻿using System.Text;
 
 namespace Yocto_Roger
 /* 

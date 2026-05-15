@@ -1,6 +1,5 @@
 ﻿namespace Yocto_Roger
 {
-
     internal class AIMath
     {
         static public Random rand = new();
