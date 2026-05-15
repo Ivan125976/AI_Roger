@@ -2,32 +2,17 @@
 {
     public class Training
     {
-        public static void WriteEducationArray(ref int[,] education, string path) //записывание данных из файла в переменную
-            //TODO: Переделать под формат .know2
-        {
-            var lines = File.ReadAllLines(path);
-
-            for (int row = 0; row < lines.Length; row++)
-            {
-                string line = lines[row].Replace("-", "").Trim();
-                var parts = line.Split(' ');
-
-                //for (int col = 0; col < 3; col++)
-                    //education[row, col] = int.Parse(parts[col]);
-            }
-        }
-
-        public static void EducationWithTeacher() //обучение с поддержкой DropOut и deadParts
+        public static void Education() //обучение с поддержкой DropOut
         {
             double[] errorOut = new double[NeuralNetwork.outputNeurons.Length];
-            double[] errorMid = new double[NeuralNetwork.middleNeurons.Length];
-            double[] deltaMid = new double[NeuralNetwork.middleNeurons.Length];
+            double[,] errorMid = new double[NeuralNetwork.middleNeurons.GetLength(0), NeuralNetwork.middleNeurons.GetLength(1)];
+            double[,] deltaMid = new double[NeuralNetwork.middleNeurons.GetLength(0), NeuralNetwork.middleNeurons.GetLength(1)];
             double[] deltaOut = new double[NeuralNetwork.outputNeurons.Length];
-            //double[,] oldWeights = new double[NeuralNetwork.weights2.GetLength(0), NeuralNetwork.weights2.GetLength(1)];
+            //double[,] oldWeights = new double[NeuralNetwork.middleNeurons.GetLength(1), NeuralNetwork.outputNeurons.Length];
 
             for (int z = 0; z < Parameters.passes; z++)
             {
-                float[] dropOutMasks = NeuralNetwork.GenerateDropOut();
+                float[,] dropOutMasks = NeuralNetwork.GenerateDropOut();
 
                 for (int i = 0; i < NeuralNetwork.educationArray.GetLength(0); i++)
                 {
@@ -47,11 +32,11 @@
                         binary[j] = (NeuralNetwork.educationArray[i, 2] & mask) != 0 ? 1 : 0;
                     }
 
-                    AIMath.WriteInput(ref NeuralNetwork.inputNeurons, NeuralNetwork.educationArray[i, 0], NeuralNetwork.educationArray[i, 1]);
+                    AIMath.numToBin(ref NeuralNetwork.inputNeurons, NeuralNetwork.educationArray[i, 0], NeuralNetwork.educationArray[i, 1]);
                     //NeuralNetwork.SumWeights(ref NeuralNetwork.weights1, ref NeuralNetwork.inputNeurons, ref NeuralNetwork.middleNeurons, NeuralNetwork.bias1);
                     for (int l = 0; l < NeuralNetwork.middleNeurons.Length; l++) //DropOut 
                     {
-                        NeuralNetwork.middleNeurons[l] *= dropOutMasks[l];
+                        //NeuralNetwork.middleNeurons[l] *= dropOutMasks[l];
                     }
                     //NeuralNetwork.SumWeights(ref NeuralNetwork.weights2, ref NeuralNetwork.middleNeurons, ref NeuralNetwork.outputNeurons, NeuralNetwork.bias2);
 
@@ -74,10 +59,10 @@
 
                         }
 
-                        if (NeuralNetwork.middleNeurons[j] == 0)
+                        /*if (NeuralNetwork.middleNeurons[j] == 0)
                             deltaMid[j] = 0;
                         else
-                            deltaMid[j] = errorMid[j] * NeuralNetwork.middleNeurons[j] * (1 - NeuralNetwork.middleNeurons[j]); //дельта
+                            deltaMid[j] = errorMid[j] * NeuralNetwork.middleNeurons[j] * (1 - NeuralNetwork.middleNeurons[j]); //дельта */
 
                         for (int k = 0; k < NeuralNetwork.inputNeurons.Length; k++)
                         {

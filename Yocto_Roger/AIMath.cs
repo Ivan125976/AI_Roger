@@ -15,7 +15,7 @@
                 Console.WriteLine("Sigmoida> " + answer);
             return answer;
         }
-        public static int WriteOutput(double[] binary) //двиучное в десятичное
+        public static int binToNum(double[] binary) //двиучное в десятичное
         {
             int result = 0;
             for (int i = 0; i < binary.Length; i++)
@@ -23,7 +23,7 @@
                     result += 1 << (7 - i);
             return result;
         }
-        public static int[] WriteInput(ref double[] inNeurons, int? v1 = null, int? v2 = null) //конвертация десятичного числа в двиучное
+        public static int[] numToBin(ref double[] inNeurons, int? v1 = null, int? v2 = null) //конвертация десятичного числа в двиучное
         {
             int[] values = new int[2];
 

@@ -5,7 +5,7 @@
         public static int[,]? educationArray;
 
         public static double[] inputNeurons = new double[Parameters.inputNeuronsCount];
-        public static double[] middleNeurons = new double[Parameters.middleNeuronsCount];
+        public static double[,] middleNeurons = new double[Parameters.Mlayers, Parameters.middleNeuronsCount];
         public static double[] outputNeurons = new double[Parameters.outputNeuronsCount];
 
         public static double[,] inputWeights = new double[inputNeurons.Length, middleNeurons.Length];
@@ -39,7 +39,7 @@
                     UI.SendMessage("done");
                     Console.Write("Education...");
                     UI.DrawLine(ConsoleColor.DarkRed, "Creating your Roger, please wait :D");
-                    //Training.EducationWithTeacher();
+                    //Training.Education();
                     UI.SendMessage("done");
                     Console.Write("Cleaning...");
                     //и тут после этого еще чистку массива до нуля, или если можно вообще его удаление. Давай, полагаюсь на тебя)))
@@ -54,40 +54,49 @@
             Console.WriteLine("Hello! I'm Roger, the MLP AI from Emotion!");
             while (true)
             {
-                UI.DrawLine(ConsoleColor.DarkGreen, "Ready.   >>> Enter SAVE for saving Roger to .roger2 file");
-                AIMath.WriteInput(ref inputNeurons);
-                UI.DrawLine(ConsoleColor.DarkRed, "Calculation neurons...");
+                UI.DrawLine(ConsoleColor.DarkGreen, "Not-ready AI Interface v2.2");
+                AIMath.numToBin(ref inputNeurons);
                 //TODO: Складывание весов
-                UI.DrawLine(ConsoleColor.DarkRed, "Rounding...");
-                AIMath.Rounding(ref outputNeurons);
-                UI.DrawLine(ConsoleColor.DarkRed, "Almost ready...");
-                Console.WriteLine($"I think it's {AIMath.WriteOutput(outputNeurons)}");
-                Console.WriteLine("Press any key to continue...");
-                UI.DrawLine(ConsoleColor.Magenta, "Waiting.");
-                Console.ReadKey();
-                Console.Clear();
             }
         }
 
-        public static float[] GenerateDropOut()
+        public static float[,] GenerateDropOut()
         {
-            float[] masks = new float[Parameters.middleNeuronsCount];
+            if (Parameters.isDebug)
+                Console.WriteLine("DropOut Matrix = ");
+            float[,] masks = new float[Parameters.Mlayers, Parameters.middleNeuronsCount];
             float keepProb = 1.00f - (Parameters.DropOutPercent * 0.01f);
 
             if (Parameters.DropOutPercent == 0)
             {
-                for (int i = 0; i < masks.Length; i++)
-                    masks[i] = 1.0f;
+                for (int i = 0; i < masks.GetLength(0); i++)
+                {
+                    for (int j = 0; j < masks.GetLength(1); j++)
+                    {
+                        masks[i, j] = 1.0f;
+                        if (Parameters.isDebug)
+                            Console.Write(masks[i, j] + " ");
+                    }
+                    if (Parameters.isDebug)
+                        Console.WriteLine();
+                }
                 return masks;
             }
             else
             {
-                for (int i = 0; i < masks.Length; i++)
+                for (int i = 0; i < masks.GetLength(0); i++)
                 {
-                    if (AIMath.rand.Next(0, 100) < Parameters.DropOutPercent)
-                        masks[i] = 0;
-                    else
-                        masks[i] = 1.0f / keepProb;
+                    for (int j = 0; j < masks.GetLength(1); j++)
+                    {
+                        if (AIMath.rand.Next(0, 101) < Parameters.DropOutPercent)
+                            masks[i, j] = 0;
+                        else
+                            masks[i, j] = 1.0f / keepProb;
+                        if (Parameters.isDebug)
+                            Console.Write(masks[i, j] + " ");
+                    }
+                    if (Parameters.isDebug)
+                        Console.WriteLine();
                 }
             }
             return masks;
