@@ -2,9 +2,9 @@
 {
     internal class NeuralNetwork
     {
-        public static int[,]? educationArray;
+        public static double[,]? educationArray;
 
-        public static double[] inputNeurons = new double[Parameters.inputNeuronsCount];
+        public static int[] inputNeurons = new int[Parameters.inputNeuronsCount];
         public static double[,] middleNeurons = new double[Parameters.Mlayers, Parameters.middleNeuronsCount];
         public static double[] outputNeurons = new double[Parameters.outputNeuronsCount];
 
@@ -51,13 +51,17 @@
                     Save_Load.LoadRoger();
                     break;
             }
-            Console.WriteLine("Hello! I'm Roger, the MLP AI from Emotion!");
+            Console.WriteLine("Hello! I'm Roger, the neuron network from Emotion!");
             while (true)
             {
-                Thread.Sleep(100000);
                 UI.DrawLine(ConsoleColor.DarkGreen, "Not-ready AI Interface v2.2");
-                //TODO: Запись в входной слой
-                //TODO: Складывание весов
+                int[] userInput = new int[inputNeurons.Length];
+                Console.Write("\nInput>>>");
+                userInput = AIMath.NumToBin(Convert.ToInt32(Console.ReadLine()), inputNeurons.Length);
+                ForwardPropagation(userInput, inputNeurons, inputWeights, middleNeurons, middleWeights, Mbias, outputNeurons, Obias, outputWeights, GenerateDropOut());
+                Console.Write("Output>>>");
+                for (int i = 0; i < outputNeurons.Length; i++)
+                    Console.Write(outputNeurons[i] + " ");
             }
         }
 
@@ -102,16 +106,49 @@
             }
             return masks;
         }
-
-        public static void SumWeights(ref double[,] oldweights, ref double[] oldNeurons, ref double[] newNeurons, double[] biases) //нахождение новых нейронов
+        public static void SumWeights(double[,] oldweights, int[] oldNeurons, double[,] newNeurons, double[,] biases) //нахождение новых нейронов (input -> middle)
         {
             if (Parameters.isDebug)
-                Console.Write("Sum of weights - ");
-            for (int i = 0; i < newNeurons.Length; i++)
+                Console.Write("Sum of weights ([]->[,]) - ");
+            for (int i = 0; i < newNeurons.GetLength(0); i++)
             {
                 double temp = 0;
                 for (int j = 0; j < oldNeurons.Length; j++)
                     temp += oldweights[j, i] * oldNeurons[j];
+                temp += biases[0, i];
+                newNeurons[0, i] = AIMath.Sigmoida(temp);
+                if (Parameters.isDebug)
+                    Console.Write(newNeurons[0, i] + " ");
+            }
+            if (Parameters.isDebug)
+                Console.WriteLine();
+        }
+        public static void SumWeights(double[,] oldweights, double[,] oldNeurons, double[,] newNeurons, double[,] biases, int layer) //нахождение новых нейронов (middle -> middle)
+        {
+            if (Parameters.isDebug)
+                Console.Write("Sum of weights ([,]->[,]) - ");
+            for (int i = 0; i < newNeurons.GetLength(0); i++)
+            {
+                double temp = 0;
+                for (int j = 0; j < oldNeurons.GetLength(0); j++)
+                    temp += oldweights[j, i] * oldNeurons[layer, j];
+                temp += biases[layer, i];
+                newNeurons[layer, i] = AIMath.Sigmoida(temp);
+                if (Parameters.isDebug)
+                    Console.Write(newNeurons[layer, i] + " ");
+            }
+            if (Parameters.isDebug)
+                Console.WriteLine();
+        }
+        public static void SumWeights(double[,] oldweights, double[,] oldNeurons, double[] newNeurons, double[] biases) //нахождение новых нейронов (middle -> output)
+        {
+            if (Parameters.isDebug)
+                Console.Write("Sum of weights ([,]->[]) - ");
+            for (int i = 0; i < newNeurons.GetLength(0); i++)
+            {
+                double temp = 0;
+                for (int j = 0; j < oldNeurons.GetLength(0); j++)
+                    temp += oldweights[j, i] * oldNeurons[oldNeurons.GetLength(0) - 1, j];
                 temp += biases[i];
                 newNeurons[i] = AIMath.Sigmoida(temp);
                 if (Parameters.isDebug)
@@ -119,6 +156,29 @@
             }
             if (Parameters.isDebug)
                 Console.WriteLine();
+        }
+
+        public static void WriteToNN(int[] neurons, int[] writeArray)
+        {
+            if (neurons.Length == writeArray.Length)
+                for (int i = 0; i < neurons.Length; i++)
+                    neurons[i] = writeArray[i];
+            else
+                UI.Send("NeuralNetwork.WriteToNN>The size of the neuron array and the data array do not match, it is impossible to write data", "error");
+        }
+
+        public static void ForwardPropagation(int[] NNinput, int[] inputNeurons, double[,] inputWeights, double[,] middleNeurons, double[][,] middleWeights,
+            double[,] middleBiases, double[] outputNeurons, double[] outputBiases, double[,] outputWeights, float[,] dropOut)
+        {
+            WriteToNN(inputNeurons, NNinput);
+            SumWeights(inputWeights, inputNeurons, middleNeurons, middleBiases);
+            for (int l = 0; l < Parameters.Mlayers; l++) //DropOut 
+            {
+                for (int k = 0; k < Parameters.middleNeuronsCount; k++)
+                    middleNeurons[l, k] *= dropOut[l, k];
+                SumWeights(middleWeights[l], middleNeurons, middleNeurons, middleBiases, l);
+            }
+            SumWeights(outputWeights, middleNeurons, outputNeurons, outputBiases);
         }
     }
 }
