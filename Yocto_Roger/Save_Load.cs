@@ -68,6 +68,10 @@ namespace Yocto_Roger
                 MiddleNeurons = BuildStringMatrix(NeuralNetwork.middleNeurons),
                 OutputNeurons = BuildStringArray(NeuralNetwork.outputNeurons),
 
+                inputWeights = BuildStringArray(NeuralNetwork.inputWeights),
+                middleWeights = BuildStringArray(NeuralNetwork.middleWeights),
+                outputWeights = BuildStringArray(NeuralNetwork.outputWeights),
+
                 Mbias = BuildStringMatrix(NeuralNetwork.Mbias),
                 Obias = BuildStringArray(NeuralNetwork.Obias),
             };
@@ -170,8 +174,8 @@ namespace Yocto_Roger
         /// For Axolotl: Если каких-то данных не хватает, просто допиши их в класс 
         /// </summary>
         public class Roger
-        { 
-            public string AIversion { get; set;  }
+        {
+            public string AIversion { get; set; }
 
             public string InputNeurons { get; set; }
             public string MiddleNeurons { get; set; }
@@ -245,7 +249,7 @@ namespace Yocto_Roger
         }
 
 
-        public static dynamic[,] ReadMatrixFromArray(dynamic[] obj) 
+        public static dynamic[,] ReadMatrixFromArray(dynamic[] obj)
         {
             byte rows = 3;
             byte columns = 2;
