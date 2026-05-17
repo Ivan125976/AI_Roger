@@ -2,7 +2,7 @@
 {
     internal class NeuralNetwork
     {
-        public static double[,]? educationArray;
+        public static string[,]? educationArray;
 
         public static int[] inputNeurons = new int[Parameters.inputNeuronsCount];
         public static double[,] middleNeurons = new double[Parameters.Mlayers, Parameters.middleNeuronsCount];
@@ -39,7 +39,7 @@
                     UI.Send("done", "message");
                     Console.Write("Education...");
                     UI.DrawLine(ConsoleColor.DarkRed, "Creating your Roger, please wait :D");
-                    //Training.Education();
+                    Training.Education(ref inputNeurons, ref middleNeurons, ref outputNeurons, ref inputWeights, ref middleWeights, ref outputWeights, ref Mbias, ref Obias, educationArray);
                     UI.Send("done", "message");
                     Console.Write("Cleaning...");
                     //и тут после этого еще чистку массива до нуля, или если можно вообще его удаление. Давай, полагаюсь на тебя)))
