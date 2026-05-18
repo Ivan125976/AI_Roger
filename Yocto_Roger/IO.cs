@@ -3,6 +3,7 @@ using IniParser.Model;
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
+using static Yocto_Roger.Auxiliary;
 
 namespace Yocto_Roger
 {
@@ -39,14 +40,14 @@ Internal I/O lib
 
             writer.WriteLine("[neurons]");
             writer.Write("inputNeurons = "); WriteAll(NeuralNetwork.inputNeurons, writer, true);
-            writer.Write("middleNeurons = "); WriteAll(NeuralNetwork.middleNeurons, writer, true);
+            writer.Write("middleNeurons = "); WriteMatrix(writer, NeuralNetwork.middleNeurons);
             writer.Write("outputNeurons = "); WriteAll(NeuralNetwork.outputNeurons, writer, true);
             writer.WriteLine();
 
             writer.WriteLine("[weights]");
             writer.Write("inputWeights = "); WriteAll(NeuralNetwork.inputWeights, writer, true);
-            writer.Write("middleWeights = "); WriteAll(NeuralNetwork.middleWeights, writer, true);
-            writer.Write("outputWeights = "); WriteAll(NeuralNetwork.outputWeights, writer, true);
+            writer.Write("middleWeights = "); writer.Write(BuildStringJaggedMatrix(NeuralNetwork.middleWeights));
+            writer.Write("outputWeights = "); WriteMatrix(writer, NeuralNetwork.outputWeights);
 
             writer.WriteLine("[biases]");
             writer.Write("Mbias = "); WriteMatrix(writer, NeuralNetwork.Mbias);
@@ -77,8 +78,7 @@ Internal I/O lib
                 OutputNeurons = BuildStringArray(NeuralNetwork.outputNeurons),
 
                 InputWeights = BuildStringArray(NeuralNetwork.inputWeights),
-                //TODO:  Сделать функцию для записи трёхмерного массива [][,]  в строку разделяя точкой с запятой (не забыть из удалить из строки последний элемент тобишь точку с запятой после которой идёт ничего и появляется проблемный пустой элемент в массиве (Nota bene)
-                //MiddleWeights = BuildStringArray(NeuralNetwork.middleWeights) Код ломается имеено здесб, изза неправильной записи, эта функция не может записать такие значения и ломается
+                MiddleWeights = BuildStringJaggedMatrix(NeuralNetwork.middleWeights), // Вроде правильно работает, но Иван, проверь пожалуйста, я то даже не пойму работает оно или нет, для меня не крашится - значит работает а за корректность хз как то
                 OutputWeights = BuildStringArray(NeuralNetwork.outputWeights),
 
                 Mbias = BuildStringMatrix(NeuralNetwork.Mbias),
@@ -89,58 +89,6 @@ Internal I/O lib
 
             using StreamWriter writer = new(fileName);
             writer.Write(jsonData);
-        }
-
-        private static void WriteAll(dynamic array, StreamWriter writer, bool line_break = false)
-        {
-            foreach (var element in array)
-                writer.Write(element.ToString(CultureInfo.InvariantCulture) + ";");
-
-            if (line_break == true)
-                writer.WriteLine();
-        }
-        private static void WriteMatrix(StreamWriter writer, double[,] matrix)
-        {
-            for (int j = 0; j < matrix.GetLength(1); j++)
-            {
-                for (int i = 0; i < matrix.GetLength(0); i++)
-                    writer.Write(matrix[i, j].ToString(CultureInfo.InvariantCulture) + ";");
-                writer.WriteLine();
-            }
-        }
-
-        public static string BuildStringMatrix(double[,] matrix)
-        {
-            StringBuilder builder = new();
-
-            for (int j = 0; j < matrix.GetLength(1); j++)
-            {
-                for (int i = 0; i < matrix.GetLength(0); i++)
-                    builder.Append(matrix[i, j].ToString(CultureInfo.InvariantCulture) + ";");
-            }
-
-            return builder.ToString()
-                [..(builder.Length - 1)];
-        }
-
-        private static void WriteArray(StreamWriter writer, double[] array)
-        {
-            foreach (double v in array)
-                writer.Write(v.ToString(CultureInfo.InvariantCulture) + ';');
-            //writer.WriteLine();
-        }
-
-        public static string BuildStringArray(dynamic array)
-        {
-            StringBuilder builder = new();
-
-            foreach (dynamic v in array)
-            {
-                builder.Append(v.ToString(CultureInfo.InvariantCulture) + ';');
-            }
-
-            return builder.ToString()
-                [..(builder.Length - 1)]; // Удаляет последний ненужный символ ';'
         }
 
         /// <summary>
@@ -169,17 +117,19 @@ Internal I/O lib
         /// Проверка формата записи
         /// </summary>
         /// <returns>true - json формат, false - roger формат/returns>
-        private static bool CheckFormat()
+        private static bool? CheckFormat()
         {
             if (Parameters.roger2.EndsWith(".json"))
                 return true;
-            else
+            else if (Parameters.roger2.EndsWith(".roger") || Parameters.roger2.EndsWith(".roger2"))
                 return false;
+
+            else return null;
         }
 
         /// <summary>
         /// Класс который будет хранить в себе данные для загрузки/сохранения нейросети.
-        /// Данные хранятся в виде строк, поэтому их придётся конвертировать с помощью соответствующих методов (вроде все методы для этого написаны)
+        /// Данные хранятся в виде строк, поэтому данные из него требуется инициализировать с помощью специальной функции InitRogersData, написанной специально для того чтобы не инициализировать всё вручную
         /// For Axolotl: Если каких-то данных не хватает, просто допиши их в класс 
         /// 
         /// PS: Если добавляешь или убираешь какое либо поле в классе Roger, делай тоже самое в функции InitRogersData() !!! *пожалуйста*
@@ -200,20 +150,6 @@ Internal I/O lib
             public string Obias { get; set; }
         }
 
-        public static void InitRogersData(Roger roger)
-        {
-            //ivan125976: TODO: Сделать инициализацию middleWeights 
-            NeuralNetwork.inputNeurons = roger.InputNeurons.Split(';').Select(int.Parse).ToArray();
-            NeuralNetwork.middleNeurons = ReadMatrixFromArray([.. roger.MiddleNeurons.Split(';').Select(int.Parse)]);
-            NeuralNetwork.outputNeurons = roger.OutputNeurons.Split(';').Select(double.Parse).ToArray();
-
-            NeuralNetwork.inputWeights = ReadMatrixFromArray([.. roger.InputWeights.Split(';').Select(int.Parse)]);
-            //NeuralNetwork.middleWeights  Ахрринеть трёхмерная матрица я это не умею ненене...
-            NeuralNetwork.outputWeights = ReadMatrixFromArray([.. roger.OutputWeights.Split(';').Select(int.Parse)]);
-
-            NeuralNetwork.Mbias = ReadMatrixFromArray([.. roger.Mbias.Split(';').Select(int.Parse)]);
-            NeuralNetwork.Obias = roger.Obias.Split(';').Select(double.Parse).ToArray();
-        }
         /// <summary>
         /// Функция которая возвращает объект класса Roger, с данными извлечёнными из файла формата .roger
         /// </summary>
@@ -270,32 +206,6 @@ Internal I/O lib
             };
 
             return roger;
-        }
-
-
-        public static double[,] ReadMatrixFromArray(int[] obj)
-        {
-            byte rows = 3;
-            byte columns = 2;
-
-            if (obj.Length < rows * columns)
-            {
-                throw new ArgumentException("В исходном массиве недостаточно элементов для заполнения матрицы 3х2.");
-            }
-
-            double[,] matrix = new double[rows, columns];
-            int index = 0;
-
-            for (int r = 0; r < rows; r++)
-            {
-                for (int c = 0; c < columns; c++)
-                {
-                    matrix[r, c] = obj[index];
-                    index++;
-                }
-            }
-
-            return matrix;
         }
     }
 

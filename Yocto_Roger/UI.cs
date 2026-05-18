@@ -51,10 +51,10 @@ Copyright 2025-2026 Emotion Corp.
 
                         case 2:
                             Console.Clear();
-                            Console.Write("Enter the name of your .roger or .json file. If it's not in this directory, please write absolute path to it>>> ");
+                            Console.Write("Enter the name of your .roger or .json file. If it's not in this directory, please write absolute path to it\n>>> ");
                             Parameters.roger2 = Console.ReadLine();
 
-                            IO.InitRogersData(IO.LoadRoger());
+                            Auxiliary.InitRogersData(IO.LoadRoger());
 
                             NeuralNetwork.StartAI(1);
                             break;
