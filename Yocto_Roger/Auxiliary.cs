@@ -39,7 +39,7 @@ namespace Yocto_Roger
                 [..(builder.Length - 1)];
         }
 
-        public static string BuildStringJaggedMatrix(double[][,] jaggedMatrix, byte maxIndexOfMatrix = 0)
+        public static string BuildStringJaggedMatrix(double[][,] jaggedMatrix, byte maxIndexOfMatrix = 2)
         {
             StringBuilder builder = new();
 
@@ -47,9 +47,10 @@ namespace Yocto_Roger
             {
                 for (int i = 0; i < jaggedMatrix[0].GetLength(0); i++)
                 {
-                    for (int iM = 0; iM < maxIndexOfMatrix; iM++)
+                    for (int iM = 0; iM < Math.Min(maxIndexOfMatrix, jaggedMatrix.Length); iM++)
                     {
-                        builder.Append(Convert.ToString(jaggedMatrix[iM][i, j], CultureInfo.InvariantCulture) + ";");
+                        if (i < jaggedMatrix[iM].GetLength(0) && j < jaggedMatrix[iM].GetLength(1)) // Эту проверку если что не я написал
+                            builder.Append(Convert.ToString(jaggedMatrix[iM][i, j], CultureInfo.InvariantCulture) + ";");
                     }
                 }
             }
@@ -84,6 +85,8 @@ namespace Yocto_Roger
         /// <param name="roger"></param>
         public static void InitRogersData(Roger roger)
         {
+            //Parameters.version = roger.AIversion; если надо -- разкомментируй
+
             NeuralNetwork.inputNeurons = roger.InputNeurons.Split(';').Select(int.Parse).ToArray();
             NeuralNetwork.middleNeurons = ReadMatrixFromArray([.. roger.MiddleNeurons.Split(';').Select(int.Parse)]);
             NeuralNetwork.outputNeurons = roger.OutputNeurons.Split(';').Select(double.Parse).ToArray();
@@ -104,6 +107,7 @@ namespace Yocto_Roger
             if (obj.Length < rows * columns)
             {
                 throw new ArgumentException("В исходном массиве недостаточно элементов для заполнения матрицы 3х2.");
+                // Не уверен насчет надобности выкидывания исключения ибо мешает, да и вообще неудобно получается
             }
 
             double[,] matrix = new double[rows, columns];
@@ -143,6 +147,5 @@ namespace Yocto_Roger
 
             return matrix;
         }
-
     }
 }

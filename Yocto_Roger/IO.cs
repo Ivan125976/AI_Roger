@@ -1,7 +1,5 @@
 ﻿using IniParser;
 using IniParser.Model;
-using System.Globalization;
-using System.Text;
 using System.Text.Json;
 using static Yocto_Roger.Auxiliary;
 
@@ -206,6 +204,32 @@ Internal I/O lib
             };
 
             return roger;
+        }
+
+        /// <summary>
+        /// Пытаеься создать файл в этой же директории, если такой файл уже существует то прибавляет индекс попыток пока не дойдёт до индекса, когда файла с таким именем не будет
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="extension"></param>
+        /// <returns>Имя итогового файла</returns>
+        public static string MakeFileSplitOnIndexIfExists(string filename, string extension)
+        {
+            string filenameWithIndex = filename;
+            int index = 0;
+
+            do
+            {
+                if (index == 0)
+                    filenameWithIndex = $"{filename}.{extension}";
+                else
+                    filenameWithIndex = $"{filename}{index}.{extension}";
+                index++;
+            }
+            while (File.Exists(filenameWithIndex));
+
+            File.Create(filenameWithIndex);
+
+            return filenameWithIndex;
         }
     }
 

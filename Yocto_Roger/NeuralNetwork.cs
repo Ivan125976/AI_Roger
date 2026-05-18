@@ -1,4 +1,6 @@
-﻿namespace Yocto_Roger
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Yocto_Roger
 {
     /* 
 Yocto Roger ;)
@@ -39,18 +41,38 @@ Copyright 2025-2026 Emotion Corp.
                     Weights.Init(ref middleWeights);
                     UI.Send("done", "message");
                     UI.Send("Initialization complete", "message");
-                    Console.Write("SetUp education array...");
-                    //d3ath_script: сделай инициализацию массива обучения, в зависимости от созданной нейросети, тоесть в зависимости от размера входных нейронов и выходных. Придумай свою логику, только шоб работало)
-                    UI.Send("done", "message");
-                    Console.Write("Read knowledge...");
-                    //и еще тут запись в массив обучения из файла, json, .roger2, какой надо. Сделай только чтобы он поддерживал .roger2, надо обратную поддержку оставить с версии 2.1 на 2.2
+                    Console.Write("SetUp education array and reading knowledge...");
+                    if (!File.Exists(Parameters.knowledgeFile))
+                    {
+                        string file = IO.MakeFileSplitOnIndexIfExists("knowledge", "know");
+                        using (StreamWriter writer = new(file))
+                        {
+                            Parameters.knowledgeFile = file;
+                            writer.Write("""
+                            10101001010 0.5;0.34;0.23;0.1313
+                            10101001001 0.2;0.1;.0.34;0.23234
+                            """);
+                        }
+                    }
+                    string[] allLines = File.ReadAllLines(Parameters.knowledgeFile);
                     UI.Send("done", "message");
                     Console.Write("Education...");
+                    // Не уверен что всё правильно но вообще должно
+                    educationArray = new string[2, allLines.Length];
+
+                    for (int i = 0; i < allLines.Length; i++)
+                    {
+                        string parsedValue = Convert.ToString(AIMath.StringParse(allLines[i]));
+
+                        educationArray[0, i] = parsedValue.ToString();
+                        educationArray[1, i] = parsedValue.ToString();
+                    }
+                    UI.Send("done", "message");
                     UI.DrawLine(ConsoleColor.DarkRed, "Creating your Roger, please wait :D");
                     Training.Education(ref inputNeurons, ref middleNeurons, ref outputNeurons, ref inputWeights, ref middleWeights, ref outputWeights, ref Mbias, ref Obias, educationArray);
                     UI.Send("done", "message");
                     Console.Write("Cleaning...");
-                    //и тут после этого еще чистку массива до нуля, или если можно вообще его удаление. Давай, полагаюсь на тебя)))
+                    educationArray = null;
                     UI.Send("done", "message");
                     break;
 
