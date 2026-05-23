@@ -16,7 +16,7 @@ RogerHub configuration
         public static int passes = 500;
         public static float learningRate = 0.02f;
         public static float DropOutPercent = 3.0f;
-        public static string knowledgeFile = "null";
+        public static string knowledgeFile = String.Empty;
         public static string? roger2 = "-";
         public static int inputNeuronsCount = 14;
         public static int middleNeuronsCount = 16;
