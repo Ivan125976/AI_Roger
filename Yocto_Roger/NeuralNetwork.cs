@@ -14,28 +14,20 @@ Copyright 2025-2026 Emotion Corp.
     {
         static bool rogerIsCreated = false;
 
-        public static string[,]? educationArray;
+        public static string[,] educationArray;
 
-        public static int[]? inputNeurons;
-        public static double[,]? middleNeurons;
-        public static double[]? outputNeurons;
+        public static int[] inputNeurons;
+        public static double[,] middleNeurons;
+        public static double[] outputNeurons;
 
-        public static double[,]? inputWeights;
-        public static double[][,]? middleWeights;
-        public static double[,]? outputWeights;
+        public static double[,] inputWeights;
+        public static double[][,] middleWeights;
+        public static double[,] outputWeights;
 
-        public static double[,]? Mbias;
-        public static double[]? Obias;
+        public static double[,] Mbias;
+        public static double[] Obias;
         public static void StartAI(int mode)
         {
-            inputNeurons = new int[Parameters.inputNeuronsCount];
-            middleNeurons = new double[Parameters.Mlayers, Parameters.middleNeuronsCount];
-            outputNeurons = new double[Parameters.outputNeuronsCount];
-            inputWeights = new double[Parameters.inputNeuronsCount, Parameters.middleNeuronsCount];
-            middleWeights = new double[Parameters.Mlayers - 1][,];
-            outputWeights = new double[Parameters.middleNeuronsCount, Parameters.outputNeuronsCount];
-            Mbias = new double[Parameters.Mlayers, Parameters.middleNeuronsCount];
-            Obias = new double[Parameters.outputNeuronsCount];
             Console.WriteLine("StartAI in mode " + mode);
             switch (mode)
             {
@@ -43,7 +35,6 @@ Copyright 2025-2026 Emotion Corp.
                     if (!File.Exists(Parameters.knowledgeFile))
                     {
                         UI.Send("I can't find the training file!", "error");
-                        Reset();
                         break;
                     }
                     Console.Write("SetUp education array and reading knowledge...");
@@ -52,30 +43,51 @@ Copyright 2025-2026 Emotion Corp.
                     //инициализация массива обучения
 
                     string[] parsedString = allLines[0].Split(' ');
-                    int[] inputSize = AIMath.StringParse(parsedString[0]);
+                    int[] input = AIMath.StringParse(parsedString[0]);
                     string[] splitingSecond = parsedString[1].Split(';');
-                    double[] outputSize = new double[splitingSecond.Length];
+                    double[] output = new double[splitingSecond.Length];
                     for (int j = 0; j < splitingSecond.Length; j++)
-                        outputSize[j] = Convert.ToDouble(splitingSecond[j], CultureInfo.InvariantCulture);
-                    int length = inputSize.Length + outputSize.Length;
+                        output[j] = Convert.ToDouble(splitingSecond[j], CultureInfo.InvariantCulture);
+                    int length = input.Length + output.Length;
 
-                    if (inputSize.Length != inputNeurons.Length)
+                    if (input.Length != Parameters.inputNeuronsCount)
                     {
                         Console.WriteLine();
-                        UI.Send("NeuralNetwork.StartAI.InputNeurons>The training file doesn't match your neural network! Please reconfigure it in the settings menu (need value " + inputSize.Length + ")", "error");
-                        Reset();
+                        UI.Send("NeuralNetwork.StartAI.InputNeurons>The training file doesn't match your neural network! Please reconfigure it in the settings menu (need value " + input.Length + ")", "error");
                         break;
                     }
-                    else if (outputSize.Length != outputNeurons.Length)
+                    else if (output.Length != Parameters.outputNeuronsCount)
                     {
                         Console.WriteLine();
-                        UI.Send("NeuralNetwork.StartAI.OutputNeurons>The training file doesn't match your neural network! Please reconfigure it in the settings menu (need value " + outputSize.Length + ")", "error");
-                        Reset();
+                        UI.Send("NeuralNetwork.StartAI.OutputNeurons>The training file doesn't match your neural network! Please reconfigure it in the settings menu (need value " + output.Length + ")", "error");
                         break;
                     }
 
                     educationArray = new string[allLines.Length, length];
 
+                    for (int i = 0; i< allLines.Length; i++)
+                    {
+                        parsedString = allLines[i].Split(' ');
+                        input = AIMath.StringParse(parsedString[0]);
+                        splitingSecond = parsedString[1].Split(';');
+                        for (int j = 0; j < input.Length; j++)
+                            educationArray[i, j] = Convert.ToString(input[j]);
+                        for (int j = 0; j < splitingSecond.Length; j++)
+                            output[j] = Convert.ToDouble(splitingSecond[j], CultureInfo.InvariantCulture);
+                        for (int j = 0; j < splitingSecond.Length; j++)
+                            educationArray[i, j + input.Length] = Convert.ToString(output[j]);
+                    }
+
+                    UI.Send("done", "message");
+                    Console.Write("Initialization RogerHub...");
+                        inputNeurons = new int[Parameters.inputNeuronsCount];
+                        middleNeurons = new double[Parameters.Mlayers, Parameters.middleNeuronsCount];
+                        outputNeurons = new double[Parameters.outputNeuronsCount];
+                        inputWeights = new double[Parameters.inputNeuronsCount, Parameters.middleNeuronsCount];
+                        middleWeights = new double[Parameters.Mlayers - 1][,];
+                        outputWeights = new double[Parameters.middleNeuronsCount, Parameters.outputNeuronsCount];
+                        Mbias = new double[Parameters.Mlayers, Parameters.middleNeuronsCount];
+                        Obias = new double[Parameters.outputNeuronsCount];
                     UI.Send("done", "message");
                     Console.Write("Initialization biases...");
                     Biases.Init(ref Mbias);
@@ -165,7 +177,7 @@ Copyright 2025-2026 Emotion Corp.
         {
             if (Parameters.isDebug)
                 Console.Write("Sum of weights ([]->[,]) - ");
-            for (int i = 0; i < newNeurons.GetLength(0); i++)
+            for (int i = 0; i < newNeurons.GetLength(1); i++)
             {
                 double temp = 0;
                 for (int j = 0; j < oldNeurons.Length; j++)
@@ -182,15 +194,15 @@ Copyright 2025-2026 Emotion Corp.
         {
             if (Parameters.isDebug)
                 Console.Write("Sum of weights ([,]->[,]) - ");
-            for (int i = 0; i < newNeurons.GetLength(0); i++)
+            for (int i = 0; i < newNeurons.GetLength(1); i++)
             {
                 double temp = 0;
-                for (int j = 0; j < oldNeurons.GetLength(0); j++)
+                for (int j = 0; j < oldNeurons.GetLength(1); j++)
                     temp += oldweights[j, i] * oldNeurons[layer, j];
                 temp += biases[layer, i];
-                newNeurons[layer, i] = AIMath.Sigmoida(temp);
+                newNeurons[layer + 1, i] = AIMath.Sigmoida(temp);
                 if (Parameters.isDebug)
-                    Console.Write(newNeurons[layer, i] + " ");
+                    Console.Write(newNeurons[layer + 1, i] + " ");
             }
             if (Parameters.isDebug)
                 Console.WriteLine();
@@ -202,7 +214,7 @@ Copyright 2025-2026 Emotion Corp.
             for (int i = 0; i < newNeurons.GetLength(0); i++)
             {
                 double temp = 0;
-                for (int j = 0; j < oldNeurons.GetLength(0); j++)
+                for (int j = 0; j < oldNeurons.GetLength(1); j++)
                     temp += oldweights[j, i] * oldNeurons[oldNeurons.GetLength(0) - 1, j];
                 temp += biases[i];
                 newNeurons[i] = AIMath.Sigmoida(temp);
@@ -230,19 +242,6 @@ Copyright 2025-2026 Emotion Corp.
             for (int l = 0; l < Parameters.Mlayers - 1; l++)
                 SumWeights(middleWeights[l], middleNeurons, middleNeurons, middleBiases, l);
             SumWeights(outputWeights, middleNeurons, outputNeurons, outputBiases);
-        }
-
-        public static void Reset()
-        {
-            inputNeurons = null;
-            outputNeurons = null;
-            inputWeights = null;
-            outputWeights = null;
-            educationArray = null;
-            middleWeights = null;
-            middleNeurons = null;
-            Obias = null;
-            Mbias = null;
         }
     }
 }

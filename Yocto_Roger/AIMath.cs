@@ -54,7 +54,7 @@ Internal AIMath lib
         {
             int[] parsedArray = new int[obj.Length];
             for (int i = 0; i < parsedArray.Length; i++)
-                parsedArray[i] = Convert.ToInt32(obj[i]);
+                parsedArray[i] = Convert.ToInt32(obj[i]) - '0';
             return parsedArray;
         }
         public static double[] SplitOutputEducation(string obj)
