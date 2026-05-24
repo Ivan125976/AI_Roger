@@ -79,7 +79,7 @@ Copyright 2025-2026 Emotion Corp.
                     }
 
                     UI.Send("done", "message");
-                    Console.Write("Initialization RogerHub...");
+                    Console.Write("Initialization RogerHubEngine...");
                         inputNeurons = new int[Parameters.inputNeuronsCount];
                         middleNeurons = new double[Parameters.Mlayers, Parameters.middleNeuronsCount];
                         outputNeurons = new double[Parameters.outputNeuronsCount];

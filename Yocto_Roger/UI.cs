@@ -20,25 +20,26 @@ Copyright 2025-2026 Emotion Corp.
             Console.InputEncoding = Encoding.UTF8;
             Console.OutputEncoding = Encoding.UTF8;
             Console.CursorVisible = false;
-            DrawLine(ConsoleColor.Magenta, "Emotion ;) 2026", "Yocto Roger :D");
+            DrawLine(ConsoleColor.Magenta, "Emotion ;) 2026", "Roger :D");
             Thread.Sleep(3000);
             int i = 0;
             while (true)
             {
                 Console.Clear();
                 if (Parameters.isDebug == false)
-                    DrawLine(ConsoleColor.DarkMagenta, $"Welcome to the RogerHub! v.{Parameters.version}{Parameters.revision} DEV2", DateTime.Now.Date.ToString("dd/MM/yyyy"));
+                    DrawLine(ConsoleColor.DarkMagenta, $"Welcome to the RogerHubEngine! v.{Parameters.version}{Parameters.revision} DEV2", DateTime.Now.Date.ToString("dd/MM/yyyy"));
                 else
-                    DrawLine(ConsoleColor.DarkMagenta, $"Welcome to the RogerHub! v.{Parameters.version}{Parameters.revision} DEV2 DEBUG MODE", DateTime.Now.Date.ToString("dd/MM/yyyy"));
+                    DrawLine(ConsoleColor.DarkMagenta, $"Welcome to the RogerHubEngine! v.{Parameters.version}{Parameters.revision} DEV2 DEBUG MODE", DateTime.Now.Date.ToString("dd/MM/yyyy"));
                 Send("This project is still in the development stage.", "warning");
                 Send("This is a BETA build. Some functionality may not work. Have fun testing :D", "warning");
                 Console.Write("""
                     
                     1. Start Roger in training mode
-                    2. Start Roger from the .roger or .json file
-                    3. Options for training mode
-                    4. RRNNs settings
-                    5. Exit from RogerHub 
+                    2. Start Roger from the .roger or .json file...
+                    3. Options for training mode...
+                    4. RRNNs settings...
+                    5. About...
+                    6. Exit from RogerHub 
                     >>> 
                     """);
                 if (int.TryParse(Console.ReadLine(), out int value))
@@ -69,6 +70,12 @@ Copyright 2025-2026 Emotion Corp.
                             break;
 
                         case 5:
+                            Console.WriteLine($" Authors: \n Axolotl512 - AI and RogerHubEngine \n d3ath_script - RRNNs, IO and compiling \n\n RogerHubEngine v{Parameters.version}{Parameters.revision} build:DEV2 \n" +
+                                " RogerCore v2.2 \n RRNNs isn't ready \n OpenRB isn't ready \n ");
+                            Console.ReadKey();
+                            break;
+
+                        case 6:
                             Environment.Exit(0);
                             break;
 
@@ -153,7 +160,7 @@ Copyright 2025-2026 Emotion Corp.
             {
                 Console.Clear();
                 Console.Write($"""
-                                        RogerHub Training Options
+                                        RogerHubEngine Training Options
                                             
                                         0. Save your roger settings in the file 
 
