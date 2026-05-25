@@ -44,7 +44,7 @@ Internal I/O lib
 
             writer.WriteLine("[weights]");
             writer.Write("inputWeights = "); WriteAll(NeuralNetwork.inputWeights, writer, true);
-            writer.Write("middleWeights = "); writer.Write(BuildStringJaggedMatrix(NeuralNetwork.middleWeights));
+            writer.Write("middleWeights = "); writer.Write(BuildStringJaggedMatrix(NeuralNetwork.middleWeights, 2));
             writer.Write("outputWeights = "); WriteMatrix(writer, NeuralNetwork.outputWeights);
 
             writer.WriteLine("[biases]");
@@ -76,7 +76,8 @@ Internal I/O lib
                 OutputNeurons = BuildStringArray(NeuralNetwork.outputNeurons) ?? String.Empty,
 
                 InputWeights = BuildStringArray(NeuralNetwork.inputWeights) ?? String.Empty,
-                //MiddleWeights = BuildStringJaggedMatrix(NeuralNetwork.middleWeights), //TODO: Исправить функцию BuildStringJaggedMatrix. Закомментировано потому что из-за некорректной работы функции программа падает с исключением
+                //TODO: ----------------------------------------------> ---------------------------------> ----------------------> ↓↓↓
+                MiddleWeights = BuildStringJaggedMatrix(NeuralNetwork.middleWeights, 2) ?? String.Empty, //Ivan:  Я тут указал что вложенных матриц 2, но я точно не знаю сколько их на самом деле. Очень важно указать правильное значение, поэтому когда будешь использовать эту функцию, используй вычисление индекса вложенных матриц пожалуйста, или сразу хардкодь правильное значение, и пожалуйста исправь здесь значение на верное, я хз какое оно должно быть
                 OutputWeights = BuildStringArray(NeuralNetwork.outputWeights) ?? String.Empty,
 
                 Mbias = BuildStringMatrix(NeuralNetwork.Mbias) ?? String.Empty,

@@ -77,6 +77,12 @@ Internal extension I/O lib
             return builder.ToString();
         }
 
+        /// <summary>
+        /// Строит все значения из матрицы с вложенными массивами в одну строчку разделяя их точкой с запятой. Очень важно вводить корректный второй параметр, от этого зависит упадёт ли программа сс исключением или нет
+        /// </summary>
+        /// <param name="jaggedMatrix">Матрица со вложенными массивами</param>
+        /// <param name="maxIndexOfMatrix">Колл-во вложенных массивов</param>
+        /// <returns></returns>
         public static string BuildStringJaggedMatrix(double[][,] jaggedMatrix, byte maxIndexOfMatrix)
         {
             StringBuilder builder = new();
