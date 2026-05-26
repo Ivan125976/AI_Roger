@@ -42,7 +42,7 @@ Copyright 2025-2026 Emotion Corp.
                     for (int l = 0; l < inputNeurons.Length; l++)
                         input += educationArray[i, l];
 
-                    parsedInput = AIMath.StringParse(input);
+                    parsedInput = AIMath.StringParse(input, ',');
 
                     Array.Clear(errorMid, 0, errorMid.Length);
                     Array.Clear(errorOut, 0, errorOut.Length);

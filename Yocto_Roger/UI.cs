@@ -17,6 +17,7 @@ Copyright 2025-2026 Emotion Corp.
         static void Main()
         {
             Console.WriteLine("Configuring console...");
+            Console.Title = "RogerHubEngine";
             Console.InputEncoding = Encoding.UTF8;
             Console.OutputEncoding = Encoding.UTF8;
             Console.CursorVisible = false;

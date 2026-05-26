@@ -43,7 +43,7 @@ Copyright 2025-2026 Emotion Corp.
                     //инициализация массива обучения
 
                     string[] parsedString = allLines[0].Split(' ');
-                    int[] input = AIMath.StringParse(parsedString[0]);
+                    int[] input = AIMath.StringParse(parsedString[0], ',');
                     string[] splitingSecond = parsedString[1].Split(';');
                     double[] output = new double[splitingSecond.Length];
                     for (int j = 0; j < splitingSecond.Length; j++)
@@ -68,7 +68,7 @@ Copyright 2025-2026 Emotion Corp.
                     for (int i = 0; i < allLines.Length; i++)
                     {
                         parsedString = allLines[i].Split(' ');
-                        input = AIMath.StringParse(parsedString[0]);
+                        input = AIMath.StringParse(parsedString[0], ',');
                         splitingSecond = parsedString[1].Split(';');
                         for (int j = 0; j < input.Length; j++)
                             educationArray[i, j] = Convert.ToString(input[j]);

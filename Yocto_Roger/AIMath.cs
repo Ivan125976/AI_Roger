@@ -47,11 +47,12 @@ Internal AIMath lib
             return bin;
         }
 
-        public static int[] StringParse(string obj)
+        public static int[] StringParse(string obj, char symbol)
         {
-            int[] parsedArray = new int[obj.Length];
+            string[] strings = obj.Split(symbol);
+            int[] parsedArray = new int[strings.Length];
             for (int i = 0; i < parsedArray.Length; i++)
-                parsedArray[i] = Convert.ToInt32(obj[i]) - '0';
+                parsedArray[i] = Convert.ToInt32(strings[i]);
             return parsedArray;
         }
         public static double[] SplitOutputEducation(string obj)
