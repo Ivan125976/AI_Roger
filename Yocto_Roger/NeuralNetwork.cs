@@ -78,6 +78,13 @@ Copyright 2025-2026 Emotion Corp.
                             educationArray[i, j + input.Length] = Convert.ToString(output[j]);
                     }
 
+                    for (int i = 0; i < educationArray.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < educationArray.GetLength(1); j++)
+                            Console.Write(educationArray[i,j] + " ");
+                        Console.WriteLine();
+                    }
+
                     UI.Send("done", "message");
                     Console.Write("Initialization RogerHubEngine...");
                     inputNeurons = new int[Parameters.inputNeuronsCount];

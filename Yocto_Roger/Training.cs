@@ -21,8 +21,8 @@ Copyright 2025-2026 Emotion Corp.
         public static void Education(ref int[] inputNeurons, ref double[,] middleNeurons, ref double[] outputNeurons, ref double[,] inputWeights,
             ref double[][,] middleWeights, ref double[,] outputWeights, ref double[,] middleBiases, ref double[] outputBiases, string[,] educationArray)
         {
-            string input, correctOutput;
-            int[] parsedInput;
+            string correctOutput;
+            int[] input = new int[Parameters.inputNeuronsCount];
             double[] output;
             double[,] errorMid = new double[middleNeurons.GetLength(0), middleNeurons.GetLength(1)];
             double[,] deltaMid = new double[middleNeurons.GetLength(0), middleNeurons.GetLength(1)];
@@ -37,12 +37,8 @@ Copyright 2025-2026 Emotion Corp.
             {
                 for (int i = 0; i < educationArray.GetLength(0); i++)
                 {
-                    input = "";
-
-                    for (int l = 0; l < inputNeurons.Length; l++)
-                        input += educationArray[i, l];
-
-                    parsedInput = AIMath.StringParse(input, ',');
+                    for (int j = 0; j < input.Length; j++)
+                        input[j] = Convert.ToInt32(educationArray[i, j]);
 
                     Array.Clear(errorMid, 0, errorMid.Length);
                     Array.Clear(errorOut, 0, errorOut.Length);
@@ -63,7 +59,7 @@ Copyright 2025-2026 Emotion Corp.
                     float[,] dropOut = NeuralNetwork.GenerateDropOut();
 
                     //forward propagation
-                    NeuralNetwork.ForwardPropagation(parsedInput, inputNeurons, inputWeights, middleNeurons, middleWeights, middleBiases, outputNeurons, outputBiases, outputWeights, dropOut);
+                    NeuralNetwork.ForwardPropagation(input, inputNeurons, inputWeights, middleNeurons, middleWeights, middleBiases, outputNeurons, outputBiases, outputWeights, dropOut);
 
                     correctOutput = "";
                     for (int l = inputNeurons.Length; l < outputNeurons.Length + inputNeurons.Length; l++)
@@ -99,7 +95,7 @@ Copyright 2025-2026 Emotion Corp.
                         else
                             for (int k = 0; k < inputNeurons.Length; k++)
                                 inputWeights[k, j] -=
-                                    parsedInput[k] *
+                                    input[k] *
                                     deltaMid[0, j] *
                                     Parameters.learningRate;
 
@@ -118,20 +114,16 @@ Copyright 2025-2026 Emotion Corp.
                                     deltaMid[layer, j] = errorMid[layer, j] * (1 - middleNeurons[layer, j] * middleNeurons[layer, j]); //дельта
                                     deltaMid[layer, j] *= dropOut[layer, j];
                                 if (layer > 0)
-                                {
                                     for (int k = 0; k < middleNeurons.GetLength(1); k++)
                                         middleWeights[layer - 1][k, j] -= middleNeurons[layer - 1, k] * deltaMid[layer, j] * Parameters.learningRate;
-                                }
 
                                 middleBiases[layer, j] -= deltaMid[layer, j] * Parameters.learningRate;
                             }
                         }
 
                     for (int j = 0; j < inputNeurons.Length; j++) //update middle->input weights
-                    {
                         for (int k = 0; k < middleNeurons.GetLength(1); k++)
-                            inputWeights[j, k] -= parsedInput[j] * deltaMid[0, k] * Parameters.learningRate;
-                    }
+                            inputWeights[j, k] -= input[j] * deltaMid[0, k] * Parameters.learningRate;
                 }
             }
 
