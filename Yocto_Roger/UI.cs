@@ -35,10 +35,11 @@ Copyright 2025-2026 Emotion Corp.
                 Console.Write("""
                     
                     1. Start Roger in training mode
-                    2. Options for training mode...
-                    3. RRNNs settings...
-                    4. About...
-                    5. Exit from RogerHub 
+                    2. Load your roger setting from the file
+                    3. Options for training mode...
+                    4. RRNNs settings...
+                    5. About...
+                    6. Exit from RogerHub 
                     >>> 
                     """);
                 if (int.TryParse(Console.ReadLine(), out int value))
@@ -51,20 +52,31 @@ Copyright 2025-2026 Emotion Corp.
                             break;
 
                         case 2:
-                            SetUp();
+                            Console.Write("Write a path to your .roger or .json file\nSTRING> ");
+                            if (Console.ReadLine() is string inputChecked && !string.IsNullOrEmpty(Console.ReadLine()))
+                            {
+                                Parameters.roger2 = inputChecked;
+                                Auxiliary.InitRogersData(IO.LoadRoger());
+                            }
+                            else
+                                Send("Incorrect input (-_0)", "error");
                             break;
 
                         case 3:
-                            Send("This page isn't ready :(", "error");
+                            SetUp();
                             break;
 
                         case 4:
+                            Send("This page isn't ready :(", "error");
+                            break;
+
+                        case 5:
                             Console.WriteLine($" Authors: \n Axolotl512 - AI and RogerHubEngine \n d3ath_script - RRNNs, IO and compiling \n\n RogerHubEngine v{Parameters.version}{Parameters.revision} build:DEV2 \n" +
                                 " RogerCore v2.2 \n RRNNs isn't ready \n OpenRB isn't ready \n\n Press any key to continue ");
                             Console.ReadKey();
                             break;
 
-                        case 5:
+                        case 6:
                             Environment.Exit(0);
                             break;
 
@@ -152,17 +164,16 @@ Copyright 2025-2026 Emotion Corp.
                                         RogerHubEngine Training Options
                                             
                                         0. Save your roger settings in the file 
-                                        1. Load your roger setting from the file
 
-                                        2. Count of input neurons...{Parameters.inputNeuronsCount}
-                                        3. Count of middle neurons (all middle layers)...{Parameters.middleNeuronsCount}
-                                        4. Count of output neurons...{Parameters.outputNeuronsCount}
-                                        5. Count of Layers...{Parameters.layers}
-                                        6. Knowledge file...{Parameters.knowledgeFile}
-                                        7. DropOut sys percent...{Parameters.DropOutPercent}% (0% - disable DropOut)
-                                        8. Learning Rate...{Parameters.learningRate}
-                                        9. Passes...{Parameters.passes}
-                                        10. Exit 
+                                        1. Count of input neurons...{Parameters.inputNeuronsCount}
+                                        2. Count of middle neurons (all middle layers)...{Parameters.middleNeuronsCount}
+                                        3. Count of output neurons...{Parameters.outputNeuronsCount}
+                                        4. Count of Layers...{Parameters.layers}
+                                        5. Knowledge file...{Parameters.knowledgeFile}
+                                        6. DropOut sys percent...{Parameters.DropOutPercent}% (0% - disable DropOut)
+                                        7. Learning Rate...{Parameters.learningRate}
+                                        8. Passes...{Parameters.passes}
+                                        9. Exit 
                                         >>> 
                                         """);
                 string choice = Console.ReadLine();
@@ -196,20 +207,16 @@ Copyright 2025-2026 Emotion Corp.
                             }
 
                             Console.WriteLine("Your roger saved in this directory, let's go, check it!\n If file was not created, write it in issues on our GitHub please ;)");
-                            Thread.Sleep(1200);
+                            Thread.Sleep(1500); // Чтобы успеть прочитать
+                        }
+                        else
+                        {
+                            Send("Unknown input", "error");
                         }
 
                         break;
 
                     case "1":
-                        Console.Write("Enter the name of your .roger or .json file. If it's not in this directory, please write absolute path to it\nSTRING>>>");
-
-                        Parameters.roger2 = Console.ReadLine() ?? String.Empty;
-
-                        Auxiliary.InitRogersData(IO.LoadRoger());
-                        break;
-
-                    case "2":
                         Console.Clear();
                         Console.WriteLine("*INPUT NEURONS PARAMETER*");
                         Console.Write("INT32> Enter new count of input neurons (> 0)...");
@@ -222,7 +229,7 @@ Copyright 2025-2026 Emotion Corp.
                         }
                         break;
 
-                    case "3":
+                    case "2":
                         Console.Clear();
                         Console.WriteLine("*MIDDLE NEURONS PARAMETER*");
                         Console.Write("INT32> Enter new count of middle neurons (> 0)...");
@@ -235,7 +242,7 @@ Copyright 2025-2026 Emotion Corp.
                         }
                         break;
 
-                    case "4":
+                    case "3":
                         Console.Clear();
                         Console.WriteLine("*OUTPUT NEURONS PARAMETER*");
                         Console.Write("INT32> Enter new count of output neurons (> 0)...");
@@ -248,7 +255,7 @@ Copyright 2025-2026 Emotion Corp.
                         }
                         break;
 
-                    case "5":
+                    case "4":
                         Console.Clear();
                         Console.WriteLine("*LAYERS PARAMETER*");
                         Console.Write("INT32> Enter new count of layers (> 2)...");
@@ -264,7 +271,7 @@ Copyright 2025-2026 Emotion Corp.
                         }
                         break;
 
-                    case "6":
+                    case "5":
                         Console.Clear();
                         Console.WriteLine("*KNOWLEDGE PARAMETER*");
                         Console.Write("STRING> Enter new knowledge file...");
@@ -275,7 +282,7 @@ Copyright 2025-2026 Emotion Corp.
                             Send("Knowledge file doesn't exists", "error");
                         break;
 
-                    case "7":
+                    case "6":
                         Console.Clear();
                         Console.WriteLine("*DROPOUT PERCENT PARAMETER*");
                         Console.Write("FLOAT> Enter new DropOut percent (0–70)... ");
@@ -290,7 +297,7 @@ Copyright 2025-2026 Emotion Corp.
                             Send("Invalid input.", "error");
                         break;
 
-                    case "8":
+                    case "7":
                         Console.Clear();
                         Console.WriteLine("*LEARNING RATE PARAMETER*");
                         Console.Write("FLOAT> Enter new learning rate (0,0 – 1,0)... ");
@@ -305,7 +312,7 @@ Copyright 2025-2026 Emotion Corp.
                             Send("Invalid input.", "error");
                         break;
 
-                    case "9":
+                    case "8":
                         Console.Clear();
                         Console.WriteLine("*PASSES PARAMETER*");
                         Console.Write("INT32> Enter count of passes (> 0)... ");
@@ -320,7 +327,7 @@ Copyright 2025-2026 Emotion Corp.
                             Send("Invalid input.", "error");
                         break;
 
-                    case "10":
+                    case "9":
                         i++;
                         break;
                 }
