@@ -17,76 +17,51 @@ Internal I/O lib
     {
         public static void SaveRoger()
         {
-            string fileName;
-            int index = 0;
 
-            do
-            {
-                if (index == 0)
-                    fileName = $"roger.roger" ?? String.Empty;
-                else
-                    fileName = $"roger{index}.roger" ?? String.Empty;
-                index++;
-            }
-            while (File.Exists(fileName));
+            using StreamWriter writer = new(MakeFileSplitOnIndexIfExists("roger", "roger"));
 
-            using StreamWriter writer = new(fileName);
+            writer.Write(
+                $"""
+                 [roger]
+                 AIversion = {Parameters.version}
+                 isDebug = {Parameters.isDebug}
+                 passes = {Parameters.passes}
+                 learningRate = {Parameters.learningRate}
+                 DropOutPercent = {Parameters.DropOutPercent}
 
-            writer.WriteLine("[roger]");
-            writer.WriteLine($"AIversion = {Parameters.version}");
-            writer.WriteLine();
+                 [neurons]
+                 inputNeuronsCount = {Parameters.inputNeuronsCount}
+                 middleNeuronsCount = {Parameters.middleNeuronsCount}
+                 outputNeuronsCount = {Parameters.outputNeuronsCount}
 
-            writer.WriteLine("[neurons]");
-            writer.Write("inputNeurons = "); WriteAll(NeuralNetwork.inputNeurons, writer, true);
-            writer.Write("middleNeurons = "); WriteMatrix(writer, NeuralNetwork.middleNeurons);
-            writer.Write("outputNeurons = "); WriteAll(NeuralNetwork.outputNeurons, writer, true);
-            writer.WriteLine();
-
-            writer.WriteLine("[weights]");
-            writer.Write("inputWeights = "); WriteAll(NeuralNetwork.inputWeights, writer, true);
-            writer.Write("middleWeights = "); writer.Write(BuildStringJaggedMatrix(NeuralNetwork.middleWeights, 2));
-            writer.Write("outputWeights = "); WriteMatrix(writer, NeuralNetwork.outputWeights);
-
-            writer.WriteLine("[biases]");
-            writer.Write("Mbias = "); WriteMatrix(writer, NeuralNetwork.Mbias);
-            writer.Write("Obias = "); WriteAll(NeuralNetwork.Obias, writer, true);
+                 [biases]
+                 Layers = {Parameters.layers}
+                 Mlayers = {Parameters.Mlayers}
+                 """);
         }
 
         public static void SaveRogerToJson()
         {
-            string fileName;
-            int index = 0;
-
-            do
-            {
-                if (index == 0)
-                    fileName = $"roger.json" ?? String.Empty;
-                else
-                    fileName = $"roger{index}.json" ?? String.Empty;
-                index++;
-            }
-            while (File.Exists(fileName));
-            //TODO: Поменять сохранение непроинициализированных данных из NeuralNetwork, на данные из класса Parameters
             Roger roger = new()
             {
-                AIversion = Parameters.version ?? String.Empty,
+                AIversion = Parameters.version,
+                IsDebug = Parameters.isDebug,
+                Passes = Parameters.passes,
 
-                InputNeurons = BuildStringArray(NeuralNetwork.inputNeurons) ?? String.Empty,
-                MiddleNeurons = BuildStringMatrix(NeuralNetwork.middleNeurons) ?? String.Empty,
-                OutputNeurons = BuildStringArray(NeuralNetwork.outputNeurons) ?? String.Empty,
+                learningRate = Parameters.learningRate,
+                DropOutPercent = Parameters.DropOutPercent,
 
-                InputWeights = BuildStringArray(NeuralNetwork.inputWeights) ?? String.Empty,
-                //TODO: ----------------------------------------------> ---------------------------------> ----------------------> ↓↓↓
-                MiddleWeights = BuildStringJaggedMatrix(NeuralNetwork.middleWeights, 2) ?? String.Empty, //Ivan:  Я тут указал что вложенных матриц 2, но я точно не знаю сколько их на самом деле. Очень важно указать правильное значение, поэтому когда будешь использовать эту функцию, используй вычисление индекса вложенных матриц пожалуйста, или сразу хардкодь правильное значение, и пожалуйста исправь здесь значение на верное, я хз какое оно должно быть
-                OutputWeights = BuildStringArray(NeuralNetwork.outputWeights) ?? String.Empty,
+                InputNeuronsCount = Parameters.inputNeuronsCount,
+                MiddleNeuronsCount = Parameters.outputNeuronsCount,
+                OutputNeuronsCount = Parameters.outputNeuronsCount,
 
-                Mbias = BuildStringMatrix(NeuralNetwork.Mbias) ?? String.Empty,
-                Obias = BuildStringArray(NeuralNetwork.Obias) ?? String.Empty,
+                Layers = Parameters.layers,
+                MLayers = Parameters.Mlayers,
             };
 
             string jsonData = JsonSerializer.Serialize(roger, new JsonSerializerOptions { WriteIndented = true });
 
-            using StreamWriter writer = new(fileName);
+            using StreamWriter writer = new(IO.MakeFileSplitOnIndexIfExists("roger", "json"));
             writer.Write(jsonData);
         }
 
@@ -138,16 +113,18 @@ Internal I/O lib
         {
             public string AIversion { get; set; }
 
-            public string InputNeurons { get; set; }
-            public string MiddleNeurons { get; set; }
-            public string OutputNeurons { get; set; }
+            public bool IsDebug { get; set; }
+            public int Passes { get; set; }
 
-            public string InputWeights { get; set; }
-            public string MiddleWeights { get; set; }
-            public string OutputWeights { get; set; }
+            public float learningRate { get; set; }
+            public float DropOutPercent { get; set; }
 
-            public string Mbias { get; set; }
-            public string Obias { get; set; }
+            public int InputNeuronsCount { get; set; }
+            public int MiddleNeuronsCount { get; set; }
+            public int OutputNeuronsCount { get; set; }
+
+            public int Layers { get; set; }
+            public int MLayers { get; set; }
         }
 
         /// <summary>
@@ -161,18 +138,18 @@ Internal I/O lib
 
             Roger roger = new()
             {
-                AIversion = data["roger"]["AIversion"] ?? String.Empty,
+                AIversion = data["roger"]["AIversion"],
+                IsDebug = Convert.ToBoolean(data["roger"]["isDebug"]),
+                Passes = Convert.ToInt32(data["roger"]["passes"]),
+                learningRate = float.Parse(data["roger"]["learningRate"]),
+                DropOutPercent = float.Parse(data["roger"]["DropOutPercent"]),
 
-                InputNeurons = data["neurons"]["inputNeurons"] ?? String.Empty,
-                MiddleNeurons = data["neurons"]["middleNeurons"] ?? String.Empty,
-                OutputNeurons = data["neurons"]["outputNeurons"] ?? String.Empty,
+                InputNeuronsCount = Convert.ToInt32(data["neurons"]["inputNeuronsCount"]),
+                MiddleNeuronsCount = Convert.ToInt32(data["neurons"]["middleNeuronsCount"]),
+                OutputNeuronsCount = Convert.ToInt32(data["neurons"]["outputNeuronsCount"]),
 
-                InputWeights = data["weights"]["inputWeights"] ?? String.Empty,
-                MiddleWeights = data["weights"]["middleWeights"] ?? String.Empty,
-                OutputWeights = data["weights"]["outputWeights"] ?? String.Empty,
-
-                Mbias = data["biases"]["Mbias"] ?? String.Empty,
-                Obias = data["biases"]["Obias"] ?? String.Empty
+                Layers = Convert.ToInt32(data["biases"]["layers"]),
+                MLayers = Convert.ToInt32(data["biases"]["mLayers"])
             };
 
             return roger;
@@ -186,24 +163,25 @@ Internal I/O lib
         /// </returns>
         private static Roger LoadRogerFromJson()
         {
-            using (JsonDocument document = JsonDocument.Parse(Parameters.roger2))
+            using (JsonDocument document = JsonDocument.Parse(File.ReadAllText(Parameters.roger2)))
             {
                 JsonElement root = document.RootElement;
 
                 Roger roger = new()
                 {
-                    AIversion = root.GetProperty("AIversion").GetString() ?? String.Empty,
+                    AIversion = root.GetProperty("AIversion").GetString(),
+                    IsDebug = root.GetProperty("isDebug").GetBoolean(),
+                    Passes = root.GetProperty("Passes").GetInt32(),
 
-                    InputNeurons = root.GetProperty("inputNeurons").GetString() ?? String.Empty,
-                    MiddleNeurons = root.GetProperty("middleNeurons").GetString() ?? String.Empty,
-                    OutputNeurons = root.GetProperty("outputNeurons").GetString() ?? String.Empty,
+                    learningRate = float.Parse(root.GetProperty("learningRate").GetString()), // Переделаю это говно
+                    DropOutPercent = float.Parse(root.GetProperty("learningRate").GetString()), // И вот это тоже
 
-                    InputWeights = root.GetProperty("inputWeights").GetString() ?? String.Empty,
-                    MiddleWeights = root.GetProperty("middleWeights").GetString() ?? String.Empty,
-                    OutputWeights = root.GetProperty("outputWeights").GetString() ?? String.Empty,
+                    InputNeuronsCount = root.GetProperty("inputNeuronsCount").GetInt32(),
+                    MiddleNeuronsCount = root.GetProperty("middleNeuronsCount").GetInt32(),
+                    OutputNeuronsCount = root.GetProperty("outputNeuronsCount").GetInt32(),
 
-                    Mbias = root.GetProperty("Mbias").GetString() ?? String.Empty,
-                    Obias = root.GetProperty("Obias").GetString() ?? String.Empty
+                    Layers = root.GetProperty("Layers").GetInt32(),
+                    MLayers = root.GetProperty("Mlayers").GetInt32()
                 };
 
                 return roger;
@@ -214,8 +192,9 @@ Internal I/O lib
         /// Пытается создать файл в этой же директории, если такой файл уже существует то прибавляет индекс попыток пока не дойдёт до индекса, когда файла с таким именем не будет
         /// </summary>
         /// <param name="filename"></param>
-        /// <param name="extension">Указывать расширение (без точки)</param>
-        /// <returns>Имя итогового файла</returns>
+        /// <param name="extension">Расширение файла (без точки)</param>
+        /// <param name="whatToReturn">true - Возвращает FileStream созданного файла, false - Возвращает путь к созданному файлу</param>
+        /// <returns>Путь до итогового файла</returns>
         public static string MakeFileSplitOnIndexIfExists(string filename, string extension)
         {
             string filenameWithIndex = filename;
@@ -231,10 +210,10 @@ Internal I/O lib
             }
             while (File.Exists(filenameWithIndex));
 
-            File.Create(filenameWithIndex);
+            FileStream fs = File.Create(filenameWithIndex);
+            fs.Close();
 
             return filenameWithIndex;
         }
     }
-
 }

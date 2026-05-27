@@ -36,7 +36,7 @@ Copyright 2025-2026 Emotion Corp.
                 Console.Write("""
                     
                     1. Start Roger in training mode
-                    2. Start Roger from the .roger or .json file...
+                    2. Load your roger setting from the file
                     3. Options for training mode...
                     4. RRNNs settings...
                     5. About...
@@ -53,13 +53,14 @@ Copyright 2025-2026 Emotion Corp.
                             break;
 
                         case 2:
-                            Console.Clear();
-                            Console.Write("Enter the name of your .roger or .json file. If it's not in this directory, please write absolute path to it\n>>> ");
-                            Parameters.roger2 = Console.ReadLine();
-
-                            Auxiliary.InitRogersData(IO.LoadRoger());
-
-                            NeuralNetwork.StartAI(1);
+                            Console.Write("Write a path to your .roger or .json file\nSTRING> ");
+                            if (Console.ReadLine() is string inputChecked && !string.IsNullOrEmpty(Console.ReadLine()))
+                            {
+                                Parameters.roger2 = inputChecked;
+                                Auxiliary.InitRogersData(IO.LoadRoger());
+                            }
+                            else
+                                Send("Incorrect input (-_0)", "error");
                             break;
 
                         case 3:
@@ -67,7 +68,7 @@ Copyright 2025-2026 Emotion Corp.
                             break;
 
                         case 4:
-                            Send("This function isn't ready :(", "error");
+                            Send("This page isn't ready :(", "error");
                             break;
 
                         case 5:
@@ -207,9 +208,15 @@ Copyright 2025-2026 Emotion Corp.
                             }
 
                             Console.WriteLine("Your roger saved in this directory, let's go, check it!\n If file was not created, write it in issues on our GitHub please ;)");
+                            Thread.Sleep(1500); // Чтобы успеть прочитать
+                        }
+                        else
+                        {
+                            Send("Unknown input", "error");
                         }
 
                         break;
+
                     case "1":
                         Console.Clear();
                         Console.WriteLine("*INPUT NEURONS PARAMETER*");

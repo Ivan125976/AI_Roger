@@ -154,16 +154,18 @@ Internal extension I/O lib
         {
             //Parameters.version = roger.AIversion; если надо -- разкомментируй
 
-            NeuralNetwork.inputNeurons = roger.InputNeurons.Split(';').Select(int.Parse).ToArray();
-            NeuralNetwork.middleNeurons = ReadMatrixFromArray([.. roger.MiddleNeurons.Split(';').Select(int.Parse)]);
-            NeuralNetwork.outputNeurons = roger.OutputNeurons.Split(';').Select(double.Parse).ToArray();
+            Parameters.version = roger.AIversion;
+            Parameters.isDebug = roger.IsDebug;
+            Parameters.passes = roger.Passes;
+            Parameters.learningRate = roger.learningRate;
+            Parameters.DropOutPercent = roger.DropOutPercent;
 
-            NeuralNetwork.inputWeights = ReadMatrixFromArray([.. roger.InputWeights.Split(';').Select(int.Parse)]);
-            NeuralNetwork.middleWeights = ReadJaggedMatrixFromArray([.. roger.MiddleNeurons.Split(';').Select(double.Parse)]);
-            NeuralNetwork.outputWeights = ReadMatrixFromArray([.. roger.OutputWeights.Split(';').Select(int.Parse)]);
+            Parameters.inputNeuronsCount = roger.InputNeuronsCount;
+            Parameters.middleNeuronsCount = roger.MiddleNeuronsCount;
+            Parameters.outputNeuronsCount = roger.OutputNeuronsCount;
 
-            NeuralNetwork.Mbias = ReadMatrixFromArray([.. roger.Mbias.Split(';').Select(int.Parse)]);
-            NeuralNetwork.Obias = roger.Obias.Split(';').Select(double.Parse).ToArray();
+            Parameters.layers = roger.Layers;
+            Parameters.Mlayers = roger.MLayers;
         }
 
         public static double[,] ReadMatrixFromArray(int[] obj)
