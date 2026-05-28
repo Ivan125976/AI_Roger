@@ -83,7 +83,7 @@ Copyright 2025-2026 Emotion Corp.
                         for (int l = 0; l < outputNeurons.Length; l++)
                             errorMid[Parameters.Mlayers - 1, j] += deltaOut[l] * oldOutputWeights[j, l]; //ошибка
 
-                            deltaMid[Parameters.Mlayers - 1, j] = errorMid[Parameters.Mlayers - 1, j] * (1 - middleNeurons[Parameters.Mlayers - 1, j] * middleNeurons[Parameters.Mlayers - 1, j]); //дельта
+                        deltaMid[Parameters.Mlayers - 1, j] = errorMid[Parameters.Mlayers - 1, j] * (1 - middleNeurons[Parameters.Mlayers - 1, j] * middleNeurons[Parameters.Mlayers - 1, j]); //дельта
                         deltaMid[Parameters.Mlayers - 1, j] *= dropOut[Parameters.Mlayers - 1, j];
 
                         if (Parameters.Mlayers > 1)
@@ -103,6 +103,7 @@ Copyright 2025-2026 Emotion Corp.
                     }
 
                     if (Parameters.Mlayers > 1)
+                    {
                         for (int layer = Parameters.Mlayers - 2; layer >= 0; layer--) //update middle->middle weights
                         {
                             int oldLayer = layer + 1;
@@ -111,8 +112,8 @@ Copyright 2025-2026 Emotion Corp.
                                 for (int l = 0; l < middleNeurons.GetLength(1); l++)
                                     errorMid[layer, j] += deltaMid[oldLayer, l] * oldMiddleWeights[layer][j, l]; //ошибка
 
-                                    deltaMid[layer, j] = errorMid[layer, j] * (1 - middleNeurons[layer, j] * middleNeurons[layer, j]); //дельта
-                                    deltaMid[layer, j] *= dropOut[layer, j];
+                                deltaMid[layer, j] = errorMid[layer, j] * (1 - middleNeurons[layer, j] * middleNeurons[layer, j]); //дельта
+                                deltaMid[layer, j] *= dropOut[layer, j];
                                 if (layer > 0)
                                     for (int k = 0; k < middleNeurons.GetLength(1); k++)
                                         middleWeights[layer - 1][k, j] -= middleNeurons[layer - 1, k] * deltaMid[layer, j] * Parameters.learningRate;
@@ -121,16 +122,12 @@ Copyright 2025-2026 Emotion Corp.
                             }
                         }
 
-                    for (int j = 0; j < inputNeurons.Length; j++) //update middle->input weights
-                        for (int k = 0; k < middleNeurons.GetLength(1); k++)
-                            inputWeights[j, k] -= input[j] * deltaMid[0, k] * Parameters.learningRate;
+                        for (int j = 0; j < inputNeurons.Length; j++) //update middle->input weights
+                            for (int k = 0; k < middleNeurons.GetLength(1); k++)
+                                inputWeights[j, k] -= input[j] * deltaMid[0, k] * Parameters.learningRate;
+                    }
                 }
             }
-
-            Array.Clear(errorMid, 0, errorMid.Length);
-            Array.Clear(errorOut, 0, errorOut.Length);
-            Array.Clear(deltaMid, 0, deltaMid.Length);
-            Array.Clear(deltaOut, 0, deltaOut.Length);
         }
     }
 }
