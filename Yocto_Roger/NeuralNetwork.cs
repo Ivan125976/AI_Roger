@@ -133,6 +133,7 @@ Copyright 2025-2026 Emotion Corp.
                 Console.WriteLine("Hello! I'm Roger, the neuron network from Emotion!");
                 while (true)
                 {
+                    Console.Clear();
                     UI.DrawLine(ConsoleColor.DarkGreen, "Not-ready AI Interface v2.2");
                         Console.Write("\nInput>>>");
                     string[] userInputString = Console.ReadLine().Split(',');
