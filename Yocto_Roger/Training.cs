@@ -8,14 +8,28 @@ Yocto Roger ;)
 Copyright 2025-2026 Emotion Corp.
     Education With Teacher Algorithm v1.1
 
-    EducationWithTeacher, DropOut, multilayer
+    EducationWithTeacher, DropOut, multilayer, biases
 */
+
     /// <summary>
-    /// Training Algorithm
+    /// Learning Algorithm Class
     /// </summary>
-    /// <returns>Trained neural network</returns>
+
     public class Training
     {
+
+        /// <summary>
+        /// Education Algorithm
+        /// </summary>
+        /// <param name="inputNeurons">Single array of input neurons</param>
+        /// <param name="middleNeurons">Two-dimensional array of input neurons</param>
+        /// <param name="outputNeurons">Single array of output neurons</param>
+        /// <param name="inputWeights">Two-dimensional array of weights input >>> middle</param>
+        /// <param name="middleWeights">Array of two-dimensional arrays of weights middle >>> middle</param>
+        /// <param name="outputWeights">Two-dimensional array of weights middle >>> output</param>
+        /// <param name="middleBiases">A two-dimensional array of shifts for all average neurons</param>
+        /// <param name="outputBiases">One-dimensional array of shifts for output neurons</param>
+        /// <param name="educationArray">An array of training data that complies with the .know standard</param>
         public static void Education(ref int[] inputNeurons, ref double[,] middleNeurons, ref double[] outputNeurons, ref double[,] inputWeights,
             ref double[][,] middleWeights, ref double[,] outputWeights, ref double[,] middleBiases, ref double[] outputBiases, double[,] educationArray)
         {

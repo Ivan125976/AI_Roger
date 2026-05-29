@@ -23,7 +23,6 @@ Internal I/O lib
                 $"""
                  [roger]
                  AIversion = {Parameters.version}
-                 isDebug = {Parameters.isDebug}
                  passes = {Parameters.passes}
                  learningRate = {Parameters.learningRate}
                  DropOutPercent = {Parameters.DropOutPercent}
@@ -47,7 +46,7 @@ Internal I/O lib
                 IsDebug = Parameters.isDebug,
                 Passes = Parameters.passes,
 
-                learningRate = Parameters.learningRate,
+                LearingRate = Parameters.learningRate,
                 DropOutPercent = Parameters.DropOutPercent,
 
                 InputNeuronsCount = Parameters.inputNeuronsCount,
@@ -58,9 +57,10 @@ Internal I/O lib
                 MLayers = Parameters.Mlayers,
             };
 
-            string jsonData = JsonSerializer.Serialize(roger, new JsonSerializerOptions { WriteIndented = true });
+            JsonSerializerOptions options = new() { WriteIndented = true };
+            string jsonData = JsonSerializer.Serialize(roger, options);
 
-            using StreamWriter writer = new(IO.MakeFileSplitOnIndexIfExists("roger", "json"));
+            using StreamWriter writer = new(MakeFileSplitOnIndexIfExists("roger", "json"));
             writer.Write(jsonData);
         }
 
@@ -112,7 +112,7 @@ Internal I/O lib
             public bool IsDebug { get; set; }
             public int Passes { get; set; }
 
-            public float learningRate { get; set; }
+            public float LearingRate { get; set; }
             public float DropOutPercent { get; set; }
 
             public int InputNeuronsCount { get; set; }
@@ -124,9 +124,8 @@ Internal I/O lib
         }
 
         /// <summary>
-        /// Функция которая возвращает объект класса Roger, с данными извлечёнными из файла формата .roger
+        /// A function that returns a Roger class object with data extracted from a .roger file.
         /// </summary>
-        /// <returns>Объект класса Roger</returns>
         private static Roger LoadRogerFromRoger()
         {
             var parser = new FileIniDataParser();
@@ -135,9 +134,8 @@ Internal I/O lib
             Roger roger = new()
             {
                 AIversion = data["roger"]["AIversion"],
-                IsDebug = Convert.ToBoolean(data["roger"]["isDebug"]),
                 Passes = Convert.ToInt32(data["roger"]["passes"]),
-                learningRate = float.Parse(data["roger"]["learningRate"]),
+                LearingRate = float.Parse(data["roger"]["learningRate"]),
                 DropOutPercent = float.Parse(data["roger"]["DropOutPercent"]),
 
                 InputNeuronsCount = Convert.ToInt32(data["neurons"]["inputNeuronsCount"]),
@@ -152,45 +150,38 @@ Internal I/O lib
         }
 
         /// <summary>
-        /// Примечание: Проверку на json это или нет надо делать заранее, эта функция подразумевает что Paramaters.roger2 это json файл!!!
+        /// Returns an object of the Roger class with all the necessary data to load the neural network.
         /// </summary>
-        /// <returns>
-        /// Возвращает обьект класса Roger со всеми нужными данными для загрузки нейросети
-        /// </returns>
         private static Roger LoadRogerFromJson()
         {
-            using (JsonDocument document = JsonDocument.Parse(File.ReadAllText(Parameters.roger2)))
+            using JsonDocument document = JsonDocument.Parse(File.ReadAllText(Parameters.roger2));
+            JsonElement root = document.RootElement;
+
+            Roger roger = new()
             {
-                JsonElement root = document.RootElement;
+                AIversion = root.GetProperty("AIversion").GetString(),
+                IsDebug = root.GetProperty("isDebug").GetBoolean(),
+                Passes = root.GetProperty("Passes").GetInt32(),
 
-                Roger roger = new()
-                {
-                    AIversion = root.GetProperty("AIversion").GetString(),
-                    IsDebug = root.GetProperty("isDebug").GetBoolean(),
-                    Passes = root.GetProperty("Passes").GetInt32(),
+                LearingRate = float.Parse(root.GetProperty("learningRate").GetString()), // Переделаю это говно
+                DropOutPercent = float.Parse(root.GetProperty("learningRate").GetString()), // И вот это тоже
 
-                    learningRate = float.Parse(root.GetProperty("learningRate").GetString()), // Переделаю это говно
-                    DropOutPercent = float.Parse(root.GetProperty("learningRate").GetString()), // И вот это тоже
+                InputNeuronsCount = root.GetProperty("inputNeuronsCount").GetInt32(),
+                MiddleNeuronsCount = root.GetProperty("middleNeuronsCount").GetInt32(),
+                OutputNeuronsCount = root.GetProperty("outputNeuronsCount").GetInt32(),
 
-                    InputNeuronsCount = root.GetProperty("inputNeuronsCount").GetInt32(),
-                    MiddleNeuronsCount = root.GetProperty("middleNeuronsCount").GetInt32(),
-                    OutputNeuronsCount = root.GetProperty("outputNeuronsCount").GetInt32(),
+                Layers = root.GetProperty("Layers").GetInt32(),
+                MLayers = root.GetProperty("Mlayers").GetInt32()
+            };
 
-                    Layers = root.GetProperty("Layers").GetInt32(),
-                    MLayers = root.GetProperty("Mlayers").GetInt32()
-                };
-
-                return roger;
-            }
+            return roger;
         }
 
         /// <summary>
-        /// Пытается создать файл в этой же директории, если такой файл уже существует то прибавляет индекс попыток пока не дойдёт до индекса, когда файла с таким именем не будет
+        /// Attempts to create a file in the same directory; if such a file already exists, it adds an index of attempts until it reaches the index where there is no file with that name.
         /// </summary>
         /// <param name="filename"></param>
-        /// <param name="extension">Расширение файла (без точки)</param>
-        /// <param name="whatToReturn">true - Возвращает FileStream созданного файла, false - Возвращает путь к созданному файлу</param>
-        /// <returns>Путь до итогового файла</returns>
+        /// <param name="extension">File extension (without period)</param>
         public static string MakeFileSplitOnIndexIfExists(string filename, string extension)
         {
             string filenameWithIndex = filename;

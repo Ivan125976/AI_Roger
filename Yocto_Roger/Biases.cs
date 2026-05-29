@@ -8,9 +8,19 @@ Yocto Roger ;)
 Copyright 2025-2026 Emotion Corp.
     Internal Biases lib
 */
+
+    /// <summary>
+    /// Class for initializing arrays of biases
+    /// </summary>
+    
     internal class Biases
     {
-        public static void Init(ref double[] biases) //рандомное заполнение массива сдвигов
+        /// <summary>
+        /// Random filling of the array of biases
+        /// </summary>
+        /// <param name="biases">Array of biases</param>
+
+        public static void Init(ref double[] biases)
         {
             if (Parameters.isDebug)
                 Console.Write($"biases[] = \n");
@@ -21,10 +31,15 @@ Copyright 2025-2026 Emotion Corp.
                     Console.Write($"{biases[i]} ");
             }
             if (Parameters.isDebug)
-                Console.WriteLine("\nThe biases have been successfully adjusted!");
+                UI.Send("\nThe biases have been successfully adjusted!");
         }
 
-        public static void Init(ref double[,] biases) //рандомное заполнение двухмерного массива сдвигов
+        /// <summary>
+        /// Random filling of a two-dimensional array of biases
+        /// </summary>
+        /// <param name="biases">Array of biases</param>
+
+        public static void Init(ref double[,] biases)
         {
             if (Parameters.isDebug)
                 Console.Write($"biases[,] = \n");
@@ -40,7 +55,7 @@ Copyright 2025-2026 Emotion Corp.
                     Console.WriteLine();
             }
             if (Parameters.isDebug)
-                Console.WriteLine("The biases have been successfully adjusted!");
+                UI.Send("The biases have been successfully adjusted!");
         }
     }
 }

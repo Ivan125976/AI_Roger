@@ -8,9 +8,19 @@ Yocto Roger ;)
 Copyright 2025-2026 Emotion Corp.
     Internal weights lib
 */
+
+    /// <summary>
+    /// Class for initializing arrays of weights
+    /// </summary>
+
     internal class Weights
     {
-        public static void Init(ref double[,] weights) //рандомное заполнение двухмерного массива весов
+        /// <summary>
+        /// Random filling of a two-dimensional array of weights
+        /// </summary>
+        /// <param name="weights">Array of weights</param>
+
+        public static void Init(ref double[,] weights)
         {
             if (Parameters.isDebug)
                 Console.Write($"weights[,] = \n");
@@ -26,10 +36,15 @@ Copyright 2025-2026 Emotion Corp.
                     Console.WriteLine();
             }
             if (Parameters.isDebug)
-                Console.WriteLine("The weights have been successfully adjusted!");
+                UI.Send("The weights have been successfully adjusted!");
         }
 
-        public static void Init(ref double[][,] weights) //рандомное заполнение массива двухмерных массивов весов (подойдет для средних слоев)
+        /// <summary>
+        /// Random filling an array of two-dimensional weight arrays (suitable for middle layers)
+        /// </summary>
+        /// <param name="weights">Array of weights</param>
+
+        public static void Init(ref double[][,] weights)
         {
             if (Parameters.isDebug)
                 Console.Write($"weights[][,] = \n");
@@ -51,7 +66,7 @@ Copyright 2025-2026 Emotion Corp.
                     Console.WriteLine(new string('=', Console.WindowWidth));
             }
             if (Parameters.isDebug)
-                Console.WriteLine("The weights have been successfully adjusted!");
+                UI.Send("The weights have been successfully adjusted!");
         }
     }
 }

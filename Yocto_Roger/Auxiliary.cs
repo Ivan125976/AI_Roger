@@ -154,10 +154,8 @@ Internal extension I/O lib
         {
             //Parameters.version = roger.AIversion; если надо -- разкомментируй
 
-            Parameters.version = roger.AIversion;
-            Parameters.isDebug = roger.IsDebug;
             Parameters.passes = roger.Passes;
-            Parameters.learningRate = roger.learningRate;
+            Parameters.learningRate = roger.LearingRate;
             Parameters.DropOutPercent = roger.DropOutPercent;
 
             Parameters.inputNeuronsCount = roger.InputNeuronsCount;

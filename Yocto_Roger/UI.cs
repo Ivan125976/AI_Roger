@@ -12,6 +12,9 @@ Copyright 2025-2026 Emotion Corp.
 */
 
 {
+    /// <summary>
+    /// Internal library for a beautiful command-line interface
+    /// </summary>
     public class UI
     {
         static void Main()
@@ -113,25 +116,11 @@ Copyright 2025-2026 Emotion Corp.
         }
 
         /// <summary>
-        /// Считает кол-во строк в переданном файле
+        /// Draws a stripe of a specified color at the bottom of the console window.
         /// </summary>
-        /// <param name="path">Абсолютный путь к файлу</param>
-        /// <returns>Целое число, значение которого является количеством прочитанных строк</returns>
-        public static int CountLines(string path)
-        {
-            int count = 0;
-            using var reader = new StreamReader(path);
-            while (reader.ReadLine() != null)
-                count++;
-            return count;
-        }
-
-        /// <summary>
-        /// Рисует полоску определенного цвета внизу окна консоли
-        /// </summary>
-        /// <param name="color">Цвет текста</param>
-        /// <param name="leftText">Текст слева</param>
-        /// <param name="rightText">Текст справа</param>
+        /// <param name="color">Background text color</param>
+        /// <param name="leftText">Left text</param>
+        /// <param name="rightText">Right text</param>
         public static void DrawLine(ConsoleColor color, string leftText = "", string rightText = "")
         {
             int cursorX = Console.CursorLeft;
@@ -153,7 +142,7 @@ Copyright 2025-2026 Emotion Corp.
         }
 
         /// <summary>
-        /// Вызов меню настройки значений а также сохранения файла
+        /// Calling up the menu for setting values ​​and saving the file
         /// </summary>
         public static void SetUp()
         {
@@ -177,10 +166,9 @@ Copyright 2025-2026 Emotion Corp.
                                         9. Exit 
                                         >>> 
                                         """);
-                string choice = Console.ReadLine();
+                string? choice = Console.ReadLine();
                 switch (choice)
                 {
-
                     case "0":
                         Console.Write("""                           
                             How do you want to save roger?
@@ -207,8 +195,9 @@ Copyright 2025-2026 Emotion Corp.
                                     break;
                             }
 
-                            Console.WriteLine("Your roger saved in this directory, let's go, check it!\n If file was not created, write it in issues on our GitHub please ;)");
-                            Thread.Sleep(1500); // Чтобы успеть прочитать
+                            Console.WriteLine("Your roger saved in this directory, let's go, check it!\n If file was not created, write it in issues on our GitHub please ;)" +
+                                "\n Press any key to continue");
+                            Console.ReadKey();
                         }
                         else
                         {
@@ -276,12 +265,12 @@ Copyright 2025-2026 Emotion Corp.
                         Console.Clear();
                         Console.WriteLine("*KNOWLEDGE PARAMETER*");
                         Console.Write("STRING> Enter new knowledge file...");
-                        string file = Console.ReadLine();
-                        if (File.Exists(file))
-                            Parameters.knowledgeFile = file;
-                        else
-                            Send("Knowledge file doesn't exists", "error");
-                        break;
+                        string? file = Console.ReadLine();
+                            if (File.Exists(file))
+                                Parameters.knowledgeFile = file;
+                            else
+                                Send("I couldn't find such a file :(", "error");
+                            break;
 
                     case "6":
                         Console.Clear();
@@ -336,12 +325,10 @@ Copyright 2025-2026 Emotion Corp.
         }
 
         /// <summary>
-        /// Рисует красивое сообщение пользователю о чём либо
-        /// 
-        /// Если ввести неправильный мод, пользователь получит ошибку о некорректно введённом моде. Замена исключениям
+        /// Draws a beautiful message to the user about something
         /// </summary>
-        /// <param name="message">Текст сообщения</param>
-        /// <param name="mode">Мод в зависимости от которого будет зависеть цвет и смысл сообщения. Доступные моды: "error", "warning", "message". По умолчанию мод является message</param>
+        /// <param name="message">Message text</param>
+        /// <param name="mode">The color and meaning of the message will depend on the mode. Available modes are "error," "warning," and "message." The default mode is "message."</param>
         public static void Send(string message, string mode = "message")
         {
             switch (mode.ToLower())
@@ -373,15 +360,10 @@ Copyright 2025-2026 Emotion Corp.
         }
     }
 
-    class Progressbar : UI
+    class Progressbar(ConsoleColor color, int parts) : UI
     {
-        private readonly int _parts;
-        private readonly ConsoleColor _color;
-        public Progressbar(ConsoleColor color, int parts)
-        {
-            _parts = parts;
-            _color = color;
-        }
+        private readonly int _parts = parts;
+        private readonly ConsoleColor _color = color;
 
         public void Draw(int percent)
         {

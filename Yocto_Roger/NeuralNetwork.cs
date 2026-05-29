@@ -40,8 +40,6 @@ Copyright 2025-2026 Emotion Corp.
                     Console.Write("SetUp education array and reading knowledge...");
                     string[] allLines = File.ReadAllLines(Parameters.knowledgeFile);
 
-                    //инициализация массива обучения
-
                     string[] parsedString = allLines[0].Split(' ');
                     int[] input = AIMath.StringParse(parsedString[0], ',');
                     string[] splitingSecond = parsedString[1].Split(';');
@@ -85,7 +83,7 @@ Copyright 2025-2026 Emotion Corp.
                         Console.WriteLine();
                     }
 
-                    UI.Send("done", "message");
+                    UI.Send("done");
                     Console.Write("Initialization RogerHubEngine...");
                     inputNeurons = new int[Parameters.inputNeuronsCount];
                     middleNeurons = new double[Parameters.Mlayers, Parameters.middleNeuronsCount];
@@ -95,27 +93,26 @@ Copyright 2025-2026 Emotion Corp.
                     outputWeights = new double[Parameters.middleNeuronsCount, Parameters.outputNeuronsCount];
                     Mbias = new double[Parameters.Mlayers, Parameters.middleNeuronsCount];
                     Obias = new double[Parameters.outputNeuronsCount];
-                    UI.Send("done", "message");
+                    UI.Send("done");
                     Console.Write("Initialization biases...");
                     Biases.Init(ref Mbias);
                     Biases.Init(ref Obias);
-                    UI.Send("done", "message");
+                    UI.Send("done");
                     Console.Write("Initialization weights...");
                     Weights.Init(ref inputWeights);
                     Weights.Init(ref outputWeights);
                     Weights.Init(ref middleWeights);
-                    UI.Send("done", "message");
+                    UI.Send("done");
                     UI.Send("Initialization complete", "message");
                     Console.Write("Education...");
                     UI.DrawLine(ConsoleColor.DarkRed, "Creating your Roger, please wait :D");
 
                     Training.Education(ref inputNeurons, ref middleNeurons, ref outputNeurons, ref inputWeights, ref middleWeights, ref outputWeights, ref Mbias, ref Obias, educationArray);
-                    UI.Send("done", "message");
+                    UI.Send("done");
 
                     Console.Write("Cleaning...");
-                    educationArray = null;
                     rogerIsCreated = true;
-                    UI.Send("done", "message");
+                    UI.Send("done");
                     break;
 
                 case 1:
