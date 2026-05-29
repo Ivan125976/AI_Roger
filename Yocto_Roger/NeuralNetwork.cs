@@ -14,7 +14,7 @@ Copyright 2025-2026 Emotion Corp.
     {
         static bool rogerIsCreated = false;
 
-        public static string[,] educationArray;
+        public static double[,] educationArray;
 
         public static int[] inputNeurons;
         public static double[,] middleNeurons;
@@ -63,7 +63,7 @@ Copyright 2025-2026 Emotion Corp.
                         break;
                     }
 
-                    educationArray = new string[allLines.Length, length];
+                    educationArray = new double[allLines.Length, length];
 
                     for (int i = 0; i < allLines.Length; i++)
                     {
@@ -71,11 +71,11 @@ Copyright 2025-2026 Emotion Corp.
                         input = AIMath.StringParse(parsedString[0], ',');
                         splitingSecond = parsedString[1].Split(';');
                         for (int j = 0; j < input.Length; j++)
-                            educationArray[i, j] = Convert.ToString(input[j]);
+                            educationArray[i, j] = input[j];
                         for (int j = 0; j < splitingSecond.Length; j++)
                             output[j] = Convert.ToDouble(splitingSecond[j], CultureInfo.InvariantCulture);
                         for (int j = 0; j < splitingSecond.Length; j++)
-                            educationArray[i, j + input.Length] = Convert.ToString(output[j]);
+                            educationArray[i, j + input.Length] = output[j];
                     }
 
                     for (int i = 0; i < educationArray.GetLength(0); i++)

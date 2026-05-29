@@ -1,6 +1,4 @@
-﻿using System.Data;
-
-namespace Yocto_Roger
+﻿namespace Yocto_Roger
 {
     /* 
 Yocto Roger ;)
@@ -19,7 +17,7 @@ Copyright 2025-2026 Emotion Corp.
     public class Training
     {
         public static void Education(ref int[] inputNeurons, ref double[,] middleNeurons, ref double[] outputNeurons, ref double[,] inputWeights,
-            ref double[][,] middleWeights, ref double[,] outputWeights, ref double[,] middleBiases, ref double[] outputBiases, string[,] educationArray)
+            ref double[][,] middleWeights, ref double[,] outputWeights, ref double[,] middleBiases, ref double[] outputBiases, double[,] educationArray)
         {
             string correctOutput;
             int[] input = new int[Parameters.inputNeuronsCount];
@@ -55,7 +53,7 @@ Copyright 2025-2026 Emotion Corp.
                             for (int z = 0; z < middleWeights[x].GetLength(1); z++)
                                 oldMiddleWeights[x][y, z] = middleWeights[x][y, z];
                     }
-                    
+
                     float[,] dropOut = NeuralNetwork.GenerateDropOut();
 
                     //forward propagation

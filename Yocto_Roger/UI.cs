@@ -68,7 +68,7 @@ Copyright 2025-2026 Emotion Corp.
                             break;
 
                         case 4:
-                            Send("This page isn't ready :(", "error");
+                            Send("This page isn't ready RRNNs.RRNNs", "error");
                             break;
 
                         case 5:
