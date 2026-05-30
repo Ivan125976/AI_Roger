@@ -1,6 +1,7 @@
 ﻿using IniParser;
 using IniParser.Model;
 using System.Text.Json;
+using Yocto_Roger;
 
 namespace Yocto_Roger
 {
@@ -160,8 +161,8 @@ Internal I/O lib
                 AIversion = root.GetProperty("AIversion").GetString(),
                 Passes = root.GetProperty("Passes").GetInt32(),
 
-                LearingRate = float.Parse(root.GetProperty("learningRate").GetString()), // Переделаю это говно
-                DropOutPercent = float.Parse(root.GetProperty("learningRate").GetString()), // И вот это тоже
+                LearingRate = float.Parse(root.GetProperty("learningRate").GetString()),
+                DropOutPercent = float.Parse(root.GetProperty("learningRate").GetString()),
 
                 InputNeuronsCount = root.GetProperty("inputNeuronsCount").GetInt32(),
                 MiddleNeuronsCount = root.GetProperty("middleNeuronsCount").GetInt32(),
@@ -198,6 +199,94 @@ Internal I/O lib
             fs.Close();
 
             return filenameWithIndex;
+        }
+
+        //*************NEURAL NETWORK SECTION********************
+        public class NeuralNetworkState
+        {
+            public string? educationArray { get; set; }
+
+            public string inputNeurons { get; set; }
+            public string middleNeurons { get; set; }
+            public string outputNeurons { get; set; }
+
+            public string inputWeights { get; set; }
+            public string middleWeights { get; set; }
+            public string outputWeights { get; set; }
+
+            public string Mbias { get; set; }
+            public string Obias { get; set; }
+        }
+
+        public static void InitNeuralNetwork(NeuralNetworkState nN, bool isNeededToInitEducationArray = true)
+        {
+            if (isNeededToInitEducationArray)
+                NeuralNetwork.educationArray = Auxiliary.ReadMatrixFromArray([.. nN.educationArray.Split(';').Select(int.Parse)]);
+
+            NeuralNetwork.inputNeurons = nN.inputNeurons.Split(';').Select(int.Parse).ToArray();
+            NeuralNetwork.middleNeurons = Auxiliary.ReadMatrixFromArray([.. nN.middleNeurons.Split(';').Select(int.Parse)]);
+            NeuralNetwork.outputNeurons = nN.outputNeurons.Split(';').Select(double.Parse).ToArray();
+
+            NeuralNetwork.inputWeights = Auxiliary.ReadMatrixFromArray([.. nN.inputWeights.Split(';').Select(int.Parse)]);
+            NeuralNetwork.middleWeights = Auxiliary.ReadJaggedMatrixFromArray([.. nN.middleNeurons.Split(';').Select(double.Parse)]);
+            NeuralNetwork.outputWeights = Auxiliary.ReadMatrixFromArray([.. nN.outputWeights.Split(';').Select(int.Parse)]);
+
+            NeuralNetwork.Mbias = Auxiliary.ReadMatrixFromArray([.. nN.Mbias.Split(';').Select(int.Parse)]);
+            NeuralNetwork.Obias = nN.Obias.Split(';').Select(double.Parse).ToArray();
+                 
+        }
+
+        public static void SaveNeuralNetworkStateToJson(NeuralNetworkState nN, string pathToDirectoryToSave)
+        {
+            string json = JsonSerializer.Serialize(nN);
+
+            string path = MakeFileSplitOnIndexIfExists(Path.Combine(pathToDirectoryToSave, "NeuralNetworkState"), "json");
+
+            File.WriteAllText(path, json);
+        }
+
+        public static NeuralNetworkState FixTheStateOfNeuralNetwork(bool isNeedToFixTheEducationArray)
+        {
+            NeuralNetworkState nN = new()
+            {
+                educationArray =  (isNeedToFixTheEducationArray) ? Auxiliary.BuildStringMatrix(NeuralNetwork.educationArray) ?? String.Empty : String.Empty,
+                inputNeurons = Auxiliary.BuildStringArray(NeuralNetwork.inputNeurons) ?? String.Empty,
+                middleNeurons = Auxiliary.BuildStringMatrix(NeuralNetwork.middleNeurons) ?? String.Empty,
+                outputNeurons = Auxiliary.BuildStringArray(NeuralNetwork.outputNeurons) ?? String.Empty,
+
+                inputWeights = Auxiliary.BuildStringArray(NeuralNetwork.inputWeights) ?? String.Empty,
+                middleWeights = Auxiliary.BuildStringJaggedMatrix(NeuralNetwork.middleWeights, 2) ?? String.Empty,
+                outputWeights = Auxiliary.BuildStringArray(NeuralNetwork.outputWeights) ?? String.Empty,
+
+                Obias = Auxiliary.BuildStringMatrix(NeuralNetwork.Mbias) ?? String.Empty,
+                Mbias = Auxiliary.BuildStringArray(NeuralNetwork.Obias) ?? String.Empty,
+            };
+
+            return nN;
+        }
+        public static NeuralNetworkState LoadNeuralNetworkStateFromJson(string absolute_path)
+        {
+            NeuralNetworkState nN = new();
+
+            using (JsonDocument doc = JsonDocument.Parse(absolute_path))
+            {
+                var root = doc.RootElement;
+
+                nN.educationArray = root.GetProperty("educationArray").GetString() ?? String.Empty;
+
+                nN.inputNeurons = root.GetProperty("inputNeurons").GetString() ?? String.Empty;
+                nN.middleNeurons = root.GetProperty("middleNeurons").GetString() ?? String.Empty;
+                nN.outputNeurons = root.GetProperty("outputNeurons").GetString() ?? String.Empty;
+
+                nN.inputWeights = root.GetProperty("inputWeights").GetString() ?? String.Empty;
+                nN.middleWeights = root.GetProperty("middleWeights").GetString() ?? String.Empty;
+                nN.outputWeights = root.GetProperty("outputWeights").GetString() ?? String.Empty;
+
+                nN.Obias = root.GetProperty("Obias").GetString() ?? String.Empty;
+                nN.Mbias = root.GetProperty("Mbias").GetString() ?? String.Empty;
+            }
+
+            return nN;
         }
     }
 }

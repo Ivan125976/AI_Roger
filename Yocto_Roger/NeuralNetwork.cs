@@ -12,7 +12,7 @@ Copyright 2025-2026 Emotion Corp.
 */
     internal class NeuralNetwork
     {
-        static bool rogerIsCreated = false;
+        public static bool rogerIsCreated = false;
 
         public static double[,] educationArray;
 
@@ -152,9 +152,11 @@ Copyright 2025-2026 Emotion Corp.
 
                 //Console.TreatControlCAsInput = true; // Блокирование закрытия программы по нажатия ctrl+c ибо нужно чтобы оно выходило из цикла, а не из программы
                 //TODO: Сделать выход из training mode в главное меню, по нажатию CTRL + C асинхронно, чтобы проверка была не в конкретном куске кода, а в любой момент
-                //UI.Send("Press CTRL + C to quit outta here", "warning");
+                UI.Send("Enter \"save\" to fix the state of neural network in the file, for load at this point later", "message");
                 Console.WriteLine("Hello! I'm Roger, the neuron network from Emotion!");
-                while (true)
+
+                bool saveIsTyped = false;
+                while (saveIsTyped = false)
                 {
                     Console.Clear();
                     UI.DrawLine(ConsoleColor.DarkGreen, "Welcome to Yocto Roger v2.2!");
@@ -162,18 +164,37 @@ Copyright 2025-2026 Emotion Corp.
                     string? userInputString = Console.ReadLine();
                     if (!string.IsNullOrEmpty(userInputString))
                     {
-                        string[] userInputChecked = userInputString.Split(',');
-                        if (userInputChecked.Length == Parameters.inputNeuronsCount)
+                        if (userInputString != "save")
                         {
-                            int[] userInput = new int[Parameters.inputNeuronsCount];
-                            for (int i = 0; i < userInput.Length; i++)
-                                userInput[i] = Convert.ToInt32(userInputChecked[i]);
-                            ForwardPropagation(userInput, inputNeurons, inputWeights, middleNeurons, middleWeights, Mbias, outputNeurons, Obias, outputWeights, disabledDropOut);
-                            Console.Write("Output>>>");
-                            for (int i = 0; i < outputNeurons.Length; i++)
-                                Console.Write(outputNeurons[i] + " ");
-                            Console.ReadKey();
+
+                            string[] userInputChecked = userInputString.Split(',');
+                            if (userInputChecked.Length == Parameters.inputNeuronsCount)
+                            {
+                                int[] userInput = new int[Parameters.inputNeuronsCount];
+                                for (int i = 0; i < userInput.Length; i++)
+                                    userInput[i] = Convert.ToInt32(userInputChecked[i]);
+                                ForwardPropagation(userInput, inputNeurons, inputWeights, middleNeurons, middleWeights, Mbias, outputNeurons, Obias, outputWeights, disabledDropOut);
+                                Console.Write("Output>>>");
+                                for (int i = 0; i < outputNeurons.Length; i++)
+                                    Console.Write(outputNeurons[i] + " ");
+                                Console.ReadKey();
+                            }
                         }
+                        else
+                            saveIsTyped = true;
+
+                        Console.Write("Please, enter the path, where we going to save the file (to this directory, simple press the enter): ");
+                        string input = Console.ReadLine() ?? String.Empty;
+
+                        if (input is string path && !string.IsNullOrEmpty(path))
+                            IO.SaveNeuralNetworkStateToJson(IO.FixTheStateOfNeuralNetwork(false), path);
+
+                        else if (input == String.Empty)
+                        {
+                            IO.SaveNeuralNetworkStateToJson(IO.FixTheStateOfNeuralNetwork(false), Directory.GetCurrentDirectory());
+                        }
+                        else
+                            UI.Send("Incorrect input (-_0)", "error");
                     }
                 }
             }
