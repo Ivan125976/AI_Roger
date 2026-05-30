@@ -65,8 +65,10 @@ Copyright 2025-2026 Emotion Corp.
                                 //Auxiliary.InitRogersData(IO.LoadRoger());
                             }
                             else
+                            {
                                 Send("Incorrect input (-_0)", "error");
-                            Send("Maybe file which you entered, doesn't exists, please check it and retry");
+                                Send("Maybe file which you entered, doesn't exists, please check it and retry");
+                            }
                             break;
 
                         case 3:
