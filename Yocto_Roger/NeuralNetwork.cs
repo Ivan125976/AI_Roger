@@ -34,7 +34,7 @@ Copyright 2025-2026 Emotion Corp.
                 case 0:
                     if (!File.Exists(Parameters.knowledgeFile))
                     {
-                        UI.Send("I can't find the training file!", "error");
+                        UI.Send("I can't find the training file! Maybe you didn't specify it in the settings, please check it before write an issue on our github ", "error");
                         break;
                     }
                     Console.Write("SetUp education array and reading knowledge...");
