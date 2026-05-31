@@ -35,7 +35,7 @@ Copyright (c) 2025 Axolotl512, death_script. Лицензия: MIT.
 
 1. В папке с файлами выполните:
    `./AI_Roger`
-2. Отредактируйте файл знаний `[knowledge.know](https://raw.githubusercontent.com/Ivan125976/AI_Roger/refs/heads/v2.2-beta/Yocto_Roger/knowledge.know)` (подробнее в wiki).
+2. Отредактируйте файл знаний [knowledge.know](https://raw.githubusercontent.com/Ivan125976/AI_Roger/refs/heads/v2.2-beta/Yocto_Roger/knowledge.know) (подробнее в wiki).
 
 ### Параметры обучения
 
