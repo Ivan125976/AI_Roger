@@ -88,7 +88,7 @@ Internal extension I/O lib
         /// <param name="jaggedMatrix">Матрица со вложенными массивами</param>
         /// <param name="maxIndexOfMatrix">Кол-во вложенных массивов</param>
         /// <returns></returns>
-        public static string BuildStringJaggedMatrix(double[][,] jaggedMatrix, byte maxIndexOfMatrix)
+        public static string BuildStringJaggedMatrix(double[][,] jaggedMatrix, int maxIndexOfMatrix)
         {
             if (jaggedMatrix != null)
             {

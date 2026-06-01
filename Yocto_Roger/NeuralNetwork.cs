@@ -190,7 +190,7 @@ Copyright 2025-2026 Emotion Corp.
 
                         else
                         {
-                            Console.Write("Please, enter the path, where we going to save the file (to this directory, simple press the enter): ");
+                            Console.Write("Please, enter the path to the directory, where we going to save the file (to this directory, simple press the enter): ");
                             string input = Console.ReadLine() ?? string.Empty;
 
                             try

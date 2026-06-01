@@ -258,7 +258,7 @@ Internal I/O lib
                 outputNeurons = Auxiliary.BuildStringArray(NeuralNetwork.outputNeurons) ?? String.Empty,
 
                 inputWeights = Auxiliary.BuildStringArray(NeuralNetwork.inputWeights) ?? String.Empty,
-                middleWeights = Auxiliary.BuildStringJaggedMatrix(NeuralNetwork.middleWeights, Convert.ToByte(Parameters.Mlayers - 1)) ?? String.Empty,
+                middleWeights = Auxiliary.BuildStringJaggedMatrix(NeuralNetwork.middleWeights, Parameters.Mlayers - 1) ?? String.Empty,
                 outputWeights = Auxiliary.BuildStringArray(NeuralNetwork.outputWeights) ?? String.Empty,
 
                 Obias = Auxiliary.BuildStringMatrix(NeuralNetwork.Mbias) ?? String.Empty,
