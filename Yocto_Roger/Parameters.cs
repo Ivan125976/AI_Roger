@@ -27,7 +27,7 @@ RogerHub configuration
         /// <summary>
         /// Debug flag. If enabled, logs will be written to the console. This is for developers.
         /// </summary>
-        public static readonly bool isDebug = true;
+        public static readonly bool isDebug = false;
 
         /// <summary>
         /// Number of passes during training on training data
@@ -47,7 +47,7 @@ RogerHub configuration
         /// <summary>
         /// The path to the neural network's knowledge base on which it will need to be trained
         /// </summary>
-        public static string knowledgeFile = string.Empty;
+        public static string knowledgeFile = "knowledge.know";
 
         /// <summary>
         /// The path to the finished neural network, sealed in a file
