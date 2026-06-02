@@ -202,9 +202,9 @@ Copyright 2025-2026 Emotion Corp.
                                 int[] userInput = new int[Parameters.inputNeuronsCount];
                                 for (int i = 0; i < userInput.Length; i++)
                                     userInput[i] = Convert.ToInt32(userInputChecked[i]);
-                                ForwardPropagation(userInput, inputNeurons, inputWeights, middleNeurons, middleWeights, Mbias, outputNeurons, Obias, outputWeights, disabledDropOut);
+                                ForwardPropagation(userInput, inputNeurons!, inputWeights!, middleNeurons!, middleWeights!, Mbias!, outputNeurons!, Obias!, outputWeights!, disabledDropOut);
                                 Console.Write("Output>>>");
-                                for (int i = 0; i < outputNeurons.Length; i++)
+                                for (int i = 0; i < outputNeurons!.Length; i++)
                                     Console.Write(outputNeurons[i] + " ");
                                 Console.WriteLine("Press any key to continue");
                                 Console.ReadKey();
