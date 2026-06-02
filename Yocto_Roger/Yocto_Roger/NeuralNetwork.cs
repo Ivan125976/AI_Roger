@@ -16,18 +16,18 @@ Copyright 2025-2026 Emotion Corp.
     {
         public static bool rogerIsCreated = false;
 
-        public static double[,] educationArray;
+        public static double[,]? educationArray;
 
-        public static int[] inputNeurons;
-        public static double[,] middleNeurons;
-        public static double[] outputNeurons;
+        public static int[]? inputNeurons;
+        public static double[,]? middleNeurons;
+        public static double[]? outputNeurons;
 
-        public static double[,] inputWeights;
-        public static double[][,] middleWeights;
-        public static double[,] outputWeights;
+        public static double[,]? inputWeights;
+        public static double[][,]? middleWeights;
+        public static double[,]? outputWeights;
 
-        public static double[,] Mbias;
-        public static double[] Obias;
+        public static double[,]? Mbias;
+        public static double[]?Obias;
 
         public static void StartAI(int mode)
         {
@@ -121,6 +121,7 @@ Copyright 2025-2026 Emotion Corp.
                     Obias = new double[Parameters.outputNeuronsCount];
                     Send("done");
                     Console.Write("Initialization biases...");
+<<<<<<< HEAD:Yocto_Roger/Yocto_Roger/NeuralNetwork.cs
                     Biases.Init(ref Mbias);
                     Biases.Init(ref Obias);
                     Send("done");
@@ -130,12 +131,50 @@ Copyright 2025-2026 Emotion Corp.
                     Weights.Init(ref middleWeights);
                     Send("done");
                     Send("Initialization complete", "message");
+=======
+                    try
+                    {
+                        Biases.Init(ref Mbias);
+                        Biases.Init(ref Obias);
+                    }
+                    catch (Exception ex)
+                    {
+                        UI.Send("Failed to initialize the Biases: \n" + ex.Message, "error");
+                        Thread.Sleep(5000);
+                        break;
+                    }
+                    UI.Send("done");
+                    Console.Write("Initialization weights...");
+                    try
+                    {
+                        Weights.Init(ref inputWeights);
+                        Weights.Init(ref outputWeights);
+                        Weights.Init(ref middleWeights);
+                    }
+                    catch (Exception ex)
+                    {
+                        UI.Send($"Failed to initialize the Weights: \n{ex.Message}", "error");
+                        Thread.Sleep(5000);
+                        break;
+                    }
+                    UI.Send("done");
+                    UI.Send("Initialization complete", "message");
+>>>>>>> c496e0713b22dc4e19d5bf43cc380c0767d57f46:Yocto_Roger/NeuralNetwork.cs
                     Console.Write("Education...");
                     DrawLine(ConsoleColor.DarkRed, "Creating your Roger, please wait :D", DateTime.Now.Date.ToString("dd/MM/yyyy"));
                     Console.WriteLine();
                     UI.Progressbar educationStatus = new(ConsoleColor.DarkGreen, 20, Console.CursorLeft, Console.CursorTop);
 
-                    Training.Education(ref inputNeurons, ref middleNeurons, ref outputNeurons, ref inputWeights, ref middleWeights, ref outputWeights, ref Mbias, ref Obias, educationArray, educationStatus);
+                    try
+                    {
+                        Training.Education(ref inputNeurons, ref middleNeurons, ref outputNeurons, ref inputWeights, ref middleWeights, ref outputWeights, ref Mbias, ref Obias, educationArray, educationStatus);
+                    }
+                    catch (Exception ex)
+                    {
+                        UI.Send($"Filed to educate the data: \n{ex.Message}", "error");
+                        Thread.Sleep(5000);
+                        break;
+                    }
 
                     educationStatus.Draw(100);
                     Send("\nEducation Complete");
@@ -177,9 +216,9 @@ Copyright 2025-2026 Emotion Corp.
                                 int[] userInput = new int[Parameters.inputNeuronsCount];
                                 for (int i = 0; i < userInput.Length; i++)
                                     userInput[i] = Convert.ToInt32(userInputChecked[i]);
-                                ForwardPropagation(userInput, inputNeurons, inputWeights, middleNeurons, middleWeights, Mbias, outputNeurons, Obias, outputWeights, disabledDropOut);
+                                ForwardPropagation(userInput, inputNeurons!, inputWeights!, middleNeurons!, middleWeights!, Mbias!, outputNeurons!, Obias!, outputWeights!, disabledDropOut);
                                 Console.Write("Output>>>");
-                                for (int i = 0; i < outputNeurons.Length; i++)
+                                for (int i = 0; i < outputNeurons!.Length; i++)
                                     Console.Write(outputNeurons[i] + " ");
                                 Console.WriteLine("Press any key to continue");
                                 Console.ReadKey();
@@ -207,7 +246,7 @@ Copyright 2025-2026 Emotion Corp.
                             }
                             catch (Exception e)
                             {
-                                Console.WriteLine("Somethin' wrong with me, here's my exception: " + e);
+                                Console.WriteLine("Somethin' wrong with me, here's my exception: " + e.Message);
                             }
                         }
                     }

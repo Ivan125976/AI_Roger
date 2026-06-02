@@ -62,7 +62,7 @@ Internal extension I/O lib
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns>Строка в которой по порядку содержатся элементы матрицы, разделённые точкой с запятой</returns>
-        public static string BuildStringMatrix(double[,] matrix) // TODO: Добавить сюда и в другие функции такого же типа, принимать символ по которому будут разделятся значения
+        public static string BuildStringMatrix(double[,]? matrix) // TODO: Добавить сюда и в другие функции такого же типа, принимать символ по которому будут разделятся значения
         {
             if (matrix != null)
             {
@@ -88,7 +88,7 @@ Internal extension I/O lib
         /// </summary>
         /// <param name="jaggedMatrix">Матрица со вложенными массивами</param>
         /// <returns></returns>
-        public static string? BuildStringJaggedMatrix(double[][,] jaggedMatrix)
+        public static string? BuildStringJaggedMatrix(double[][,]? jaggedMatrix)
         {
             if (jaggedMatrix == null)
                 return null;
@@ -115,7 +115,7 @@ Internal extension I/O lib
             return builder.ToString();
         }
 
-        public static string BuildStringArray(dynamic array)
+        public static string BuildStringArray(dynamic? array)
         {
             StringBuilder builder = new();
 
@@ -148,26 +148,59 @@ Internal extension I/O lib
         }
 
         /// <summary>
-        /// Преобразует в нужные типы и инициализирует данные (строки) из переданного объекта в соответствуюшие переменные 
+        /// Преобразует в нужные типы и инициализирует данные (строки) из переданного объекта в соответствующие переменные. Если передан null, он инициализирует значения по умолчанию
         /// </summary>
         /// <param name="roger"></param>
+<<<<<<< HEAD:Yocto_Roger/IO/Auxiliary.cs
         public static void InitRogersData(MainIO.Roger roger)
+=======
+        public static void InitRogersData(Roger? roger)
+>>>>>>> c496e0713b22dc4e19d5bf43cc380c0767d57f46:Yocto_Roger/Auxiliary.cs
         {
             //Parameters.version = roger.AIversion; если надо -- разкомментируй
 
-            Parameters.passes = roger.Passes;
-            Parameters.learningRate = roger.LearingRate;
-            Parameters.DropOutPercent = roger.DropOutPercent;
+            Parameters.passes = roger?.Passes ?? 500;
+            Parameters.learningRate = roger?.LearingRate ?? 0.02f;
+            Parameters.DropOutPercent = roger?.DropOutPercent ?? 3.0f;
 
-            Parameters.inputNeuronsCount = roger.InputNeuronsCount;
-            Parameters.middleNeuronsCount = roger.MiddleNeuronsCount;
-            Parameters.outputNeuronsCount = roger.OutputNeuronsCount;
+            Parameters.inputNeuronsCount = roger?.InputNeuronsCount ?? 14;
+            Parameters.middleNeuronsCount = roger?.MiddleNeuronsCount ?? 16;
+            Parameters.outputNeuronsCount = roger?.OutputNeuronsCount ?? 8;
 
-            Parameters.layers = roger.Layers;
-            Parameters.Mlayers = roger.MLayers;
+            Parameters.layers = roger?.Layers ?? 3;
+            Parameters.Mlayers = roger?.MLayers ?? 1; // Layers -2
         }
 
-        public static double[,] ReadMatrixFromArray(int[] obj)
+        public static double[,]? ReadMatrixFromArray(int[]? obj)
+        {
+            if (obj != null && obj.Length > 0)
+            {
+                byte rows = 3;
+                byte columns = 2;
+
+                double[,] matrix = new double[rows, columns];
+                int index = 0;
+                for (int r = 0; r < rows; r++)
+                {
+                    for (int c = 0; c < columns; c++)
+                    {
+                        if (index < obj.Length)
+                        {
+                            matrix[r, c] = obj[index];
+                            index++;
+                        }
+                        else
+                        {
+                            matrix[r, c] = 0.0;
+                        }
+                    }
+                }
+                return matrix;
+            }
+            else return null;
+        }
+
+        public static double[,]? ReadMatrixFromDoublesArray(double[]? obj)
         {
             byte rows = 3;
             byte columns = 2;
@@ -175,53 +208,30 @@ Internal extension I/O lib
             double[,] matrix = new double[rows, columns];
             int index = 0;
 
-            for (int r = 0; r < rows; r++)
+            if (obj != null && obj.Length != 0)
             {
-                for (int c = 0; c < columns; c++)
+                for (int r = 0; r < rows; r++)
                 {
-                    if (index < obj.Length)
+                    for (int c = 0; c < columns; c++)
                     {
-                        matrix[r, c] = obj[index];
-                        index++;
-                    }
-                    else
-                    {
-                        matrix[r, c] = 0.0;
+                        if (index < obj!.Length)
+                        {
+                            matrix[r, c] = obj[index];
+                            index++;
+                        }
+                        else
+                        {
+                            matrix[r, c] = 0.0;
+                        }
                     }
                 }
             }
+            else return null;
 
             return matrix;
         }
 
-        public static double[,] ReadMatrixFromDoublesArray(double[] obj)
-        {
-            byte rows = 3;
-            byte columns = 2;
-
-            double[,] matrix = new double[rows, columns];
-            int index = 0;
-
-            for (int r = 0; r < rows; r++)
-            {
-                for (int c = 0; c < columns; c++)
-                {
-                    if (index < obj.Length)
-                    {
-                        matrix[r, c] = obj[index];
-                        index++;
-                    }
-                    else
-                    {
-                        matrix[r, c] = 0.0;
-                    }
-                }
-            }
-
-            return matrix;
-        }
-
-        public static double[][,] ReadJaggedMatrixFromArray(double[] obj, byte matrixCount = 1)
+        public static double[][,] ReadJaggedMatrixFromArray(double[]? obj, byte matrixCount = 1)
         {
             if (obj == null || obj.Length == 0 || matrixCount == 0)
             {
