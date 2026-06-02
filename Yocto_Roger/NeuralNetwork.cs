@@ -14,18 +14,18 @@ Copyright 2025-2026 Emotion Corp.
     {
         public static bool rogerIsCreated = false;
 
-        public static double[,] educationArray;
+        public static double[,]? educationArray;
 
-        public static int[] inputNeurons;
-        public static double[,] middleNeurons;
-        public static double[] outputNeurons;
+        public static int[]? inputNeurons;
+        public static double[,]? middleNeurons;
+        public static double[]? outputNeurons;
 
-        public static double[,] inputWeights;
-        public static double[][,] middleWeights;
-        public static double[,] outputWeights;
+        public static double[,]? inputWeights;
+        public static double[][,]? middleWeights;
+        public static double[,]? outputWeights;
 
-        public static double[,] Mbias;
-        public static double[] Obias;
+        public static double[,]? Mbias;
+        public static double[]?Obias;
 
         public static void StartAI(int mode)
         {
@@ -119,13 +119,31 @@ Copyright 2025-2026 Emotion Corp.
                     Obias = new double[Parameters.outputNeuronsCount];
                     UI.Send("done");
                     Console.Write("Initialization biases...");
-                    Biases.Init(ref Mbias);
-                    Biases.Init(ref Obias);
+                    try
+                    {
+                        Biases.Init(ref Mbias);
+                        Biases.Init(ref Obias);
+                    }
+                    catch (Exception ex)
+                    {
+                        UI.Send("Failed to initialize the Biases: \n" + ex.Message, "error");
+                        Thread.Sleep(5000);
+                        break;
+                    }
                     UI.Send("done");
                     Console.Write("Initialization weights...");
-                    Weights.Init(ref inputWeights);
-                    Weights.Init(ref outputWeights);
-                    Weights.Init(ref middleWeights);
+                    try
+                    {
+                        Weights.Init(ref inputWeights);
+                        Weights.Init(ref outputWeights);
+                        Weights.Init(ref middleWeights);
+                    }
+                    catch (Exception ex)
+                    {
+                        UI.Send($"Failed to initialize the Weights: \n{ex.Message}", "error");
+                        Thread.Sleep(5000);
+                        break;
+                    }
                     UI.Send("done");
                     UI.Send("Initialization complete", "message");
                     Console.Write("Education...");
@@ -133,7 +151,16 @@ Copyright 2025-2026 Emotion Corp.
                     Console.WriteLine();
                     Progressbar educationStatus = new(ConsoleColor.DarkGreen, 20, Console.CursorLeft, Console.CursorTop);
 
-                    Training.Education(ref inputNeurons, ref middleNeurons, ref outputNeurons, ref inputWeights, ref middleWeights, ref outputWeights, ref Mbias, ref Obias, educationArray, educationStatus);
+                    try
+                    {
+                        Training.Education(ref inputNeurons, ref middleNeurons, ref outputNeurons, ref inputWeights, ref middleWeights, ref outputWeights, ref Mbias, ref Obias, educationArray, educationStatus);
+                    }
+                    catch (Exception ex)
+                    {
+                        UI.Send($"Filed to educate the data: \n{ex.Message}", "error");
+                        Thread.Sleep(5000);
+                        break;
+                    }
 
                     educationStatus.Draw(100);
                     UI.Send("\nEducation Complete");
@@ -205,7 +232,7 @@ Copyright 2025-2026 Emotion Corp.
                             }
                             catch (Exception e)
                             {
-                                Console.WriteLine("Somethin' wrong with me, here's my exception: " + e);
+                                Console.WriteLine("Somethin' wrong with me, here's my exception: " + e.Message);
                             }
                         }
                     }
