@@ -1,4 +1,4 @@
-﻿namespace Yocto_Roger
+﻿namespace Yocto_Roger.Yocto_Roger
 {
     /* 
 Yocto Roger ;)
@@ -21,7 +21,7 @@ Internal AIMath lib
             int result = 0;
             for (int i = 0; i < obj.Length; i++)
                 if (obj[i] != 0.0)
-                    result += 1 << (7 - i);
+                    result += 1 << 7 - i;
             if (Parameters.isDebug)
                 Console.WriteLine("binToNum -> " + result);
             return result;
@@ -40,7 +40,7 @@ Internal AIMath lib
             int[] bin = new int[bits];
             for (int i = 0; i < bits; i++)
             {
-                bin[bits - 1 - i] = (obj >> i) & 1;
+                bin[bits - 1 - i] = obj >> i & 1;
                 if (Parameters.isDebug)
                     Console.Write(bin[bits - 1 - i] + " ");
             }

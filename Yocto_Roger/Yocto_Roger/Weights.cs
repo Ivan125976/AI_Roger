@@ -1,4 +1,6 @@
-﻿namespace Yocto_Roger
+﻿using static Yocto_Roger.UI.UI;
+
+namespace Yocto_Roger.Yocto_Roger
 {
     /* 
 Yocto Roger ;)
@@ -36,7 +38,7 @@ Copyright 2025-2026 Emotion Corp.
                     Console.WriteLine();
             }
             if (Parameters.isDebug)
-                UI.Send("The weights have been successfully adjusted!");
+                Send("The weights have been successfully adjusted!");
         }
 
         /// <summary>
@@ -66,7 +68,7 @@ Copyright 2025-2026 Emotion Corp.
                     Console.WriteLine(new string('=', Console.WindowWidth));
             }
             if (Parameters.isDebug)
-                UI.Send("The weights have been successfully adjusted!");
+                Send("The weights have been successfully adjusted!");
         }
     }
 }

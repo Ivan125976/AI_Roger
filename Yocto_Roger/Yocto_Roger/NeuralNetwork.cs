@@ -1,6 +1,8 @@
 ﻿using System.Globalization;
+using static Yocto_Roger.UI.UI;
+using static Yocto_Roger.IO.MainIO;
 
-namespace Yocto_Roger
+namespace Yocto_Roger.Yocto_Roger
 {
     /* 
 Yocto Roger ;)
@@ -35,7 +37,7 @@ Copyright 2025-2026 Emotion Corp.
                 case 0:
                     if (!File.Exists(Parameters.knowledgeFile))
                     {
-                        UI.Send("I can't find the training file!", "error");
+                        Send("I can't find the training file!", "error");
                         break;
                     }
                     Console.Write("SetUp education array and reading knowledge...");
@@ -52,7 +54,7 @@ Copyright 2025-2026 Emotion Corp.
                     if (input.Length != Parameters.inputNeuronsCount)
                     {
                         Console.WriteLine();
-                        UI.Send("NeuralNetwork.StartAI.InputNeurons>The training file doesn't match your neural network! (need value " + input.Length + " for Count of Input neurons)", "error");
+                        Send("NeuralNetwork.StartAI.InputNeurons>The training file doesn't match your neural network! (need value " + input.Length + " for Count of Input neurons)", "error");
                         Console.WriteLine("Do you want to change this parameter <Parameters.inputNeuronsCount> and restart NeuralNetwork? (y/n)");
                         ConsoleKeyInfo answer = Console.ReadKey();
                         switch (answer.KeyChar)
@@ -68,7 +70,7 @@ Copyright 2025-2026 Emotion Corp.
                     else if (output.Length != Parameters.outputNeuronsCount)
                     {
                         Console.WriteLine();
-                        UI.Send("NeuralNetwork.StartAI.OutputNeurons>The training file doesn't match your neural network! (need value " + output.Length + " for Count of Output neurons)", "error");
+                        Send("NeuralNetwork.StartAI.OutputNeurons>The training file doesn't match your neural network! (need value " + output.Length + " for Count of Output neurons)", "error");
                         Console.WriteLine("Do you want to change this parameter <Parameters.outputNeuronsCount> and restart NeuralNetwork? (y/n)");
                         ConsoleKeyInfo answer = Console.ReadKey();
                         switch (answer.KeyChar)
@@ -83,7 +85,7 @@ Copyright 2025-2026 Emotion Corp.
                     }
 
                     Console.CursorVisible = false;
-                    UI.Send("Everything is ready to create Roger!");
+                    Send("Everything is ready to create Roger!");
 
                     educationArray = new double[allLines.Length, length];
 
@@ -107,7 +109,7 @@ Copyright 2025-2026 Emotion Corp.
                         Console.WriteLine();
                     }
 
-                    UI.Send("done");
+                    Send("done");
                     Console.Write("Initialization RogerHubEngine...");
                     inputNeurons = new int[Parameters.inputNeuronsCount];
                     middleNeurons = new double[Parameters.Mlayers, Parameters.middleNeuronsCount];
@@ -117,30 +119,30 @@ Copyright 2025-2026 Emotion Corp.
                     outputWeights = new double[Parameters.middleNeuronsCount, Parameters.outputNeuronsCount];
                     Mbias = new double[Parameters.Mlayers, Parameters.middleNeuronsCount];
                     Obias = new double[Parameters.outputNeuronsCount];
-                    UI.Send("done");
+                    Send("done");
                     Console.Write("Initialization biases...");
                     Biases.Init(ref Mbias);
                     Biases.Init(ref Obias);
-                    UI.Send("done");
+                    Send("done");
                     Console.Write("Initialization weights...");
                     Weights.Init(ref inputWeights);
                     Weights.Init(ref outputWeights);
                     Weights.Init(ref middleWeights);
-                    UI.Send("done");
-                    UI.Send("Initialization complete", "message");
+                    Send("done");
+                    Send("Initialization complete", "message");
                     Console.Write("Education...");
-                    UI.DrawLine(ConsoleColor.DarkRed, "Creating your Roger, please wait :D", DateTime.Now.Date.ToString("dd/MM/yyyy"));
+                    DrawLine(ConsoleColor.DarkRed, "Creating your Roger, please wait :D", DateTime.Now.Date.ToString("dd/MM/yyyy"));
                     Console.WriteLine();
-                    Progressbar educationStatus = new(ConsoleColor.DarkGreen, 20, Console.CursorLeft, Console.CursorTop);
+                    UI.Progressbar educationStatus = new(ConsoleColor.DarkGreen, 20, Console.CursorLeft, Console.CursorTop);
 
                     Training.Education(ref inputNeurons, ref middleNeurons, ref outputNeurons, ref inputWeights, ref middleWeights, ref outputWeights, ref Mbias, ref Obias, educationArray, educationStatus);
 
                     educationStatus.Draw(100);
-                    UI.Send("\nEducation Complete");
+                    Send("\nEducation Complete");
 
                     Console.Write("Finishing...");
                     rogerIsCreated = true;
-                    UI.Send("done");
+                    Send("done");
                     Console.WriteLine("Hello! I'm Roger, the neuron network from Emotion!");
                     Thread.Sleep(3000);
                     break;
@@ -160,10 +162,10 @@ Copyright 2025-2026 Emotion Corp.
                 while (true)
                 {
                     Console.Clear();
-                    UI.Send("Enter \"save\"  to fix the state of neural network in the file, for load at this point later. Or \"exit\" to exit to main menu", "warning");
+                    Send("Enter \"save\"  to fix the state of neural network in the file, for load at this point later. Or \"exit\" to exit to main menu", "warning");
                     Console.WriteLine($"Roger have {Parameters.inputNeuronsCount} input neurons, and {Parameters.outputNeuronsCount} output neurons." +
                         $"Write input format: <datain1>,<datain2>,<datain3>...");
-                    UI.DrawLine(ConsoleColor.DarkGreen, "Welcome to Yocto Roger v2.2! Manual interface", DateTime.Now.Date.ToString("dd/MM/yyyy"));
+                    DrawLine(ConsoleColor.DarkGreen, "Welcome to Yocto Roger v2.2! Manual interface", DateTime.Now.Date.ToString("dd/MM/yyyy"));
                     Console.Write("\nInput>>>");
                     string? userInputString = Console.ReadLine();
                     if (!string.IsNullOrEmpty(userInputString))
@@ -196,12 +198,12 @@ Copyright 2025-2026 Emotion Corp.
                             try
                             {
                                 if (input is string path && !string.IsNullOrEmpty(path))
-                                    IO.SaveNeuralNetworkStateToJson(IO.FixTheStateOfNeuralNetwork(false), path);
+                                    SaveNeuralNetworkStateToJson(FixTheStateOfNeuralNetwork(false), path);
 
                                 else if (input == string.Empty)
-                                    IO.SaveNeuralNetworkStateToJson(IO.FixTheStateOfNeuralNetwork(false), Directory.GetCurrentDirectory());
+                                    SaveNeuralNetworkStateToJson(FixTheStateOfNeuralNetwork(false), Directory.GetCurrentDirectory());
                                 else
-                                    UI.Send("Incorrect input (-_0)", "error");
+                                    Send("Incorrect input (-_0)", "error");
                             }
                             catch (Exception e)
                             {
@@ -211,7 +213,7 @@ Copyright 2025-2026 Emotion Corp.
                     }
                     else
                     {
-                        UI.Send("Incorrect input (-_0)", "error");
+                        Send("Incorrect input (-_0)", "error");
                     }
                 }
             }
@@ -222,7 +224,7 @@ Copyright 2025-2026 Emotion Corp.
             if (Parameters.isDebug)
                 Console.WriteLine("DropOut Matrix = ");
             float[,] masks = new float[Parameters.Mlayers, Parameters.middleNeuronsCount];
-            float keepProb = 1.00f - (Parameters.DropOutPercent * 0.01f);
+            float keepProb = 1.00f - Parameters.DropOutPercent * 0.01f;
 
             if (Parameters.DropOutPercent == 0)
             {
@@ -316,7 +318,7 @@ Copyright 2025-2026 Emotion Corp.
                 for (int i = 0; i < neurons.Length; i++)
                     neurons[i] = writeArray[i];
             else
-                UI.Send("NeuralNetwork.WriteToNN>The size of the neuron array and the data array do not match, it is impossible to write data", "error");
+                Send("NeuralNetwork.WriteToNN>The size of the neuron array and the data array do not match, it is impossible to write data", "error");
         }
 
         public static void ForwardPropagation(int[] NNinput, int[] inputNeurons, double[,] inputWeights, double[,] middleNeurons, double[][,] middleWeights, double[,] middleBiases,

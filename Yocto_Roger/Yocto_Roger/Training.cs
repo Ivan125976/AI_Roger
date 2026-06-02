@@ -1,4 +1,6 @@
-﻿namespace Yocto_Roger
+﻿using Yocto_Roger.UI;
+
+namespace Yocto_Roger.Yocto_Roger
 {
     /* 
 Yocto Roger ;)

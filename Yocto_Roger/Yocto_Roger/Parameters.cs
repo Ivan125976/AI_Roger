@@ -1,4 +1,4 @@
-﻿namespace Yocto_Roger
+﻿namespace Yocto_Roger.Yocto_Roger
 {
     /* 
 Yocto Roger ;)
@@ -47,7 +47,7 @@ RogerHub configuration
         /// <summary>
         /// The path to the neural network's knowledge base on which it will need to be trained
         /// </summary>
-        public static string knowledgeFile = "knowledge.know";
+        public static string knowledgeFile = string.Empty;
 
         /// <summary>
         /// The path to the finished neural network, sealed in a file

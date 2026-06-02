@@ -1,8 +1,9 @@
 ﻿using System.Globalization;
 using System.Text;
-using static Yocto_Roger.IO;
+using Yocto_Roger.Yocto_Roger;
+using static Yocto_Roger.IO.MainIO;
 
-namespace Yocto_Roger
+namespace Yocto_Roger.IO
 /* 
 Yocto Roger ;)
 *****************
@@ -79,7 +80,7 @@ Internal extension I/O lib
                 return builder.ToString();
             }
             else
-                return String.Empty;
+                return string.Empty;
         }
 
         /// <summary>
@@ -120,9 +121,9 @@ Internal extension I/O lib
 
             if (array != null)
             {
-                foreach (dynamic v in array)
+                foreach (object v in array)
                 {
-                    builder.Append(v.ToString(CultureInfo.InvariantCulture) + ';');
+                    builder.Append(Convert.ToString(v, CultureInfo.InvariantCulture) + ';');
                 }
 
                 if (builder.ToString().EndsWith(';'))
@@ -131,7 +132,7 @@ Internal extension I/O lib
                 return builder.ToString();
             }
             else
-                return String.Empty;
+                return string.Empty;
         }
 
         private static void WriteArray(StreamWriter writer, double[] array, bool line_break = false)
@@ -150,7 +151,7 @@ Internal extension I/O lib
         /// Преобразует в нужные типы и инициализирует данные (строки) из переданного объекта в соответствуюшие переменные 
         /// </summary>
         /// <param name="roger"></param>
-        public static void InitRogersData(Roger roger)
+        public static void InitRogersData(MainIO.Roger roger)
         {
             //Parameters.version = roger.AIversion; если надо -- разкомментируй
 

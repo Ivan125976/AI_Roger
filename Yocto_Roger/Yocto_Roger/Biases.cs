@@ -1,4 +1,6 @@
-﻿namespace Yocto_Roger
+﻿using static Yocto_Roger.UI.UI;
+
+namespace Yocto_Roger.Yocto_Roger
 {
     /* 
 Yocto Roger ;)
@@ -31,7 +33,7 @@ Copyright 2025-2026 Emotion Corp.
                     Console.Write($"{biases[i]} ");
             }
             if (Parameters.isDebug)
-                UI.Send("\nThe biases have been successfully adjusted!");
+                Send("\nThe biases have been successfully adjusted!");
         }
 
         /// <summary>
@@ -55,7 +57,7 @@ Copyright 2025-2026 Emotion Corp.
                     Console.WriteLine();
             }
             if (Parameters.isDebug)
-                UI.Send("The biases have been successfully adjusted!");
+                Send("The biases have been successfully adjusted!");
         }
     }
 }

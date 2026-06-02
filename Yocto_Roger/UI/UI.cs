@@ -1,7 +1,8 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using System.Text;
+﻿using System.Text;
+using Yocto_Roger.Yocto_Roger;
+using static Yocto_Roger.IO.MainIO;
 
-namespace Yocto_Roger
+namespace Yocto_Roger.UI
 /* 
 Yocto Roger ;)
 *****************
@@ -65,7 +66,7 @@ Copyright 2025-2026 Emotion Corp.
                             if (userInput is string inputChecked && !string.IsNullOrEmpty(userInput) && Path.Exists(userInput))
                             {
                                 NeuralNetwork.rogerIsCreated = true;
-                                IO.InitNeuralNetwork(IO.LoadNeuralNetworkStateFromJson(userInput), false);
+                                InitNeuralNetwork(LoadNeuralNetworkStateFromJson(inputChecked), false);
                                 NeuralNetwork.StartAI(1);
                             }
                             else
@@ -76,7 +77,7 @@ Copyright 2025-2026 Emotion Corp.
                             break;
 
                         case 3:
-                            SetUp();
+                            SetUp.SetUpMenu();
                             break;
 
                         case 4:
@@ -148,7 +149,7 @@ Copyright 2025-2026 Emotion Corp.
             Console.SetCursorPosition(0, Console.WindowHeight - 1);
             Console.Write(leftText);
 
-            Console.SetCursorPosition((Console.WindowWidth - rightText.Length - 1), Console.WindowHeight - 1);
+            Console.SetCursorPosition(Console.WindowWidth - rightText.Length - 1, Console.WindowHeight - 1);
             Console.Write(rightText);
 
             Console.SetCursorPosition(cursorX, cursorY);
@@ -156,203 +157,6 @@ Copyright 2025-2026 Emotion Corp.
             Console.ForegroundColor = ConsoleColor.Gray;
         }
 
-        /// <summary>
-        /// Calling up the menu for setting values ​​and saving the file
-        /// </summary>
-        public static void SetUp()
-        {
-            int i = 0;
-            while (i == 0)
-            {
-                Console.Clear();
-                Console.Write($"""
-                                        RogerHubEngine Training Options
-                                            
-                                        0. Save your roger settings in the file 
-                                        1. Load your roger setting from the file
-
-                                        2. Count of input neurons...{Parameters.inputNeuronsCount}
-                                        3. Count of middle neurons (all middle layers)...{Parameters.middleNeuronsCount}
-                                        4. Count of output neurons...{Parameters.outputNeuronsCount}
-                                        5. Count of Layers...{Parameters.layers}
-                                        6. Knowledge file...{Parameters.knowledgeFile}
-                                        7. DropOut sys percent...{Parameters.DropOutPercent}% (0% - disable DropOut)
-                                        8. Learning Rate...{Parameters.learningRate}
-                                        9. Passes...{Parameters.passes}
-                                        10. Exit 
-                                        >>> 
-                                        """);
-                string? choice = Console.ReadLine();
-                switch (choice)
-                {
-                    case "0":
-                        Console.Write("""                           
-                            How do you want to save roger?
-
-                            1. INI
-                            2. Json (recommended)
-
-                            >>>
-                            """);
-                        if (int.TryParse(Console.ReadLine(), out int userInputChecked))
-                        {
-                            switch (userInputChecked)
-                            {
-                                case 1:
-                                    IO.SaveRoger();
-                                    break;
-
-                                case 2:
-                                    IO.SaveRogerToJson();
-                                    break;
-
-                                default:
-                                    Send("What?", "error");
-                                    break;
-                            }
-
-                            Console.WriteLine("Your roger saved in this directory, let's go, check it!\n If file was not created, write it in issues on our GitHub please ;)" +
-                                "\n Press any key to continue");
-                            Console.ReadKey();
-                        }
-                        else
-                        {
-                            Send("Unknown input", "error");
-                        }
-
-                        break;
-
-                    case "1":
-                        Console.Write("Write an absolute path to the .roger of .json file please: ");
-
-                        if (Console.ReadLine() is string input && !String.IsNullOrEmpty(input) && Path.Exists(input))
-                        {
-                            Parameters.roger2 = input;
-
-                            Auxiliary.InitRogersData(IO.LoadRoger());
-                        }
-                        else
-                            Send("Incorrect input (-_0)", "error");
-                        Send("Maybe file which you typed, doesn't exists or you typed not string, please recheck this 2 factors");
-                        break;
-
-                    case "2":
-                        Console.Clear();
-                        Console.WriteLine("*INPUT NEURONS PARAMETER*");
-                        Console.Write("INT32> Enter new count of input neurons (> 0)...");
-                        if (int.TryParse(Console.ReadLine(), out int userInputChecked1))
-                        {
-                            if (userInputChecked1 > 0)
-                                Parameters.inputNeuronsCount = userInputChecked1;
-                            else
-                                Send("Value out of range.", "error");
-                        }
-                        break;
-
-                    case "3":
-                        Console.Clear();
-                        Console.WriteLine("*MIDDLE NEURONS PARAMETER*");
-                        Console.Write("INT32> Enter new count of middle neurons (> 0)...");
-                        if (int.TryParse(Console.ReadLine(), out int userInputChecked2))
-                        {
-                            if (userInputChecked2 > 0)
-                                Parameters.middleNeuronsCount = userInputChecked2;
-                            else
-                                Send("Value out of range.", "error");
-                        }
-                        break;
-
-                    case "4":
-                        Console.Clear();
-                        Console.WriteLine("*OUTPUT NEURONS PARAMETER*");
-                        Console.Write("INT32> Enter new count of output neurons (> 0)...");
-                        if (int.TryParse(Console.ReadLine(), out int userInputChecked3))
-                        {
-                            if (userInputChecked3 > 0)
-                                Parameters.outputNeuronsCount = userInputChecked3;
-                            else
-                                Send("Value out of range.", "error");
-                        }
-                        break;
-
-                    case "5":
-                        Console.Clear();
-                        Console.WriteLine("*LAYERS PARAMETER*");
-                        Console.Write("INT32> Enter new count of layers (> 2)...");
-                        if (int.TryParse(Console.ReadLine(), out int layersCount))
-                        {
-                            if (layersCount > 2)
-                            {
-                                Parameters.layers = layersCount;
-                                Parameters.Mlayers = layersCount - 2;
-                            }
-                            else
-                                Send("Value out of range.", "error");
-                        }
-                        break;
-
-                    case "6":
-                        Console.Clear();
-                        Console.WriteLine("*KNOWLEDGE PARAMETER*");
-                        Console.Write("STRING> Enter new knowledge file...");
-                        string? file = Console.ReadLine();
-                        if (File.Exists(file))
-                            Parameters.knowledgeFile = file;
-                        else
-                            Send("I couldn't find such a file :(", "error");
-                        break;
-
-                    case "7":
-                        Console.Clear();
-                        Console.WriteLine("*DROPOUT PERCENT PARAMETER*");
-                        Console.Write("FLOAT> Enter new DropOut percent (0–70)... ");
-                        if (int.TryParse(Console.ReadLine(), out int newDrop))
-                        {
-                            if (newDrop >= 0 && newDrop <= 70)
-                                Parameters.DropOutPercent = newDrop;
-                            else
-                                Send("Value out of range.", "error");
-                        }
-                        else
-                            Send("Invalid input.", "error");
-                        break;
-
-                    case "8":
-                        Console.Clear();
-                        Console.WriteLine("*LEARNING RATE PARAMETER*");
-                        Console.Write("FLOAT> Enter new learning rate (0,0 – 1,0)... ");
-                        if (float.TryParse(Console.ReadLine(), out float newLR))
-                        {
-                            if (newLR > 0 && newLR <= 1.0)
-                                Parameters.learningRate = newLR;
-                            else
-                                Send("Learning rate out of range.", "error");
-                        }
-                        else
-                            Send("Invalid input.", "error");
-                        break;
-
-                    case "9":
-                        Console.Clear();
-                        Console.WriteLine("*PASSES PARAMETER*");
-                        Console.Write("INT32> Enter count of passes (> 0)... ");
-                        if (int.TryParse(Console.ReadLine(), out int newPasses))
-                        {
-                            if (newPasses > 0)
-                                Parameters.passes = newPasses;
-                            else
-                                Send("Passes must be greater than zero.", "error");
-                        }
-                        else
-                            Send("Invalid input.", "error");
-                        break;
-
-                    case "10":
-                        i++;
-                        break;
-                }
-            }
-        }
 
         /// <summary>
         /// Draws a beautiful message to the user about something
