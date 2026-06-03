@@ -7,9 +7,6 @@ namespace Yocto_Roger.UI
     /// <summary>
     /// Settings interface
     /// </summary>
-    /// <param name="param">Link to RogerHubEngine parameters file</param>
-    /// <param name="io">Link to RogerHubEngine IO lib</param>
-    /// <param name="auxiliaryIO">Link to RogerHubEngine ExternalIO file</param>
     public class SettingsInterface(Parameters param, MainIO io, Auxiliary auxiliaryIO)
     {
         private readonly MainIO _io = io;

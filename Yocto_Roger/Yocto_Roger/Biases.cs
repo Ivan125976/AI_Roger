@@ -12,7 +12,6 @@ Copyright 2025-2026 Emotion Corp.
     /// <summary> 
     /// Class for initializing arrays of biases
     /// </summary>
-    /// <param name="param">Link to RogerHubEngine parameters file</param>
     public class Biases(Parameters param)
     {
         private readonly Parameters _param = param;

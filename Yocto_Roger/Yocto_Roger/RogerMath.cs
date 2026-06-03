@@ -12,7 +12,6 @@ Internal AIMath lib
     /// <summary>
     /// Internal Math lib for Roger
     /// </summary>
-    /// <param name="param">Link to RogerHubEngine parameters file</param>
     public class RogerMath(Parameters param)
     {
         private readonly Parameters _param = param;

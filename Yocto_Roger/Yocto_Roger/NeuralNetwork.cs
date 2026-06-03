@@ -17,11 +17,6 @@ Copyright 2025-2026 Emotion Corp.
     /// <summary>
     /// Yocto Roger Neural Network. Hello! :D
     /// </summary>
-    /// <param name="param"></param>
-    /// <param name="io"></param>
-    /// <param name="weights"></param>
-    /// <param name="biases"></param>
-    /// <param name="training"></param>
     public class NeuralNetwork(Parameters param, MainIO io, Weights weights, Biases biases, Training training)
     {
         private readonly Parameters _param = param;

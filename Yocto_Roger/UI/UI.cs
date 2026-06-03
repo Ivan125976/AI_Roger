@@ -15,9 +15,6 @@ Copyright 2025-2026 Emotion Corp.
     /// <summary>
     /// Internal library for a beautiful command line
     /// </summary>
-    /// <param name="nN">Link to RogerHubEngine neural network lib</param>
-    /// <param name="settingsInterface">Link to RogerHubEngine settings interface</param>
-    /// <param name="param">Link to RogerHubEngine parameters file</param>
     public class UI(NeuralNetwork nN, SettingsInterface settingsInterface, Parameters param)
     {
         /// <summary>
