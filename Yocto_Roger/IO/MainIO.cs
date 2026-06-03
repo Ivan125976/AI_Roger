@@ -228,7 +228,7 @@ Internal I/O lib
             Parameters.outputNeuronsCount = nN?.OutputNeuronsCount ?? 8;
 
             NeuralNetwork.inputWeights = Auxiliary.ReadMatrixFromDoublesArray((nN?.InputWeights is not null) ? [.. nN.InputWeights!.Split(';').Select(s => double.Parse(s, CultureInfo.InvariantCulture))] : null);
-            NeuralNetwork.middleWeights = Auxiliary.ReadJaggedMatrixFromArray((nN?.MiddleWeights is not null) ? [.. nN.MiddleWeights!.Split(';').Select(s => double.Parse(s, CultureInfo.InvariantCulture))] : null );
+            NeuralNetwork.middleWeights = Auxiliary.ReadJaggedMatrixFromArray((nN?.MiddleWeights is not null) ? [.. nN.MiddleWeights!.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(s => double.Parse(s, CultureInfo.InvariantCulture))] : null );
             NeuralNetwork.outputWeights = Auxiliary.ReadMatrixFromDoublesArray((nN?.OutputWeights is not null) ? [.. nN.OutputWeights!.Split(';').Select(s => double.Parse(s, CultureInfo.InvariantCulture))] : null);
 
             // Значения по умолчанию в случае null или пустого элемента
@@ -283,19 +283,19 @@ Internal I/O lib
             {
                 var root = doc.RootElement;
 
-                nN.EducationArray = root.GetProperty("educationArray").GetString() ?? null;
+                nN.EducationArray = root.GetProperty("EducationArray").GetString() ?? null;
 
-                nN.InputNeurons = root.GetProperty("inputNeurons").GetString() ?? null;
-                nN.MiddleNeurons = root.GetProperty("middleNeurons").GetString() ?? null;
-                nN.OutputNeurons = root.GetProperty("outputNeurons").GetString() ?? null;
+                nN.InputNeurons = root.GetProperty("InputNeurons").GetString() ?? null;
+                nN.MiddleNeurons = root.GetProperty("MiddleNeurons").GetString() ?? null;
+                nN.OutputNeurons = root.GetProperty("OutputNeurons").GetString() ?? null;
 
-                nN.InputNeuronsCount = root.GetProperty("inputNeuronsCount").GetInt32();
-                nN.MiddleNeuronsCount = root.GetProperty("middleNeuronsCount").GetInt32();
-                nN.OutputNeuronsCount = root.GetProperty("outputNeuronsCount").GetInt32();
+                nN.InputNeuronsCount = root.GetProperty("InputNeuronsCount").GetInt32();
+                nN.MiddleNeuronsCount = root.GetProperty("MiddleNeuronsCount").GetInt32();
+                nN.OutputNeuronsCount = root.GetProperty("OutputNeuronsCount").GetInt32();
 
-                nN.InputWeights = root.GetProperty("inputWeights").GetString() ?? null;
-                nN.MiddleWeights = root.GetProperty("middleWeights").GetString() ?? null;
-                nN.OutputWeights = root.GetProperty("outputWeights").GetString() ?? null;
+                nN.InputWeights = root.GetProperty("InputWeights").GetString() ?? null;
+                nN.MiddleWeights = root.GetProperty("MiddleWeights").GetString() ?? null;
+                nN.OutputWeights = root.GetProperty("OutputWeights").GetString() ?? null;
 
                 nN.Obias = root.GetProperty("Obias").GetString() ?? null;
                 nN.Mbias = root.GetProperty("Mbias").GetString() ?? null;

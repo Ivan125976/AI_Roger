@@ -175,8 +175,9 @@ Copyright 2025-2026 Emotion Corp.
                     break;
 
                 case 1:
-                    Console.Write("Loading your Roger...");
-                    LoadRoger();
+                    //Console.Write("Loading your Roger...");
+                    //LoadRoger();
+                    // Не надо это разкомментировать пожалуйста, эта функция загружает параметры нейросети, в настройках. Не саму нейросеть. Я специально сделал, чтобы при запуске в моде 1, оно проскакивало мод 0 и делало rogerIsCreated = true, ибо загружает параметры нейронки самостоятельно, короче просто оставь так. Работает - не трогай! 
                     break;
             }
             if (rogerIsCreated)
@@ -201,7 +202,7 @@ Copyright 2025-2026 Emotion Corp.
                             {
                                 int[] userInput = new int[Parameters.inputNeuronsCount];
                                 for (int i = 0; i < userInput.Length; i++)
-                                    userInput[i] = Convert.ToInt32(userInputChecked[i]);
+                                    userInput[i] = Convert.ToInt32(userInputChecked[i], CultureInfo.InvariantCulture);
                                 ForwardPropagation(userInput, inputNeurons!, inputWeights!, middleNeurons!, middleWeights!, Mbias!, outputNeurons!, Obias!, outputWeights!, disabledDropOut);
                                 Console.Write("Output>>>");
                                 for (int i = 0; i < outputNeurons!.Length; i++)

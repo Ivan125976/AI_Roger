@@ -151,7 +151,7 @@ Internal extension I/O lib
         /// Преобразует в нужные типы и инициализирует данные (строки) из переданного объекта в соответствующие переменные. Если передан null, он инициализирует значения по умолчанию
         /// </summary>
         /// <param name="roger"></param>
-        public static void InitRogersData(MainIO.Roger roger)
+        public static void InitRogersData(MainIO.Roger? roger)
         {
             //Parameters.version = roger.AIversion; если надо -- разкомментируй
 
