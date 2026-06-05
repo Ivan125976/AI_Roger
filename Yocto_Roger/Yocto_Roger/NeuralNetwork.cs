@@ -260,20 +260,7 @@ Copyright 2025-2026 Emotion Corp.
                     {
 
                         string[] userInputChecked = userInputString.Split(',');
-                        if (userInputChecked.Length == _param.inputNeuronsCount)
-                        {
-                            int[] userInput = new int[_param.inputNeuronsCount];
-                            for (int i = 0; i < userInput.Length; i++)
-                                userInput[i] = Convert.ToInt32(userInputChecked[i], CultureInfo.InvariantCulture);
-                            ForwardPropagation(userInput, inputNeurons!, inputWeights!, middleNeurons!, middleWeights!, Mbias!, outputNeurons!, Obias!, outputWeights!, disabledDropOut);
-                            Console.Write("Output>>>");
-                            for (int i = 0; i < outputNeurons!.Length; i++)
-                                Console.Write(outputNeurons[i] + " ");
-                            Console.WriteLine("Press any key to continue");
-                            Console.ReadKey();
-                            Console.Clear();
-                        }
-                        else if (userInputString == "exit")
+                        if (userInputString == "exit")
                             return;
                         else if (userInputString == "save")
                         {
@@ -294,6 +281,19 @@ Copyright 2025-2026 Emotion Corp.
                             {
                                 Console.WriteLine("Somethin' wrong with me, here's my exception: " + e.Message);
                             }
+                        }
+                        else if (userInputChecked.Length == _param.inputNeuronsCount)
+                        {
+                            int[] userInput = new int[_param.inputNeuronsCount];
+                            for (int i = 0; i < userInput.Length; i++)
+                                userInput[i] = Convert.ToInt32(userInputChecked[i], CultureInfo.InvariantCulture);
+                            ForwardPropagation(userInput, inputNeurons!, inputWeights!, middleNeurons!, middleWeights!, Mbias!, outputNeurons!, Obias!, outputWeights!, disabledDropOut);
+                            Console.Write("Output>>>");
+                            for (int i = 0; i < outputNeurons!.Length; i++)
+                                Console.Write(outputNeurons[i] + " ");
+                            Console.WriteLine("Press any key to continue");
+                            Console.ReadKey();
+                            Console.Clear();
                         }
                         else
                             Send("It looks like you entered the wrong amount of information for the neurons or made a mistake with the command. No worries — it happens.", "error");

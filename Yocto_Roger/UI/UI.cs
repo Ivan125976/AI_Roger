@@ -42,7 +42,7 @@ Copyright 2025-2026 Emotion Corp.
                 Environment.Exit(1);
             }
 
-            Console.Title = "Welcome to Beta!";
+            Console.Title = "RogerHubEngine v2.2.0";
 
             Console.InputEncoding = Encoding.Unicode;
             Console.OutputEncoding = Encoding.Unicode;
@@ -176,7 +176,8 @@ Copyright 2025-2026 Emotion Corp.
                 case "error":
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("ERROR>" + message);
-                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.Beep();
+                    Console.ResetColor();
                     Console.WriteLine("Press any key to continue");
                     Console.ReadKey();
                     break;
@@ -184,13 +185,13 @@ Copyright 2025-2026 Emotion Corp.
                 case "warning":
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("WARNING>" + message);
-                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.ResetColor();
                     break;
 
                 case "message":
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.Write(message + "\n");
-                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.ResetColor();
                     break;
 
                 default:
@@ -230,7 +231,7 @@ Copyright 2025-2026 Emotion Corp.
             int filled = Math.Clamp(percent * _parts / 100, 0, _parts);
             Console.Write(new string('█', filled));
             Console.Write(new string('░', _parts - filled));
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.ResetColor();
             Console.Write("]");
             Console.SetCursorPosition(cursorX, cursorY);
         }
