@@ -16,13 +16,26 @@ Yocto Roger ;)
 Copyright 2025-2026 Emotion Corp.
 Internal I/O lib
 */
+    /// <summary>
+    /// Main IO class, where contains all main function for work with salve/load
+    /// </summary>
+    /// <param name="param"></param>
+    /// <param name="nN"></param>
+    /// <param name="nNState"></param>
+    /// <param name="auxiliaryIO"></param>
     public class MainIO(Parameters param, NeuralNetwork nN, NeuralNetworkState nNState, Auxiliary auxiliaryIO)
     {
         private Parameters _param = param;
+        /// <summary>
+        /// object of NeuralNetwork class
+        /// </summary>
         public NeuralNetwork _nN = nN;
         private NeuralNetworkState _nNState = nNState;
         private Auxiliary _auxiliaryIO = auxiliaryIO;
 
+        /// <summary>
+        /// Saving the current roger settings in the file, which creating automatedly
+        /// </summary>
         public void SaveRoger()
         {
             using (StreamWriter writer = new(MakeFileSplitOnIndexIfExists("roger", "roger")))
@@ -47,6 +60,9 @@ Internal I/O lib
             }
         }
 
+        /// <summary>
+        /// Saving the current Roger settings in the json file, which creating automatedly
+        /// </summary>
         public void SaveRogerToJson()
         {
 
@@ -118,18 +134,45 @@ Internal I/O lib
         /// </summary>
         public class Roger
         {
+            /// <summary>
+            /// Ai version
+            /// </summary>
             public string? AIversion { get; set; }
 
+            /// <summary>
+            /// Passes
+            /// </summary>
             public int Passes { get; set; }
 
+            /// <summary>
+            /// Learning rate
+            /// </summary>
             public float LearingRate { get; set; }
+            /// <summary>
+            /// Drop out percent
+            /// </summary>
             public float DropOutPercent { get; set; }
 
+            /// <summary>
+            /// Input neurons count
+            /// </summary>
             public int InputNeuronsCount { get; set; }
+            /// <summary>
+            /// Middle neurons count
+            /// </summary>
             public int MiddleNeuronsCount { get; set; }
+            /// <summary>
+            /// Output neurons count
+            /// </summary>
             public int OutputNeuronsCount { get; set; }
 
+            /// <summary>
+            /// Layers
+            /// </summary>
             public int Layers { get; set; }
+            /// <summary>
+            /// MLayers
+            /// </summary>
             public int MLayers { get; set; }
         }
 
@@ -204,11 +247,13 @@ Internal I/O lib
 
         //*************NEURAL NETWORK SECTION********************
 
+        /// <summary>
+        /// Transforming the values from class NeuralNetworkState to needed types, and initializing it where it needs
+        /// </summary>
+        /// <param name="nN"></param>
+        /// <param name="isNeededToInitEducationArray"></param>
         public void InitNeuralNetwork(NeuralNetworkState nN, bool isNeededToInitEducationArray = false)
         {
-
-            //var any = RogerHubEngine.
-            //NeuralNetwork roger = new();
             if (isNeededToInitEducationArray)
                 if (nN?.EducationArray is not null)
                     _nN.educationArray = ReadMatrixFromArray([.. nN.EducationArray.Split(';').Select(s => int.Parse(s, CultureInfo.InvariantCulture!))]);
@@ -217,7 +262,7 @@ Internal I/O lib
             _nN.middleNeurons = ReadMatrixFromDoublesArray((nN?.MiddleNeurons is not null) ? [.. nN.MiddleNeurons.Split(';').Select(s => double.Parse(s, CultureInfo.InvariantCulture))] : null);
             _nN.outputNeurons = nN?.OutputNeurons?.Split(';').Select(s => double.Parse(s, CultureInfo.InvariantCulture)).ToArray();
 
-            // Если null - значения по умолчанию
+            // If null - Values by default
             _param.inputNeuronsCount = nN?.InputNeuronsCount ?? 14;
             _param.middleNeuronsCount = nN?.MiddleNeuronsCount ?? 16;
             _param.outputNeuronsCount = nN?.OutputNeuronsCount ?? 8;
@@ -226,14 +271,18 @@ Internal I/O lib
             _nN.middleWeights = ReadJaggedMatrixFromArray((nN?.MiddleWeights is not null) ? [.. nN.MiddleWeights!.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(s => double.Parse(s, CultureInfo.InvariantCulture))] : null);
             _nN.outputWeights = ReadMatrixFromDoublesArray((nN?.OutputWeights is not null) ? [.. nN.OutputWeights!.Split(';').Select(s => double.Parse(s, CultureInfo.InvariantCulture))] : null);
 
-            // Значения по умолчанию в случае null или пустого элемента
+            // If null - values by default
             _param.layers = nN?.Layers ?? 3;
 
             _nN.Mbias = ReadMatrixFromDoublesArray((nN?.Mbias != null) ? [.. nN.Mbias!.Split(';').Select(s => double.Parse(s, CultureInfo.InvariantCulture))] : null);
             _nN.Obias = nN?.Obias?.Split(';').Select(s => double.Parse(s, CultureInfo.InvariantCulture)).ToArray();
 
         }
-
+        /// <summary>
+        /// Saving neural network state to json file.
+        /// </summary>
+        /// <param name="nN"></param>
+        /// <param name="pathToDirectoryToSave"></param>
         public void SaveNeuralNetworkStateToJson(NeuralNetworkState nN, string pathToDirectoryToSave)
         {
             string json = JsonSerializer.Serialize(nN, new JsonSerializerOptions { WriteIndented = true });
@@ -242,7 +291,11 @@ Internal I/O lib
 
             File.WriteAllText(path, json);
         }
-
+        /// <summary>
+        /// Fixing the neural network state
+        /// </summary>
+        /// <param name="isNeedToFixTheEducationArray">recommended to set it to false</param>
+        /// <returns></returns>
         public NeuralNetworkState FixTheStateOfNeuralNetwork(bool isNeedToFixTheEducationArray)
         {
             NeuralNetworkState nN = new()
@@ -268,6 +321,12 @@ Internal I/O lib
 
             return nN;
         }
+
+        /// <summary>
+        /// Loading values from the file 
+        /// </summary>
+        /// <param name="absolute_path"></param>
+        /// <returns></returns>
         public NeuralNetworkState LoadNeuralNetworkStateFromJson(string absolute_path)
         {
             using (JsonDocument doc = JsonDocument.Parse(File.ReadAllText(absolute_path)))

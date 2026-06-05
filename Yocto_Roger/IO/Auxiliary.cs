@@ -12,9 +12,20 @@ Copyright 2025-2026 Emotion Corp.
 Internal extension I/O lib
 */
 {
+    /// <summary>
+    /// Auxiliary class, and contains methods for work with array's
+    /// </summary>
+    /// <param name="param"></param>
     public class Auxiliary(Parameters param)
     {
         private readonly Parameters _param = param;
+
+        /// <summary>
+        /// Function which writing any array, with you writer using foreach.
+        /// </summary>
+        /// <param name="array">array you want to write</param>
+        /// <param name="writer"></param>
+        /// <param name="line_break">if true, function will do writer.WriteLine() in the end, after it foreach your array</param>
         public static void WriteAll(dynamic array, StreamWriter writer, bool line_break = false)
         {
             foreach (var element in array)
@@ -25,11 +36,11 @@ Internal extension I/O lib
         }
 
         /// <summary>
-        /// Узкоспециализированная функция для записи матрицы врайтером
+        /// Function, is analnog WriteAll, but writting matrix ([,])
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="matrix"></param>
-        /// <param name="line_break">Перенос строки после записи</param>
+        /// <param name="matrix">double[,]</param>
+        /// <param name="line_break">Line break after all operation with array</param>
         public static void WriteMatrix(StreamWriter writer, double[,] matrix, bool line_break = false)
         {
             for (int j = 0; j < matrix.GetLength(1); j++)
@@ -42,6 +53,12 @@ Internal extension I/O lib
             }
         }
 
+        /// <summary>
+        /// Writing double[,,] array in the string
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="matrix">double[,,]</param>
+        /// <param name="line_break">Line break after all operation with your array</param>
         public static void WriteJaggedMatrix(StreamWriter writer, double[,,] matrix, bool line_break = false)
         {
             for (byte j = 0; j < matrix.GetLength(1); j++)
@@ -51,17 +68,17 @@ Internal extension I/O lib
                     for (byte c = 0; c < matrix.GetLength(2); c++)
                         writer.Write(matrix[i, j, c].ToString(CultureInfo.InvariantCulture) + ";");
                 }
-
+                    
                 if (line_break)
                     writer.WriteLine();
             }
         }
         /// <summary>
-        /// Преобразует матрицу в строку, разделяя каждое значение точкой с запятой
+        /// Matrix to string, separating values with ';'
         /// </summary>
-        /// <param name="matrix"></param>
-        /// <returns>Строка в которой по порядку содержатся элементы матрицы, разделённые точкой с запятой</returns>
-        public static string BuildStringMatrix(double[,]? matrix) // TODO: Добавить сюда и в другие функции такого же типа, принимать символ по которому будут разделятся значения
+        /// <param name="matrix">double[,] (Can be null, then return is String.Empty)</param>
+        /// <returns>String with all values in your matrix, separated ';'</returns>
+        public static string BuildStringMatrix(double[,]? matrix)
         {
             if (matrix != null)
             {
@@ -83,10 +100,10 @@ Internal extension I/O lib
         }
 
         /// <summary>
-        /// Строит все значения из матрицы с вложенными массивами в одну строчку разделяя их точкой с запятой. Важно, что если переденная переменная будет пустой (null), то программа упадёт с исключением, NullReference исключения, требется обрабатывать (если честно то не только здесь, а всегда).
+        /// Building the string from your double[][,] array, separating values with ';'
         /// </summary>
-        /// <param name="jaggedMatrix">Матрица со вложенными массивами</param>
-        /// <returns></returns>
+        /// <param name="jaggedMatrix">double[][,] (Can be null, then function return null, it's fair, right?)</param>
+        /// <returns>String with all values in your matrix, separated ';'</returns>
         public static string? BuildStringJaggedMatrix(double[][,]? jaggedMatrix)
         {
             if (jaggedMatrix == null)
@@ -109,11 +126,17 @@ Internal extension I/O lib
             }
 
             if (builder.Length > 0)
-                builder.Length--; // Удаление последнего символа ';'
+                builder.Length--; // Removing the last symbol ';'
 
             return builder.ToString();
         }
 
+
+        /// <summary>
+        /// Simple building the string with your array, which can have any type
+        /// </summary>
+        /// <param name="array">Any type array. Can be null, then function returning String.Empty</param>
+        /// <returns></returns>
         public static string BuildStringArray(dynamic? array)
         {
             StringBuilder builder = new();
@@ -126,7 +149,7 @@ Internal extension I/O lib
                 }
 
                 if (builder.ToString().EndsWith(';'))
-                    builder.Length--; // Удаляет последний ненужный символ ';'
+                    builder.Length--; // Removing the last symbol ';'
 
                 return builder.ToString();
             }
@@ -134,6 +157,12 @@ Internal extension I/O lib
                 return string.Empty;
         }
 
+        /// <summary>
+        /// Analog function WriteAll, i don't know, why it's still exists
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="array"></param>
+        /// <param name="line_break"></param>
         private static void WriteArray(StreamWriter writer, double[] array, bool line_break = false)
         {
             if (array != null)
@@ -164,6 +193,11 @@ Internal extension I/O lib
             _param.layers = roger?.Layers ?? 3;
         }
 
+        /// <summary>
+        ///Reading int array, and building from it, double matrix array. 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>double[,] array. If null was passed to the function, then it gonna return null too. </returns>
         public static double[,]? ReadMatrixFromArray(int[]? obj)
         {
             if (obj != null && obj.Length > 0)
@@ -190,6 +224,11 @@ Internal extension I/O lib
             else return null;
         }
 
+        /// <summary>
+        /// Simple reading doubles array, and tranforming it in the double[,] array. 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>double[,] array, If null was passed to the function the it gonna return null too</returns>
         public static double[,]? ReadMatrixFromDoublesArray(double[]? obj)
         {
             byte rows = 3;
@@ -221,6 +260,12 @@ Internal extension I/O lib
             return matrix;
         }
 
+        /// <summary>
+        ///Reading double[] array, and building double[][,] from it 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="matrixCount"></param>
+        /// <returns>double[][,] array.If null or empty array was passed to the function, then it returns fully empty array</returns>
         public static double[][,] ReadJaggedMatrixFromArray(double[]? obj, byte matrixCount = 1)
         {
             if (obj == null || obj.Length == 0 || matrixCount == 0)
