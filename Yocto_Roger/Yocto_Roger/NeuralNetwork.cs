@@ -273,12 +273,9 @@ Copyright 2025-2026 Emotion Corp.
                             Console.ReadKey();
                             Console.Clear();
                         }
-
-
-                        if (userInputString == "exit")
+                        else if (userInputString == "exit")
                             return;
-
-                        if (userInputString == "save")
+                        else if (userInputString == "save")
                         {
                             Console.Write("Please, enter the path to the directory, where we going to save the file (to this directory, simple press the enter): ");
                             string input = Console.ReadLine() ?? string.Empty;
@@ -298,6 +295,8 @@ Copyright 2025-2026 Emotion Corp.
                                 Console.WriteLine("Somethin' wrong with me, here's my exception: " + e.Message);
                             }
                         }
+                        else
+                            Send("It looks like you entered the wrong amount of information for the neurons or made a mistake with the command. No worries — it happens.", "error");
                     }
                     else
                     {
