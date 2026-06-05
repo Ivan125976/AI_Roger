@@ -27,12 +27,6 @@ Internal I/O lib
                 WriteIndented = true
             };
 
-        private static readonly JsonSerializerOptions JsonOptions =
-            new()
-            {
-                WriteIndented = true
-            };
-
         private readonly Parameters _param = param;
         /// <summary>
         /// object of NeuralNetwork class
@@ -289,7 +283,7 @@ Internal I/O lib
         /// <param name="pathToDirectoryToSave"></param>
         public static void SaveNeuralNetworkStateToJson(NeuralNetworkState nN, string pathToDirectoryToSave)
         {
-            string json = JsonSerializer.Serialize(nN, JsonOptions);
+            string json = JsonSerializer.Serialize(nN, options);
 
             string path = MakeFileSplitOnIndexIfExists(Path.Combine(pathToDirectoryToSave, "NeuralNetworkState"), "json");
 
