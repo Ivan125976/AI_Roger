@@ -15,7 +15,6 @@ Internal extension I/O lib
     /// <summary>
     /// Auxiliary class, and contains methods for work with array's
     /// </summary>
-    /// <param name="param"></param>
     public class Auxiliary(Parameters param)
     {
         private readonly Parameters _param = param;

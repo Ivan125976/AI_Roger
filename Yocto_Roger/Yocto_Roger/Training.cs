@@ -13,16 +13,9 @@ Copyright 2025-2026 Emotion Corp.
     EducationWithTeacher, DropOut, multilayer, biases
 */
 
-    // <summary>
-    // Learning Algorithm Class
-    // </summary>
-
     /// <summary>
-    /// 
+    /// Learning Algorithm Class
     /// </summary>
-    /// <param name="param">Link to RogerHubEngine parameters file</param>
-    /// <param name="nN">Link to RogerHubEngine neural network lib</param>
-    /// <param name="aiMath">Link to RogerHubEngine aiMath lib</param>
     public class Training(Parameters param, NeuralNetwork nN, RogerMath aiMath)
     {
         private readonly Parameters _param = param;

@@ -19,30 +19,36 @@ Internal I/O lib
     /// <summary>
     /// Main IO class, where contains all main function for work with salve/load
     /// </summary>
-    /// <param name="param"></param>
-    /// <param name="nN"></param>
-    /// <param name="nNState"></param>
-    /// <param name="auxiliaryIO"></param>
-    public class MainIO(Parameters param, NeuralNetwork nN, NeuralNetworkState nNState, Auxiliary auxiliaryIO)
+    public class MainIO(Parameters param, NeuralNetwork nN, NeuralNetworkState nNState)
     {
-        private Parameters _param = param;
+        private static readonly JsonSerializerOptions options =
+            new()
+            {
+                WriteIndented = true
+            };
+
+        private static readonly JsonSerializerOptions JsonOptions =
+            new()
+            {
+                WriteIndented = true
+            };
+
+        private readonly Parameters _param = param;
         /// <summary>
         /// object of NeuralNetwork class
         /// </summary>
         public NeuralNetwork _nN = nN;
-        private NeuralNetworkState _nNState = nNState;
-        private Auxiliary _auxiliaryIO = auxiliaryIO;
+        private readonly NeuralNetworkState _nNState = nNState;
 
         /// <summary>
         /// Saving the current roger settings in the file, which creating automatedly
         /// </summary>
         public void SaveRoger()
         {
-            using (StreamWriter writer = new(MakeFileSplitOnIndexIfExists("roger", "roger")))
-            {
+            using StreamWriter writer = new(MakeFileSplitOnIndexIfExists("roger", "roger"));
 
-                writer.Write(
-                    $"""
+            writer.Write(
+                $"""
                  [roger]
                  AIversion = {_param.version}
                  passes = {_param.passes}
@@ -57,7 +63,6 @@ Internal I/O lib
                  [layers]
                  Layers = {_param.layers}
                  """);
-            }
         }
 
         /// <summary>
@@ -81,11 +86,10 @@ Internal I/O lib
                 Layers = _param.layers,
             };
 
-            JsonSerializerOptions options = new() { WriteIndented = true };
             string jsonData = JsonSerializer.Serialize(roger, options);
 
-            using (StreamWriter writer = new(MakeFileSplitOnIndexIfExists("roger", "json")))
-                writer.Write(jsonData);
+            using StreamWriter writer = new(MakeFileSplitOnIndexIfExists("roger", "json"));
+            writer.Write(jsonData);
         }
 
         /// <summary>
@@ -115,7 +119,7 @@ Internal I/O lib
         /// Checking the recording format
         /// </summary>
         /// <returns>true - json format, false - roger format</returns>
-        private bool? CheckFormat()
+        private static bool? CheckFormat()
         {
             Parameters param = new();
 
@@ -179,7 +183,7 @@ Internal I/O lib
         /// <summary>
         /// A function that returns a Roger class object with data extracted from a .roger file.
         /// </summary>
-        private Roger LoadRogerFromRoger()
+        private static Roger LoadRogerFromRoger()
         {
             Parameters param = new();
 
@@ -207,14 +211,14 @@ Internal I/O lib
         /// <summary>
         /// Returns an object of the Roger class with all the necessary data to load the neural network.
         /// </summary>
-        private Roger? LoadRogerFromJson()
+        private static Roger? LoadRogerFromJson()
         {
             Parameters param = new();
 
             using JsonDocument document = JsonDocument.Parse(File.ReadAllText(param.roger2));
             JsonElement root = document.RootElement;
 
-            Roger roger = JsonSerializer.Deserialize<Roger>(File.ReadAllText(param.roger2));
+            Roger? roger = JsonSerializer.Deserialize<Roger>(File.ReadAllText(param.roger2));
 
             return roger ?? null;
         }
@@ -224,7 +228,7 @@ Internal I/O lib
         /// </summary>
         /// <param name="filename"></param>
         /// <param name="extension">File extension (without period)</param>
-        public string MakeFileSplitOnIndexIfExists(string filename, string extension)
+        public static string MakeFileSplitOnIndexIfExists(string filename, string extension)
         {
             int index = 0;
 
@@ -283,9 +287,9 @@ Internal I/O lib
         /// </summary>
         /// <param name="nN"></param>
         /// <param name="pathToDirectoryToSave"></param>
-        public void SaveNeuralNetworkStateToJson(NeuralNetworkState nN, string pathToDirectoryToSave)
+        public static void SaveNeuralNetworkStateToJson(NeuralNetworkState nN, string pathToDirectoryToSave)
         {
-            string json = JsonSerializer.Serialize(nN, new JsonSerializerOptions { WriteIndented = true });
+            string json = JsonSerializer.Serialize(nN, JsonOptions);
 
             string path = MakeFileSplitOnIndexIfExists(Path.Combine(pathToDirectoryToSave, "NeuralNetworkState"), "json");
 

@@ -286,12 +286,12 @@ Copyright 2025-2026 Emotion Corp.
                             try
                             {
                                 if (input is string path && !string.IsNullOrEmpty(path))
-                                    _io.SaveNeuralNetworkStateToJson(_io.FixTheStateOfNeuralNetwork(false), path);
+                                    MainIO.SaveNeuralNetworkStateToJson(_io.FixTheStateOfNeuralNetwork(false), path);
 
                                 else if (input == string.Empty)
-                                    _io.SaveNeuralNetworkStateToJson(_io.FixTheStateOfNeuralNetwork(false), Directory.GetCurrentDirectory());
+                                    MainIO.SaveNeuralNetworkStateToJson(_io.FixTheStateOfNeuralNetwork(false), Directory.GetCurrentDirectory());
                                 else
-                                    UI.UI.Send("Incorrect input (-_0)", "error");
+                                    Send("Incorrect input (-_0)", "error");
                             }
                             catch (Exception e)
                             {
@@ -301,7 +301,7 @@ Copyright 2025-2026 Emotion Corp.
                     }
                     else
                     {
-                        UI.UI.Send("Incorrect input (-_0)", "error");
+                        Send("Incorrect input (-_0)", "error");
                     }
                 }
             }

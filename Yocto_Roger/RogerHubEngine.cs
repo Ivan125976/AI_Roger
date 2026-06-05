@@ -26,7 +26,7 @@ namespace Yocto_Roger
 
             UI.UI user = new(null!, null!, param);
             Auxiliary auxiliaryIO = new(param);
-            MainIO io = new(param, null!, nNState, auxiliaryIO);
+            MainIO io = new(param, null!, nNState);
             Weights weights = new(param);
             Biases biases = new(param);
             RogerMath aiMath = new(param);
