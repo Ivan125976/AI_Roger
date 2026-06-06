@@ -17,6 +17,10 @@ namespace Yocto_Roger
         /// </summary>
         static public void Main()
         {
+            // We are not idiots.
+            // We are idiots++.
+            // © Emotion Corp.
+
             Parameters param = new();
             NeuralNetworkState nNState = new();
 
