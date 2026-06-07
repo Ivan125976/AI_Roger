@@ -17,7 +17,7 @@ RogerHub configuration
         /// <summary>
         /// Debug flag. If enabled, logs will be written to the console. This is for developers.
         /// </summary>
-        public readonly bool isDebug = true;
+        public readonly bool isDebug = false;
 
         /// <summary>
         /// Version of RogerHubEngine
