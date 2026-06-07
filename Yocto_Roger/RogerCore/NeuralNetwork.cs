@@ -21,14 +21,14 @@ Copyright 2025-2026 Emotion Corp.
     /// <summary>
     /// Yocto Roger Neural Network. Hello! :D
     /// </summary>
-    public class NeuralNetwork(Parameters param, MainIO io, Weights weights, Biases biases, Training.Training training)
+    public class NeuralNetwork(Parameters param, MainIO io, Weights weights, Biases biases, Training.Training training, GUI gui)
     {
         private readonly Parameters _param = param;
         private readonly MainIO _io = io;
         private readonly Weights _weights = weights;
         private readonly Biases _biases = biases;
         private readonly Training.Training _training = training;
-
+        private readonly GUI _gui = gui;
         /// <summary>
         /// Flag indicating whether Roger has been created
         /// </summary>
@@ -85,8 +85,6 @@ Copyright 2025-2026 Emotion Corp.
         /// <param name="mode">When 1 -> the neural network tries to load, when 0 -> a new neural network is created</param>
         public void StartAI(int mode)
         {
-            //UI.UI user = new();
-            //Parameters param = new();
             Console.WriteLine("StartAI in mode " + mode);
             switch (mode)
             {
@@ -193,8 +191,8 @@ Copyright 2025-2026 Emotion Corp.
                     try
                     {
                         _weights.Init(ref inputWeights);
-                        _weights.Init(ref outputWeights);
                         _weights.Init(ref middleWeights);
+                        _weights.Init(ref outputWeights);
                     }
                     catch (Exception ex)
                     {
@@ -245,6 +243,9 @@ Copyright 2025-2026 Emotion Corp.
                         Send("Maybe file which you entered, doesn't exists, please check it and retry");
                     }
                     break;
+
+                case 3:
+                    return;
             }
             if (rogerIsCreated)
             {
@@ -265,7 +266,9 @@ Copyright 2025-2026 Emotion Corp.
 
                         string[] userInputChecked = userInputString.Split(',');
                         if (userInputString == "exit")
-                            return;
+                        {
+                            _gui.StartEngine(false); // Goto main menu
+                        }
                         else if (userInputString == "save")
                         {
                             Console.Write("Please, enter the path to the directory, where we going to save the file (to this directory, simple press the enter): ");

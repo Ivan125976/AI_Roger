@@ -31,7 +31,7 @@ namespace Yocto_Roger
             Biases biases = new(param);
             RogerMath aiMath = new(param);
             Training training = new(param, null!);
-            NeuralNetwork nN = new(param, io, weights, biases, training);
+            NeuralNetwork nN = new(param, io, weights, biases, training, user);
             SettingsInterface settingsInterface = new(param, io, auxiliaryIO);
 
             io._nN = nN;
@@ -39,7 +39,7 @@ namespace Yocto_Roger
             user._settingsInterface = settingsInterface;
             training.roger = nN;
 
-            user.StartEngine();
+            user.StartEngine(true);
         }
     }
 }

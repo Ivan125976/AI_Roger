@@ -185,7 +185,7 @@ Internal I/O lib
         /// </summary>
         /// <param name="nN"></param>
         /// <param name="isNeededToInitEducationArray"></param>
-        public void InitNeuralNetwork(NeuralNetworkState nN, bool isNeededToInitEducationArray = false)
+        public void InitNeuralNetwork(NeuralNetworkState? nN, bool isNeededToInitEducationArray = false)
         {
             if (isNeededToInitEducationArray)
                 if (nN?.EducationArray is not null)
@@ -249,7 +249,7 @@ Internal I/O lib
 
                 // And here too
                 Layers = _param.layers,
-
+                
                 Obias = BuildStringMatrix(_nN.Mbias) ?? null,
                 Mbias = BuildStringArray(_nN.Obias) ?? null,
             };
@@ -260,33 +260,13 @@ Internal I/O lib
         /// <summary>
         /// Loading values from the file 
         /// </summary>
-        /// <param name="absolute_path"></param>
+        /// <param name="absolute_path">Absolute path to file</param>
         /// <returns></returns>
-        public NeuralNetworkState LoadNeuralNetworkStateFromJson(string absolute_path)
+        public NeuralNetworkState? LoadNeuralNetworkStateFromJson(string absolute_path)
         {
-            string parsedJson = File.ReadAllText(absolute_path);
+            NeuralNetworkState? nNState = JsonSerializer.Deserialize<NeuralNetworkState>(File.ReadAllText(absolute_path));
 
-            NeuralNetworkState? nNState = JsonSerializer.Deserialize<NeuralNetworkState>(parsedJson);
-
-            _nNState.EducationArray = nNState?.EducationArray ?? null;
-
-            _nNState.InputNeurons = nNState?.InputNeurons ?? null;
-            _nNState.MiddleNeurons = nNState?.MiddleNeurons ?? null;
-            _nNState.OutputNeurons = nNState?.OutputNeurons ?? null;
-
-            // If null - Values as default (In NeuralNetwork.cs, there's initialization as default)
-            _nNState.InputNeuronsCount =   nNState!.InputNeuronsCount;
-            _nNState.MiddleNeuronsCount = nNState!.MiddleNeuronsCount;
-            _nNState.OutputNeuronsCount = nNState!.OutputNeuronsCount;
-
-            _nNState.InputWeights = nNState?.InputWeights ?? null;
-            _nNState.MiddleWeights = nNState?.MiddleWeights ?? null;
-            _nNState.OutputWeights = nNState?.OutputWeights ?? null;
-
-            _nNState.Obias = nNState?.Obias ?? null;
-            _nNState.Mbias = nNState?.Mbias ?? null;
-
-            return _nNState;
+            return nNState;
         }
     }
 }

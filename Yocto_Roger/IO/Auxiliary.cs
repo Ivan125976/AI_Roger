@@ -118,7 +118,7 @@ Internal extension I/O lib
                 {
                     for (int j = 0; j < cols; j++)
                     {
-                        builder.Append(Convert.ToString(jaggedMatrix[iM][i, j], CultureInfo.InvariantCulture)).Append(';');
+                        builder.Append(jaggedMatrix[iM][i, j].ToString(CultureInfo.InvariantCulture)).Append(';');
                     }
                 }
             }
@@ -268,33 +268,46 @@ Internal extension I/O lib
         {
             if (obj == null || obj.Length == 0 || matrixCount == 0)
             {
-                return [];
+                return Array.Empty<double[,]>();
+            }
+
+            int totalElements = obj.Length;
+            int elementsPerMatrix = totalElements / matrixCount;
+
+            if (elementsPerMatrix == 0)
+            {
+                elementsPerMatrix = totalElements;
+                matrixCount = 1;
             }
 
             byte rows = 3;
             byte columns = 2;
+            int elementsPerBox = rows * columns; // 6
 
-            double[][,] matrix = new double[matrixCount][,];
+            int actualMatrixCount = Math.Min((int)matrixCount, totalElements / elementsPerBox);
+            if (actualMatrixCount == 0 && totalElements > 0) actualMatrixCount = 1;
+
+            double[][,] jaggedMatrix = new double[actualMatrixCount][,];
             int index = 0;
 
-            for (int i = 0; i < matrixCount; i++)
+            for (int i = 0; i < actualMatrixCount; i++)
             {
-                matrix[i] = new double[rows, columns];
+                double[,] matrix = new double[rows, columns];
 
                 for (int r = 0; r < rows; r++)
                 {
                     for (int c = 0; c < columns; c++)
                     {
-                        if (index < obj.Length)
+                        if (index < totalElements)
                         {
-                            matrix[i][r, c] = obj[index];
-                            index++;
+                            matrix[r, c] = obj[index++];
                         }
                     }
                 }
+                jaggedMatrix[i] = matrix;
             }
 
-            return matrix;
+            return jaggedMatrix;
         }
     }
 }

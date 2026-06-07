@@ -33,23 +33,26 @@ Copyright 2025-2026 Emotion Corp.
         /// <summary>
         /// Launches the console UI
         /// </summary>
-        public void StartEngine()
+        public void StartEngine(bool needToConfigure)
         {
-            Console.WriteLine("Configuring console...");
-
-            if (Console.WindowHeight < 20 || Console.WindowWidth < 50)
+            if (needToConfigure)
             {
-                Send("The window is too small >:(", MessageType.error);
-                Environment.Exit(1);
+                Console.WriteLine("Configuring console...");
+
+                if (Console.WindowHeight < 20 || Console.WindowWidth < 50)
+                {
+                    Send("The window is too small >:(", MessageType.error);
+                    Environment.Exit(1);
+                }
+
+                Console.Title = "RogerHubEngine v2.2.0 CharLie";
+
+                Console.InputEncoding = Encoding.Unicode;
+                Console.OutputEncoding = Encoding.Unicode;
+
+                DrawLine(ConsoleColor.Magenta, "Emotion ;) 2026", "Roger :D");
+                Thread.Sleep(3000);
             }
-
-            Console.Title = "RogerHubEngine v2.2.0 CharLie";
-
-            Console.InputEncoding = Encoding.Unicode;
-            Console.OutputEncoding = Encoding.Unicode;
-
-            DrawLine(ConsoleColor.Magenta, "Emotion ;) 2026", "Roger :D");
-            Thread.Sleep(3000);
             int i = 0;
             while (true)
             {
