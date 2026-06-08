@@ -1,4 +1,7 @@
 ﻿using Yocto_Roger.RogerCore.UtilityTools;
+using Yocto_Roger.UI.GUI;
+
+using static Yocto_Roger.UI.GUI.GUI;
 
 namespace Yocto_Roger.RogerCore.Initialization.Weights
 {
@@ -56,13 +59,13 @@ Copyright 2025-2026 Emotion Corp.
         {
             if (weights.Length > 0)
             {
-#if DEBUG
-                Console.Write($"weights[][,] = \n");
-                Send($"Xaiver Uniform Initialization; limit = {limit}", MessageType.warning);
-#endif
                 for (int i = 0; i < weights.Length; i++)
                 {
                     double limit = (double)Math.Sqrt(6 / (weights[i].GetLength(0) * 1.0 + weights[i].GetLength(1) * 1.0));
+#if DEBUG
+                    Console.Write($"weights[][,] = \n");
+                    Send($"Xaiver Uniform Initialization; limit = {limit}", MessageType.warning);
+#endif
                     for (int j = 0; j < weights[i].GetLength(0); j++)
                     {
                         for (int k = 0; k < weights[i].GetLength(1); k++)

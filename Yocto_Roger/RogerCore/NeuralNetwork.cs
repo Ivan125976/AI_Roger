@@ -1,4 +1,9 @@
 ﻿using System.Globalization;
+using MemoryPack;
+
+#if DEBUG
+using Newtonsoft.Json; // For middleWeights
+#endif
 using Yocto_Roger.IO;
 using Yocto_Roger.RogerCore.Initialization.Biases;
 using Yocto_Roger.RogerCore.Initialization.Weights;
@@ -205,12 +210,12 @@ Copyright 2025-2026 Emotion Corp.
                     break;
 
                 case 1:
-                    Console.Write("Write an absolute path to your .json file\nSTRING> ");
+                    Console.Write("Write an absolute path to your .bin file\nSTRING> ");
                     string? userInput = Console.ReadLine();
                     if (userInput is string inputChecked && !string.IsNullOrEmpty(userInput) && Path.Exists(userInput))
                     {
                         Console.WriteLine("Loading your Roger... please wait :D");
-                        _io.InitNeuralNetwork(MainIO.LoadNeuralNetworkStateFromJson(inputChecked), false);
+                        _io.InitNeuralNetwork(MainIO.LoadNeuralNetworkStateFromBin(inputChecked));
                         rogerIsCreated = true;
                     }
                     else
@@ -242,7 +247,7 @@ Copyright 2025-2026 Emotion Corp.
                         string[] userInputChecked = userInputString.Split(',');
                         if (userInputString == "exit")
                         {
-                            _gui.StartEngine(false); // Goto main menu
+                            _gui.StartEngine(false); // Go to main menu
                         }
                         else if (userInputString == "save")
                         {
@@ -252,9 +257,26 @@ Copyright 2025-2026 Emotion Corp.
                             try
                             {
                                 if (input is string path && !string.IsNullOrEmpty(path) && Directory.Exists(path))
-                                    MainIO.SaveNeuralNetworkStateToJson(_io.FixTheStateOfNeuralNetwork(false), path);
+                                {
+                                    MainIO.SaveNeuralNetworkStateToBin(_io.FixTheStateOfNeuralNetwork(), path);
+#if DEBUG
+                                    NeuralNetworkState data = MemoryPackSerializer.Deserialize<NeuralNetworkState>(File.ReadAllBytes(path));
+                                    Console.WriteLine($"Saved data is: {JsonConvert.SerializeObject(data, Formatting.Indented)}");
+                                    Console.WriteLine("Enter any button to continue");
+                                    Console.ReadLine();
+#endif
+                                }
+
                                 else if (input == string.Empty)
-                                    MainIO.SaveNeuralNetworkStateToJson(_io.FixTheStateOfNeuralNetwork(false), Directory.GetCurrentDirectory());
+                                {
+                                    MainIO.SaveNeuralNetworkStateToBin(_io.FixTheStateOfNeuralNetwork(), Directory.GetCurrentDirectory());
+#if DEBUG
+                                    NeuralNetworkState data = MemoryPackSerializer.Deserialize<NeuralNetworkState>(File.ReadAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "NeuralNetworkState.bin")));
+                                    Console.WriteLine($"Saved data (in json) is: \n{JsonConvert.SerializeObject(data, Formatting.Indented)});");
+                                    Console.WriteLine("Enter any button to continue");
+                                    Console.ReadLine();
+#endif
+                                }
                                 else
                                     Send("Incorrect input (-_0)", MessageType.error);
                             }

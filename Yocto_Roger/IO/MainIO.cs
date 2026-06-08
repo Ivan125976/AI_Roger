@@ -5,6 +5,7 @@ using Yocto_Roger.UI.GUI;
 using static Yocto_Roger.Configuration.EngineVersion;
 using static Yocto_Roger.IO.Auxiliary;
 using static Yocto_Roger.UI.GUI.GUI;
+using MemoryPack;
 
 namespace Yocto_Roger.IO
 {
@@ -156,7 +157,7 @@ Internal I/O lib
         /// <summary>
         /// Attempts to create a file in the same directory; if such a file already exists, it adds an index of attempts until it reaches the index where there is no file with that name.
         /// </summary>
-        /// <param name="fileName"></param>
+        /// <param name="fileName">Can be path + filename. Example: C:\Users\Noob\Desktop\roger, where roger is filename, without extenshion. Then file will be created in Desktop</param>
         /// <param name="extension">File extension (without period)</param>
         public static string MakeFileSplitOnIndexIfExists(string extension, string? fileName = "roger")
         {
@@ -179,37 +180,28 @@ Internal I/O lib
             return filenameWithIndex;
         }
 
-        //*************NEURAL NETWORK SECTION********************
+        /********************NEURAL NETWORK SECTION********************/
 
         /// <summary>
         /// Transforming the values from class NeuralNetworkState to needed types, and initializing it where it needs
         /// </summary>
         /// <param name="nN"></param>
-        /// <param name="isNeededToInitEducationArray"></param>
-        public void InitNeuralNetwork(NeuralNetworkState? nN, bool isNeededToInitEducationArray = false)
+        public void InitNeuralNetwork(NeuralNetworkState? nN)
         {
-            if (isNeededToInitEducationArray)
-                if (nN?.EducationArray is not null)
-                    _nN.educationArray = ReadMatrixFromArray([.. nN.EducationArray.Split(';').Select(s => int.Parse(s, CultureInfo.InvariantCulture!))]);
-
-            _nN.inputNeurons = nN?.InputNeurons?.Split(';').Select(s => int.Parse(s, CultureInfo.InvariantCulture)).ToArray();
-            _nN.middleNeurons = ReadMatrixFromDoublesArray((nN?.MiddleNeurons is not null) ? [.. nN.MiddleNeurons.Split(';').Select(s => double.Parse(s, CultureInfo.InvariantCulture))] : null);
-            _nN.outputNeurons = nN?.OutputNeurons?.Split(';').Select(s => double.Parse(s, CultureInfo.InvariantCulture)).ToArray();
-
             // If null - Values by default
             _param.inputNeuronsCount = nN?.InputNeuronsCount ?? 14;
             _param.middleNeuronsCount = nN?.MiddleNeuronsCount ?? 16;
             _param.outputNeuronsCount = nN?.OutputNeuronsCount ?? 8;
 
-            _nN.inputWeights = ReadMatrixFromDoublesArray((nN?.InputWeights is not null) ? [.. nN.InputWeights!.Split(';').Select(s => double.Parse(s, CultureInfo.InvariantCulture))] : null);
-            _nN.middleWeights = ReadJaggedMatrixFromArray((nN?.MiddleWeights is not null) ? [.. nN.MiddleWeights!.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(s => double.Parse(s, CultureInfo.InvariantCulture))] : null);
-            _nN.outputWeights = ReadMatrixFromDoublesArray((nN?.OutputWeights is not null) ? [.. nN.OutputWeights!.Split(';').Select(s => double.Parse(s, CultureInfo.InvariantCulture))] : null);
+            _nN.inputWeights = nN?.InputWeights!;
+            _nN.middleWeights = nN?.MiddleWeights!;
+            _nN.outputWeights = nN?.OutputWeights!;
 
             // If null - values by default
             _param.layers = nN?.Layers ?? 3;
 
-            _nN.Mbias = ReadMatrixFromDoublesArray((nN?.Mbias != null) ? [.. nN.Mbias!.Split(';').Select(s => double.Parse(s, CultureInfo.InvariantCulture))] : null);
-            _nN.Obias = nN?.Obias?.Split(';').Select(s => double.Parse(s, CultureInfo.InvariantCulture)).ToArray();
+            _nN.Mbias = nN?.Mbias;
+            _nN.Obias = nN?.Obias;
 
         }
         /// <summary>
@@ -217,42 +209,37 @@ Internal I/O lib
         /// </summary>
         /// <param name="nN"></param>
         /// <param name="pathToDirectoryToSave"></param>
-        public static void SaveNeuralNetworkStateToJson(NeuralNetworkState nN, string pathToDirectoryToSave)
+        public static void SaveNeuralNetworkStateToBin(NeuralNetworkState nN, string pathToDirectoryToSave)
         {
-            string json = JsonSerializer.Serialize(nN, options);
+            byte[] binData = MemoryPackSerializer.Serialize(nN);
 
-            string path = MakeFileSplitOnIndexIfExists("json", Path.Combine(pathToDirectoryToSave, "NeuralNetworkState"));
+            string path = MakeFileSplitOnIndexIfExists("bin", Path.Combine(pathToDirectoryToSave, "NeuralNetworkState"));
 
-            File.WriteAllText(path, json);
+            File.WriteAllBytes(path, binData);
         }
         /// <summary>
         /// Fixing the neural network state
         /// </summary>
-        /// <param name="isNeedToFixTheEducationArray">recommended to set it to false</param>
         /// <returns></returns>
-        public NeuralNetworkState FixTheStateOfNeuralNetwork(bool isNeedToFixTheEducationArray)
+        public NeuralNetworkState FixTheStateOfNeuralNetwork()
         {
             NeuralNetworkState nN = new()
             {
-                EducationArray = (isNeedToFixTheEducationArray) ? BuildStringMatrix(_nN.educationArray) ?? null : String.Empty,
-                InputNeurons = BuildStringArray(_nN.inputNeurons) ?? null,
-                MiddleNeurons = BuildStringMatrix(_nN.middleNeurons) ?? null,
-                OutputNeurons = BuildStringArray(_nN.outputNeurons) ?? null,
 
-                // It can't be null (i hope...), so i don't paste "?? null" here
+                // If it's null, then it automatedly set to default value
                 InputNeuronsCount = _param.inputNeuronsCount,
                 MiddleNeuronsCount = _param.middleNeuronsCount,
                 OutputNeuronsCount = _param.outputNeuronsCount,
 
-                InputWeights = BuildStringArray(_nN.inputWeights) ?? null,
-                MiddleWeights = BuildStringJaggedMatrix(_nN.middleWeights) ?? null,
-                OutputWeights = BuildStringArray(_nN.outputWeights) ?? null,
+                InputWeights = _nN.inputWeights ?? null,
+                MiddleWeights = _nN.middleWeights ?? null,
+                OutputWeights = _nN.outputWeights ?? null,
 
                 // And here too
                 Layers = _param.layers,
 
-                Obias = BuildStringMatrix(_nN.Mbias) ?? null,
-                Mbias = BuildStringArray(_nN.Obias) ?? null,
+                Obias = _nN.Obias ?? null,
+                Mbias = _nN.Mbias ?? null
             };
 
             return nN;
@@ -261,11 +248,11 @@ Internal I/O lib
         /// <summary>
         /// Loading values from the file 
         /// </summary>
-        /// <param name="absolute_path">Absolute path to file</param>
+        /// <param name="absolute_path">Absolute path to the file</param>
         /// <returns></returns>
-        public static NeuralNetworkState? LoadNeuralNetworkStateFromJson(string absolute_path)
+        public static NeuralNetworkState? LoadNeuralNetworkStateFromBin(string absolute_path)
         {
-            NeuralNetworkState? nNState = JsonSerializer.Deserialize<NeuralNetworkState>(File.ReadAllText(absolute_path));
+            NeuralNetworkState? nNState = MemoryPackSerializer.Deserialize<NeuralNetworkState>(File.ReadAllBytes(absolute_path));
 
             return nNState;
         }

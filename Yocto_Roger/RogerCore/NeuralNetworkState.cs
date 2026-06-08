@@ -1,26 +1,13 @@
-﻿namespace Yocto_Roger.RogerCore
+﻿using MemoryPack;
+
+namespace Yocto_Roger.RogerCore
 {
     /// <summary>
     /// Keeping values in string's
     /// </summary>
-    public class NeuralNetworkState
+    [MemoryPackable]
+    public partial class NeuralNetworkState
     {
-        /// <summary>
-        /// Education array
-        /// </summary>
-        public string? EducationArray { get; set; }
-        /// <summary>
-        /// Input neurons
-        /// </summary>
-        public string? InputNeurons { get; set; }
-        /// <summary>
-        /// Middle neurons
-        /// </summary>
-        public string? MiddleNeurons { get; set; }
-        /// <summary>
-        /// Output neurons
-        /// </summary>
-        public string? OutputNeurons { get; set; }
         /// <summary>
         /// Input neurons count
         /// </summary>
@@ -36,15 +23,15 @@
         /// <summary>
         /// input weights
         /// </summary>
-        public string? InputWeights { get; set; }
+        public double[,]? InputWeights { get; set; }
         /// <summary>
         /// middle weights
         /// </summary>
-        public string? MiddleWeights { get; set; }
+        public double[][,]? MiddleWeights { get; set; }
         /// <summary>
         /// output weights
         /// </summary>
-        public string? OutputWeights { get; set; }
+        public double[,]? OutputWeights { get; set; }
         /// <summary>
         /// layers
         /// </summary>
@@ -52,10 +39,10 @@
         /// <summary>
         /// mbias
         /// </summary>
-        public string? Mbias { get; set; }
+        public double[,]? Mbias { get; set; }
         /// <summary>
         /// obias
         /// </summary>
-        public string? Obias { get; set; }
+        public double[]? Obias { get; set; }
     }
 }
