@@ -22,12 +22,10 @@ Copyright 2025-2026 Emotion Corp.
     /// <summary>
     /// Yocto Roger Neural Network. Hello! :D
     /// </summary>
-    public class NeuralNetwork(Parameters param, MainIO io, InitWeights weights, InitBiases biases, Training.Training training, GUI gui, CreateWeights weightsCreator)
+    public class NeuralNetwork(Parameters param, MainIO io, Training.Training training, GUI gui, CreateWeights weightsCreator)
     {
         private readonly Parameters _param = param;
         private readonly MainIO _io = io;
-        private readonly InitWeights _weights = weights;
-        private readonly InitBiases _biases = biases;
         private readonly Training.Training _training = training;
         private readonly GUI _gui = gui;
         private readonly CreateWeights _weightsCreator = weightsCreator;
@@ -177,14 +175,14 @@ Copyright 2025-2026 Emotion Corp.
                     Obias = new double[_param.outputNeuronsCount];
                     Send("done");
                     Console.Write("Initialization biases...");
-                    InitBiases.Init(ref Mbias);
-                    InitBiases.Init(ref Obias);
+                    InitBiases.Init(Mbias);
+                    InitBiases.Init(Obias);
                     Send("done");
                     Console.Write("Initialization weights...");
-                    InitWeights.Init(ref inputWeights);
-                    _weightsCreator.CreateMiddleWeights(ref middleWeights);
-                    InitWeights.Init(ref middleWeights);
-                    InitWeights.Init(ref outputWeights);
+                    InitWeights.Init(inputWeights);
+                    _weightsCreator.CreateMiddleWeights(middleWeights);
+                    InitWeights.Init(middleWeights);
+                    InitWeights.Init(outputWeights);
                     Send("done");
                     Send("Initialization complete", MessageType.message);
                     Console.Write("Education...");
@@ -192,7 +190,7 @@ Copyright 2025-2026 Emotion Corp.
                     Console.WriteLine();
                     Progressbar educationStatus = new(ConsoleColor.DarkGreen, 20, Console.CursorLeft, Console.CursorTop);
 
-                    _training.Education(ref inputNeurons, ref middleNeurons, ref outputNeurons, ref inputWeights, ref middleWeights, ref outputWeights, ref Mbias, ref Obias, educationArray, educationStatus);
+                    _training.Education(inputNeurons, middleNeurons, outputNeurons, inputWeights, middleWeights, outputWeights, Mbias, Obias, educationArray, educationStatus);
 
                     educationStatus.Draw(100);
                     Send("\nEducation Complete");

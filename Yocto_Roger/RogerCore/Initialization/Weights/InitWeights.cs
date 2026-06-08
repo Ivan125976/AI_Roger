@@ -22,7 +22,7 @@ Copyright 2025-2026 Emotion Corp.
         /// </summary>
         /// <param name="weights">Array of weights</param>
 
-        public static void Init(ref double[,] weights)
+        public static void Init(double[,] weights)
         {
             double limit = (double)Math.Sqrt(6 / (weights.GetLength(0) * 1.0 + weights.GetLength(1) * 1.0));
 #if DEBUG
@@ -52,7 +52,7 @@ Copyright 2025-2026 Emotion Corp.
         /// </summary>
         /// <param name="weights">Array of weights</param>
 
-        public static void Init(ref double[][,] weights)
+        public static void Init(double[][,] weights)
         {
             if (weights.Length > 0)
             {

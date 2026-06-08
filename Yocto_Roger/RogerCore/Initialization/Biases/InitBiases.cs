@@ -12,15 +12,14 @@ Copyright 2025-2026 Emotion Corp.
     /// <summary> 
     /// Class for initializing arrays of biases
     /// </summary>
-    public class InitBiases(Parameters param)
+    public class InitBiases()
     {
-        private readonly Parameters _param = param;
         /// <summary>
         /// Random filling of the array of biases
         /// </summary>
         /// <param name="biases">Array of biases</param>
 
-        public static void Init(ref double[] biases)
+        public static void Init(double[] biases)
         {
             for (int i = 0; i < biases.Length; i++)
                 biases[i] = 0;
@@ -31,7 +30,7 @@ Copyright 2025-2026 Emotion Corp.
         /// </summary>
         /// <param name="biases">Array of biases</param>
 
-        public static void Init(ref double[,] biases)
+        public static void Init(double[,] biases)
         {
             for (int i = 0; i < biases.GetLength(0); i++)
                 for (int j = 0; j < biases.GetLength(1); j++)

@@ -39,14 +39,14 @@ Copyright 2025-2026 Emotion Corp.
         /// <param name="outputBiases">One-dimensional array of shifts for output neurons</param>
         /// <param name="educationArray">An array of training data that complies with the .know standard</param>
         /// <param name="status">An optional Progressbar object that will display how much the neural network has learned.</param>
-        public void Education(ref int[] inputNeurons,
-                                     ref double[,] middleNeurons,
-                                     ref double[] outputNeurons,
-                                     ref double[,] inputWeights,
-                                     ref double[][,] middleWeights,
-                                     ref double[,] outputWeights,
-                                     ref double[,] middleBiases,
-                                     ref double[] outputBiases,
+        public void Education(int[] inputNeurons,
+                                     double[,] middleNeurons,
+                                     double[] outputNeurons,
+                                     double[,] inputWeights,
+                                     double[][,] middleWeights,
+                                     double[,] outputWeights,
+                                     double[,] middleBiases,
+                                     double[] outputBiases,
                                      double[,] educationArray,
                                      Progressbar? status = null)
         {

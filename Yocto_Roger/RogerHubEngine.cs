@@ -29,9 +29,8 @@ namespace Yocto_Roger
             MainIO io = new(param, null!, nNState);
             CreateWeights middleWeightsCreator = new(param);
             InitWeights weights = new();
-            InitBiases biases = new(param);
             Training training = new(param, null!);
-            NeuralNetwork nN = new(param, io, weights, biases, training, user, middleWeightsCreator);
+            NeuralNetwork nN = new(param, io, training, user, middleWeightsCreator);
             SettingsInterface settingsInterface = new(param, io, auxiliaryIO);
 
             io._nN = nN;
