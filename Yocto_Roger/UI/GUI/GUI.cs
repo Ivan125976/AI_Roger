@@ -1,6 +1,9 @@
-﻿using System.Text;
+﻿using System.Runtime.CompilerServices;
+using System.Text;
 using Yocto_Roger.RogerCore;
 using Yocto_Roger.UI.Interfaces;
+using Velopack;
+using Velopack.Sources;
 using static Yocto_Roger.Configuration.EngineVersion;
 
 namespace Yocto_Roger.UI.GUI
@@ -69,8 +72,9 @@ Copyright 2025-2026 Emotion Corp.
                     2. Load your roger (neural network) from the file
                     3. Options for training mode...
                     4. RRNNs settings...
-                    5. About...
-                    6. Exit from RogerHub 
+                    5. Update manager...
+                    6. About...
+                    7. Exit from RogerHub 
                     >>> 
                     """);
                 if (int.TryParse(Console.ReadLine(), out int value))
@@ -95,12 +99,82 @@ Copyright 2025-2026 Emotion Corp.
                             break;
 
                         case 5:
+                            VelopackApp.Build().Run();
+                            GithubSource githubSource = new("https://github.com/Ivan125976/AI_Roger", null, false);
+                            var mgr = new UpdateManager(githubSource);
+
+                            if (mgr.IsInstalled)
+                            {
+
+                                Console.WriteLine(
+                                    $"""
+                                1. Check for updates and update
+                                2. Get outta here to main menu
+                                """);
+                                if (int.TryParse(Console.ReadLine(), out int choice))
+                                {
+                                    switch (choice)
+                                    {
+                                        case 1:
+                                            UpdateInfo info = mgr.CheckForUpdates();
+
+                                            if (info != null)
+                                            {
+                                                Console.WriteLine("Updates found! Downloading...");
+                                                try
+                                                {
+                                                    mgr.DownloadUpdates(info);
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    Console.WriteLine($"Failed to download the update: {ex}");
+                                                    break;
+                                                }
+                                                Console.WriteLine("Updates was downloaded successful!\nTrying to apply it, the app will be restarted in new version...");
+                                                Thread.Sleep(5000); // For user can to read the message
+                                                try
+                                                {
+                                                    mgr.ApplyUpdatesAndRestart(info);
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    Send("Failed to apply updates, here's my error: ", MessageType.error);
+                                                    Console.WriteLine(ex.ToString(), ConsoleColor.Red);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                Send("Hey, hey, calm down, you have the latest version");
+                                                Thread.Sleep(5000);
+                                            }
+                                            break;
+
+                                        case 2:
+                                            break;
+
+                                    }
+
+                                }
+                                else
+                                {
+                                    Send("Incorrect input (-_0)", MessageType.error);
+                                    Thread.Sleep(1000);
+                                }
+                                break;
+                            }
+                            else
+                            {
+                                Send("I can't find installed tools, maybe you run it in ide? If you run it in visual studio for example, then the library which response for updates, won't working", MessageType.error);
+                            }
+                            break;
+
+                        case 6:
                             Console.WriteLine($" Github: https://github.com/Ivan125976/AI_Roger\n\n Authors: \n Axolotl512 - AI and RogerHubEngine \n d3ath-script - RRNNs, IO and compiling \n\n RogerHubEngine v{version}.{revision} build:CHARLIE \n" +
                                 " RogerCore v2.2 \n RRNNs isn't ready \n OpenRB isn't ready \n\n Press any key to continue ");
                             Console.ReadKey();
                             break;
 
-                        case 6:
+                        case 7:
                             Environment.Exit(0);
                             break;
 
