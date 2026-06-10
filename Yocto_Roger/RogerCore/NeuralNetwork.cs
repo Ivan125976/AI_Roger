@@ -30,13 +30,13 @@ Copyright 2025-2026 Emotion Corp.
     /// <summary>
     /// Yocto Roger Neural Network. Hello! :D
     /// </summary>
-    public class NeuralNetwork(Parameters param, MainIO io, Training.Training training, CreateWeights weightsCreator, MainMenuInterface mainMenuInterface)
+    public class NeuralNetwork(Parameters param, MainIO io, Training.Training training, CreateWeights weightsCreator, NeuralNetworkInterface neuralNetworkInterface)
     {
         private readonly Parameters _param = param;
         private readonly MainIO _io = io;
         private readonly Training.Training _training = training;
         private readonly CreateWeights _weightsCreator = weightsCreator;
-        private readonly MainMenuInterface _mainMenuInterface = mainMenuInterface;
+        private readonly NeuralNetworkInterface _neuralNetworkInterface = neuralNetworkInterface;
         /// <summary>
         /// Flag indicating whether Roger has been created
         /// </summary>
@@ -241,88 +241,9 @@ Copyright 2025-2026 Emotion Corp.
                 case 3:
                     return;
             }
-            #region NeuralNetworkInterface
+
             if (rogerIsCreated)
-            {
-                Console.CursorVisible = true;
-                while (true)
-                {
-                    Console.Clear();
-                    Send("Enter \"save\"  to fix the state of neural network in the file, for load at this point later. Or \"exit\" to exit to main menu", MessageType.warning);
-                    Console.WriteLine($"Roger have {_param.inputNeuronsCount} input neurons, and {_param.outputNeuronsCount} output neurons." +
-                        $"Write input format: <datain1>,<datain2>,<datain3>...");
-                    DrawLine(ConsoleColor.DarkGreen, "Welcome to Yocto Roger v2.2! Manual interface", DateTime.Now.Date.ToString("dd/MM/yyyy"));
-                    Console.Write("\nInput>>>");
-                    string? userInputString = Console.ReadLine();
-                    if (!string.IsNullOrEmpty(userInputString))
-                    {
-
-                        string[] userInputChecked = userInputString.Split(',');
-                        if (userInputString == "exit")
-                        {
-                            _mainMenuInterface.StartInterface();
-                        }
-                        else if (userInputString == "save")
-                        {
-                            Console.Write("Please, enter the path to the directory, where we going to save the file (to this directory, simple press the enter): ");
-                            string input = Console.ReadLine() ?? string.Empty;
-
-                            try
-                            {
-                                if (input is string path && !string.IsNullOrEmpty(path) && Directory.Exists(path))
-                                {
-                                    MainIO.SaveNeuralNetworkStateToBin(_io.FixTheStateOfNeuralNetwork(), path);
-#if DEBUG
-                                    NeuralNetworkState data = MemoryPackSerializer.Deserialize<NeuralNetworkState>(File.ReadAllBytes(path));
-                                    Console.WriteLine($"Saved data is: {JsonConvert.SerializeObject(data, Formatting.Indented)}");
-                                    Console.WriteLine("Enter any button to continue");
-                                    Console.ReadLine();
-#endif
-                                }
-
-                                else if (input == string.Empty)
-                                {
-                                    MainIO.SaveNeuralNetworkStateToBin(_io.FixTheStateOfNeuralNetwork(), Directory.GetCurrentDirectory());
-#if DEBUG
-                                    NeuralNetworkState data = MemoryPackSerializer.Deserialize<NeuralNetworkState>(File.ReadAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "NeuralNetworkState.bin")));
-                                    Console.WriteLine($"Saved data (in json) is: \n{JsonConvert.SerializeObject(data, Formatting.Indented)});");
-                                    Console.WriteLine("Enter any button to continue");
-                                    Console.ReadLine();
-#endif
-                                }
-                                else
-                                    Send("Incorrect input (-_0)", MessageType.error);
-                            }
-                            catch (Exception e)
-                            {
-                                Send("Somethin' wrong with me, here's my exception: ", MessageType.error);
-                                Console.WriteLine($"Error: {e}", ConsoleColor.Red);
-                                Thread.Sleep(5000);
-                            }
-                        }
-                        else if (userInputChecked.Length == _param.inputNeuronsCount)
-                        {
-                            int[] userInput = new int[_param.inputNeuronsCount];
-                            for (int i = 0; i < userInput.Length; i++)
-                                userInput[i] = Convert.ToInt32(userInputChecked[i], CultureInfo.InvariantCulture);
-                            ForwardPropagation(userInput, inputNeurons!, inputWeights!, middleNeurons!, middleWeights!, Mbias!, outputNeurons!, Obias!, outputWeights!);
-                            Console.Write("Output>>>");
-                            for (int i = 0; i < outputNeurons!.Length; i++)
-                                Console.Write(outputNeurons[i] + " ");
-                            Console.WriteLine("Press any key to continue");
-                            Console.ReadKey();
-                            Console.Clear();
-                        }
-                        else
-                            Send("It looks like you entered the wrong amount of information for the neurons or made a mistake with the command. No worries — it happens.", MessageType.error);
-                    }
-                    else
-                    {
-                        Send("Incorrect input (-_0)", MessageType.error);
-                    }
-                }
-            }
-            #endregion
+                _neuralNetworkInterface.StartInterface();
         }
 
         /// <summary>

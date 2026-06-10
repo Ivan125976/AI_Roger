@@ -46,11 +46,13 @@ namespace Yocto_Roger
             CreateWeights middleWeightsCreator = new(param);
             Training training = new(param, null!);
             MainMenuInterface mainMenuInterface = new(settingsInterface, null!);
-            NeuralNetwork nN = new(param, io, training, middleWeightsCreator, mainMenuInterface);
+            NeuralNetworkInterface neuralNetworkInterface = new(param, io, mainMenuInterface, null!);
+            NeuralNetwork nN = new(param, io, training, middleWeightsCreator, neuralNetworkInterface);
 
             io._nN = nN;
             training.roger = nN;
             mainMenuInterface._roger = nN;
+            neuralNetworkInterface._neuralNetwork = nN;
 
             DrawLine(ConsoleColor.Magenta, "Emotion ;) 2026", "Roger :D");
             Thread.Sleep(3000);
