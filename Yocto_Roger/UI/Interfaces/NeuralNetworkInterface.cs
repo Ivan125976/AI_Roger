@@ -58,8 +58,11 @@ namespace Yocto_Roger.UI.Interfaces
                             {
                                 MainIO.SaveNeuralNetworkStateToBin(_io.FixTheStateOfNeuralNetwork(), path);
 #if DEBUG
-                                    NeuralNetworkState data = MemoryPackSerializer.Deserialize<NeuralNetworkState>(File.ReadAllBytes(path));
-                                    Console.WriteLine($"Saved data is: {JsonConvert.SerializeObject(data, Formatting.Indented)}");
+                                    string data = JsonConvert.SerializeObject(
+                                        MemoryPackSerializer.Deserialize<NeuralNetworkState>(File.ReadAllBytes(path)),
+                                        Formatting.Indented);
+
+                                    Console.WriteLine($"Saved data is: {data}");
                                     Console.WriteLine("Enter any button to continue");
                                     Console.ReadLine();
 #endif
@@ -69,7 +72,7 @@ namespace Yocto_Roger.UI.Interfaces
                             {
                                 MainIO.SaveNeuralNetworkStateToBin(_io.FixTheStateOfNeuralNetwork(), Directory.GetCurrentDirectory());
 #if DEBUG
-                                    NeuralNetworkState data = MemoryPackSerializer.Deserialize<NeuralNetworkState>(File.ReadAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "NeuralNetworkState.bin")));
+                                    NeuralNetworkState data = MemoryPackSerializer.Deserialize<NeuralNetworkState>(File.ReadAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "NeuralNetworkState.bin")))!;
                                     Console.WriteLine($"Saved data (in json) is: \n{JsonConvert.SerializeObject(data, Formatting.Indented)});");
                                     Console.WriteLine("Enter any button to continue");
                                     Console.ReadLine();
