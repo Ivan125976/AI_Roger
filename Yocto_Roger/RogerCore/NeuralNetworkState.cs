@@ -44,5 +44,10 @@ namespace Yocto_Roger.RogerCore
         /// obias
         /// </summary>
         public double[]? Obias { get; set; }
+
+        /// <summary>
+        /// Flag is RMS enabled
+        /// </summary>
+        public bool Rms_Enabled { get; set; } = false;
     }
 }

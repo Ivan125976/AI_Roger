@@ -10,9 +10,11 @@ using static Yocto_Roger.UI.CUI.CUI;
 
 namespace Yocto_Roger
 {
-    // We are not idiots.
-    // We are idiots++.
-    // © Emotion Corp.
+    /* 
+         We are not idiots.
+         We are idiots++.
+         © Emotion Corp.
+    */
 
     /// <summary>
     /// Main class
@@ -46,7 +48,7 @@ namespace Yocto_Roger
             Training training = new(param, null!);
             MainMenuInterface mainMenuInterface = new(settingsInterface, null!);
             NeuralNetworkInterface neuralNetworkInterface = new(param, io, mainMenuInterface, null!);
-            NeuralNetwork nN = new(param, io, training, neuralNetworkInterface);
+            NeuralNetwork nN = new(param, io, training, neuralNetworkInterface, mainMenuInterface);
 
             io._nN = nN;
             training.roger = nN;

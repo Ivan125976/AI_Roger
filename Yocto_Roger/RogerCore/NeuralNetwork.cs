@@ -1,20 +1,18 @@
-﻿using System.Globalization;
-using MemoryPack;
+﻿using MemoryPack;
+using System.Globalization;
+using Yocto_Roger.IO;
+using Yocto_Roger.RogerCore.Initialization.Weights;
+using Yocto_Roger.RogerCore.UtilityTools;
+using Yocto_Roger.UI.CUI;
+using Yocto_Roger.UI.Interfaces;
+using static Yocto_Roger.IO.Splitter;
+using static Yocto_Roger.RogerCore.UtilityTools.RogerMath;
 using static Yocto_Roger.UI.CUI.CUI;
 
-using Yocto_Roger.RogerCore.Initialization.Weights;
-
-// При компиляции в Release дллка NewtonsoftJson.dll всё равно почему-то линкуется в папку с бинарником, вероятно изза того что он добавленн в проект как nuget пакет. Так вот, в release когда компилируешь, дллку эту можно удалить, ибо она не нужна и весит 700кб целых
+// При компиляции в Release дллка NewtonsoftJson.dll всё равно почему-то линкуется в папку с бинарником, вероятно изза того что он добавлен в проект как nuget пакет. Так вот, в release когда компилируешь, дллку эту можно удалить, ибо она не нужна и весит 700кб целых
 #if DEBUG
 using Newtonsoft.Json; // For middleWeights
 #endif
-
-using Yocto_Roger.IO;
-using Yocto_Roger.RogerCore.UtilityTools;
-using Yocto_Roger.UI.CUI;
-using static Yocto_Roger.IO.Splitter;
-using static Yocto_Roger.RogerCore.UtilityTools.RogerMath;
-using Yocto_Roger.UI.Interfaces;
 
 namespace Yocto_Roger.RogerCore
 {
@@ -30,12 +28,14 @@ Copyright 2025-2026 Emotion Corp.
     /// <summary>
     /// Yocto Roger Neural Network. Hello! :D
     /// </summary>
-    public class NeuralNetwork(Parameters param, MainIO io, Training.Training training, NeuralNetworkInterface neuralNetworkInterface)
+
+    public class NeuralNetwork(Parameters param, MainIO io, Training.Training training, NeuralNetworkInterface neuralNetworkInterface, MainMenuInterface mainMenu)
     {
         private readonly Parameters _param = param;
         private readonly MainIO _io = io;
         private readonly Training.Training _training = training;
         private readonly NeuralNetworkInterface _neuralNetworkInterface = neuralNetworkInterface;
+        private readonly MainMenuInterface _mainMenu = mainMenu;
         /// <summary>
         /// Flag indicating whether Roger has been created
         /// </summary>
@@ -102,17 +102,38 @@ Copyright 2025-2026 Emotion Corp.
                         break;
                     }
                     Console.Write("SetUp education array and reading knowledge...");
-                    string[] allLines = File.ReadAllLines(_param.knowledgeFile);
 
-                    string[] parsedString = allLines[0].Split(' ');
-                    int[] input = StringParse(parsedString[0], ',');
-                    string[] splitingSecond = parsedString[1].Split(';');
-                    double[] output = new double[splitingSecond.Length];
-                    for (int j = 0; j < splitingSecond.Length; j++)
-                        output[j] = Convert.ToDouble(splitingSecond[j], CultureInfo.InvariantCulture);
-                    int length = input.Length + output.Length;
+                    // In the future, these variables can't be null, because if they don't receive a value, the while(true) method is called, which eliminates the use of null values.
+                    string[] allLines = null!;
+                    string[] parsedString = null!;
+                    int[] input = null!;
+                    string[] splitingSecond = null!;
+                    double[] output = null!;
+                    int length = 0!;
 
-                    if (input.Length != _param.inputNeuronsCount)
+                    try
+                    {
+                        allLines = File.ReadAllLines(_param.knowledgeFile);
+
+                        parsedString = allLines[0].Split(' ');
+                        input = StringParse(parsedString[0], ',');
+                        splitingSecond = parsedString[1].Split(';');
+                        output = new double[splitingSecond.Length];
+                        for (int j = 0; j < splitingSecond.Length; j++)
+                            output[j] = Convert.ToDouble(splitingSecond[j], CultureInfo.InvariantCulture);
+                        length = input.Length + output.Length;
+                    }
+                    catch (Exception ex)
+                    {
+                        Send("Invalid knowledge file. Check if this is it, or check if its contents are correct", MessageType.error);
+                        Console.WriteLine("Here's exception, if you are programmer, you can make a pull request on our github, with fix this exception, or write Issue with this problem, and add to it this exception please\nGithub: https://github.com/Ivan125976/AI_Roger/tree/v2.2-beta\n Exception:\n" + ex.Message);
+                        Console.Write("Press enter to continue", ConsoleColor.Blue);
+                        Console.ReadLine();
+                        _mainMenu.StartInterface();
+                    }
+
+
+                    if (input!.Length != _param.inputNeuronsCount)
                     {
                         Console.WriteLine();
                         Send("NeuralNetwork.StartAI.InputNeurons>The training file doesn't match your neural network! (need value " + input.Length + " for Count of Input neurons)", MessageType.error);
@@ -128,7 +149,7 @@ Copyright 2025-2026 Emotion Corp.
                         }
                         break;
                     }
-                    else if (output.Length != _param.outputNeuronsCount)
+                    else if (output!.Length != _param.outputNeuronsCount)
                     {
                         Console.WriteLine();
                         Send("NeuralNetwork.StartAI.OutputNeurons>The training file doesn't match your neural network! (need value " + output.Length + " for Count of Output neurons)", MessageType.error);
@@ -148,7 +169,7 @@ Copyright 2025-2026 Emotion Corp.
                     Console.CursorVisible = false;
                     Send("Everything is ready to create Roger!");
 
-                    educationArray = new double[allLines.Length, length];
+                    educationArray = new double[allLines!.Length, length];
 
                     for (int i = 0; i < allLines.Length; i++)
                     {
@@ -218,8 +239,8 @@ Copyright 2025-2026 Emotion Corp.
                         }
                         catch (MemoryPackSerializationException e)
                         {
-                            Send($"I can't to serialize the data, here's my error: \n", MessageType.error);
-                            Console.WriteLine(e.ToString(), ConsoleColor.Red);
+                            Send("I can't to serialize the data, here's my error: \n", MessageType.error);
+                            Console.WriteLine(e.Message, ConsoleColor.Red);
                             Console.WriteLine("This could mean that the developers screwed up somewhere. If you have a time, then please write an issue about this error on our Github (0v0). Here's url:\n" +
                                 "https://github.com/Ivan125976/AI_Roger/issues/new", ConsoleColor.Blue);
                             Console.Write("Press enter to continue");
