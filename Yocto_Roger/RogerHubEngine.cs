@@ -23,9 +23,15 @@ namespace Yocto_Roger
     /// <summary>
     /// Keeps minimal size of the console
     /// </summary>
-    struct ConsoleSize(ushort height, ushort width) // By default, in Windows, the console size is 25 in height and 80 in width.
+    public struct ConsoleSize(ushort height, ushort width) // By default, in Windows, the console size is 25 in height and 80 in width.
     {
+        /// <summary>
+        /// Height
+        /// </summary>
         public ushort Height = height;
+        /// <summary>
+        /// Width
+        /// </summary>
         public ushort Width = width;
     }
 
@@ -77,7 +83,7 @@ namespace Yocto_Roger
                         {
                             switch (input)
                             {
-                                case 'y':
+                                case 'y' or 'Y':
                                     try
                                     {
                                         if (isWindows)
@@ -85,11 +91,29 @@ namespace Yocto_Roger
                                     }
                                     catch (PlatformNotSupportedException)
                                     {
-                                        Console.WriteLine($"Your terminal doesn't allow changing the window size, please change is yourself. Size need to be: Width: {minSize.Width} | Height: {minSize.Height}");
+                                        Console.WriteLine($"Your terminal doesn't allow changing the window size, please change it yourself. Size need to be: Width: {minSize.Width} | Height: {minSize.Height}");
+                                        Console.WriteLine($"But wait... I can try to change it with escape-code.\n\nPress Enter to try to change the size with escape code...");
+                                        Console.ReadLine();
+                                        Console.Write($"\x1b[8;{minSize.Height};{minSize.Width}t");
+                                        switch (Console.WindowHeight > minSize.Height && Console.WindowWidth > minSize.Width)
+                                        {
+                                            case true:
+                                                Send("Success! Everything's okay, you're ready to use this program", MessageType.message);
+                                                Console.WriteLine("Press Enter to enter to the main menu");
+                                                Console.ReadLine();
+                                                break;
+
+                                            case false:
+                                                Send($"I didn't succeed... So please change it yourself. Let me remind you: need Height: {minSize.Height}, Need Width {minSize.Width}", MessageType.warning);
+                                                Console.WriteLine("Press enter to close the app");
+                                                Console.ReadLine();
+                                                Environment.Exit(0);
+                                                break;
+                                        }
                                     }
                                     continue;
 
-                                case 'n':
+                                case 'n' or 'N':
                                     Console.WriteLine("Whatever you want... then bye... :/");
                                     Thread.Sleep(2000);
                                     Environment.Exit(0);
@@ -171,7 +195,7 @@ namespace Yocto_Roger
                 string query = $"SELECT ParentProcessId FROM Win32_Process WHERE ProcessId = {currentPid}";
                 using var searcher = new ManagementObjectSearcher(query);
                 using var results = searcher.Get();
-                foreach (ManagementObject mO in results)
+                foreach (ManagementObject mO in results.Cast<ManagementObject>())
                 {
                     int parentPid = Convert.ToInt32(mO["ParentProcessId"]);
                     if (parentPid == 0) return false;
