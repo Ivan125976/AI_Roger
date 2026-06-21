@@ -51,8 +51,31 @@ namespace Yocto_Roger
 
                 if (!CheckMinWindowSize(minSize))
                 {
-                    if(OperatingSystem.IsWindows())
-                        Console.SetWindowSize(width: minSize.Width, height: minSize.Height);
+                    if (OperatingSystem.IsWindows())
+                    {
+                        try
+                        {
+                            Console.SetWindowSize(width: minSize.Width, height: minSize.Height);
+                        }
+                        catch (PlatformNotSupportedException)
+                        {
+                            Console.Write($"\x1b[8;{minSize.Height};{minSize.Width}t");
+
+                            Thread.Sleep(25); // Delay to allow time for the size to change
+
+                            if (!CheckMinWindowSize(minSize)) // If escape-code didn't work
+                            {
+                                Send($"Unable to resize the console. You'll have to do it yourself :( \nneed: \nWidth: {minSize.Width} \nHeight: {minSize.Height}", MessageType.error);
+                                Send("Resize the window until i say \"Done\"", MessageType.note);
+                                while (!CheckMinWindowSize(minSize))
+                                {
+                                    bool check = CheckMinWindowSize(minSize);
+
+                                    if (check) { Send("Done"); }
+                                }
+                            }
+                        }
+                    }
                     else
                     {
                         Console.Write("\n");
@@ -81,11 +104,11 @@ namespace Yocto_Roger
                 // Some terminals (mostly on GNU/Linux) don't support Unicode, and throwing exception, but supporting UTF-8
                 try { Console.InputEncoding = Encoding.Unicode; } catch { 
                     Console.InputEncoding = Encoding.UTF8;
-                    Send("RogerHubEngine.InputEncoding> Yout system doesn't support Unicode!", MessageType.warning);
+                    Send("RogerHubEngine.InputEncoding> Yout system doesn't support Unicode! I'm setting up UTF-8", MessageType.warning);
                 }
                 try { Console.OutputEncoding = Encoding.Unicode; } catch { 
                     Console.OutputEncoding = Encoding.UTF8;
-                    Send("RogerHubEngine.OutputEncoding> Your system doesn't support Unicode!", MessageType.warning);
+                    Send("RogerHubEngine.OutputEncoding> Your system doesn't support Unicode! I'm setting up UTF-8", MessageType.warning);
                 }
 
                 Parameters param = new();

@@ -26,7 +26,7 @@ Internal I/O lib
                 WriteIndented = true
             };
 
-        private readonly Parameters _param = param;
+        private Parameters _param = param;
         /// <summary>
         /// object of NeuralNetwork class
         /// </summary>
@@ -156,7 +156,7 @@ Internal I/O lib
             /// <summary>
             /// is RMS enabled
             /// </summary>
-            public bool Rms_enabled { get; set; } = false;
+            public bool Rms_enabled { get; set; }
         }
 
         /// <summary>
