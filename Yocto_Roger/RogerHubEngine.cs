@@ -99,7 +99,7 @@ namespace Yocto_Roger
                 }
 
 
-                try { Console.Title = $"RogerHubEngine v{majorVersion}.{minorVersion}.{patchVersion}{revision} DELTA!"; } catch { Send("Couldn't change the title", MessageType.warning); }
+                try { Console.Title = $"RogerHubEngine v{majorVersion}.{minorVersion}.{patchVersion}{revision}"; } catch { Send("Couldn't change the title", MessageType.warning); }
 
                 // Some terminals (mostly on GNU/Linux) don't support Unicode, and throwing exception, but supporting UTF-8
                 try { Console.InputEncoding = Encoding.Unicode; } catch { 
@@ -113,12 +113,12 @@ namespace Yocto_Roger
 
                 Parameters param = new();
                 NeuralNetworkState nNState = new();
-
+                UpdateManagerInterface updateManager = new();
                 MainIO io = new(param, null!, nNState);
                 Auxiliary auxiliaryIO = new(param);
                 SettingsInterface settingsInterface = new(param, io, auxiliaryIO);
                 Training training = new(param, null!);
-                MainMenuInterface mainMenuInterface = new(settingsInterface, null!);
+                MainMenuInterface mainMenuInterface = new(settingsInterface, null!, updateManager);
                 NeuralNetworkInterface neuralNetworkInterface = new(param, io, mainMenuInterface, null!);
                 NeuralNetwork nN = new(param, io, training, neuralNetworkInterface, mainMenuInterface);
 
@@ -127,7 +127,7 @@ namespace Yocto_Roger
                 mainMenuInterface._roger = nN;
                 neuralNetworkInterface._neuralNetwork = nN;
 
-                DrawLine(ConsoleColor.Magenta, "Emotion ;) 2026", "Roger :D");
+                DrawLine(ConsoleColor.Magenta, "Emotion ;) 2025-2026", "Roger :D");
                 Thread.Sleep(3000);
 
                 mainMenuInterface.StartInterface();

@@ -3,17 +3,17 @@ using Velopack.Sources;
 using Yocto_Roger.UI.CUI;
 using static Yocto_Roger.UI.CUI.CUI;
 
-namespace Yocto_Roger.IO
+namespace Yocto_Roger.UI.Interfaces
 {
     /// <summary>
     /// Class of Update Manager
     /// </summary>
-    public class UpdateManager
+    public class UpdateManagerInterface : IUserInterface
     {
         /// <summary>
         /// Menu of update manager + logic and exceptions. Can writing some text in console, be careful when using it in your project
         /// </summary>
-        public static void UpdateManagerMenu()
+        public void StartInterface()
         {
             VelopackApp.Build().Run();
 
@@ -73,9 +73,7 @@ namespace Yocto_Roger.IO
                 }
             }
             else
-            {
                 Send("It's Doesn't work in the developer mode. I guess you run it in visual studio, with simple compiler, but this future works only when it compiled with VPK, so forget about it, you don't need it. If you are an simple user, and u see this message, please write about it in Issues on our Github: https://github.com/Ivan125976/AI_Roger/issues/new/choose", MessageType.error);
-            }
         }
     }
 }
