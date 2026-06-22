@@ -18,9 +18,5 @@ RogerHub
 | ------- | ------------------ |
 | Zero    | :x:                |
 | 2.0.x   | :x:                 |
-| 2.1.x   | ✅                |
+| 2.1.x   | :x:                |
 | 2.2.x   | ✅               |
-
-## Reporting a Vulnerability
-
-Telegram: Axolotl512

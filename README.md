@@ -1,39 +1,48 @@
-[Switch to English readme](https://github.com/Ivan125976/AI_Roger/blob/main/README-en.md)
+# RogerHubEngine
 
-# Roger
+> ## **_The world_** of neural networks for your robot
 
-Моя нейросеть, которую я улучшаю каждый день.
+Copyright (c) 2025-2026 Emotion
 
-Copyright (c) 2025 Axolotl512, death_script. Лицензия: MIT.
+### :star: What is this? 
+This is a cute little neural network for your robot or your Unity game.
+- The engine for our neural networks is written entirely in C#.
+- The higher the engine version, the more functions, weight and resources it takes up.
+- There are stable versions, and there are Beta, Charlie, and Delta versions where you can try out new features*
 
-ИИ, который подходит для встройки в робота.
+### :rocket: What engine versions are there?
+>Quecto
++ **Roger v1.4** - This is an experimental version, I don't even recommend downloading it.
++ **Roger v2.0** - The smallest engine. MLP neural network.
+>Yocto
++ **Roger v2.1** - Same as 2.0 but with the addition of IO and DropOut subsystems
++ **Roger v2.2** - Major rework of v2.1, added RMS and many other features
 
-## Версии и архитектура
+### :1st_place_medal: What can your neural network do? (v2.2)
+- MLP neural network
+- DropOut in training
+- Xaiver Uniform in initialization
+- RMSprop in training too
+- Biases in neural network
+- Support for input and output of negative numbers
+- Save/Load neural network
+- XML Documentation
+- Debug mode for developers
+- Ability to choose the number of layers
 
-- **Quecto Roger 1.x** — архитектура LP, .NET 8.0.
-- **Quecto Roger 2.0.x** — архитектура MLP, .NET 9.0.
-- **Yocto Roger 2.1.x** — архитектура MLP, .NET 9.0.
-- **Yocto Roger 2.2.x** — архитектура MLP, .NET 9.0.
 
-## Запуск  Yocto Roger 2.0 на Windows
+### :mailbox: Method of communication and error reporting
+> Discord
++ Axolotl512 - @antipin_ivan
++ d3ath-script - @semmechki
 
-1. Установите .NET 9.0.
-2. Откройте проект в Visual Studio
-3. Скомпилируйте проект под нужную вам платформу
-4. Протестируйте нейросеть, благодаря встроенной оболочке RogerHub
-5. Интегрируйте нейросеть в свой продукт
+> Telegram
++ Axolotl512 - @axolotl512
++ d3ath-script - @death_script
+---
+>[!WARNING]
+> - This project is still in active development today.
+> - *Beta, Charlie, and Delta versions may contain serious bugs.
+---
 
-### Параметры обучения
-
-- **LR (Learning Rate)** — чем меньше значение, тем аккуратнее обучение.
-- **Проходы** — чем больше значение, тем лучше сеть усваивает информацию.
-- **Файл знаний** — файл, на котором обучается нейросеть.
-- **DropOut** (только в `Yocto Roger v.2.1.exe`) — защита от переобучения.
-  Рекомендуемые значения: от **3%** до **5%**.
-  При использовании DropOut обычно нужен меньший LR и большее количество проходов.
-
->[!NOTE]
->Все анонсы, новости и прочая информация о проекте будут в телеграм канале: [Ссылка на канал](https://t.me/Axolotl1024) 
->А также наш сайт: [Сайт](https://emotioncorp.site)
-
-С уважением, команда Emotion ;)
+The best regards, Emotion :)
