@@ -40,12 +40,12 @@ namespace Yocto_Roger.UI.Interfaces
                                     catch (Exception ex)
                                     {
                                         Console.WriteLine($"Failed to download the update: {ex}");
-                                        Console.Write("Press Enter to continue");
-                                        Console.ReadLine();
+                                        Console.Write("Press any key to continue");
+                                        Console.ReadKey(true);
                                         break;
                                     }
-                                    Console.WriteLine("Updates was downloaded successful!\nTrying to apply it, the app will be restarted in new version...");
-                                    Console.Write("Press Enter to continue"); // For user can to read the message
+                                    Send("Updates was downloaded successful!\nTrying to apply it, the app will be restarted in new version...");
+                                    Thread.Sleep(3000);
                                     try
                                     {
                                         mgr.ApplyUpdatesAndRestart(info);
@@ -53,8 +53,8 @@ namespace Yocto_Roger.UI.Interfaces
                                     catch (Exception ex)
                                     {
                                         Send($"Failed to apply updates, here's my error: {ex}", MessageType.error);
-                                        Console.Write("Press Enter to continue");
-                                        Console.ReadLine();
+                                        Console.Write("Press any key to continue");
+                                        Console.ReadKey(true);
                                     }
                                     break;
                                 }
