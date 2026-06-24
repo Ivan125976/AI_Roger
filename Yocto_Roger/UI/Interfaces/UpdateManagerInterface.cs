@@ -28,7 +28,7 @@ namespace Yocto_Roger.UI.Interfaces
 
                     if (info != null)
                     {
-                        Console.WriteLine($" Update found! New version: {info.TargetFullRelease.Version}. Do you want to install it? (y/n)\n >>>");
+                        Console.WriteLine($" Update found!. Do you want to install it? \n(y/n) >>>");
                         switch (Console.ReadKey(true).KeyChar)
                         {
                             case 'Y' or 'y':

@@ -103,11 +103,11 @@ namespace Yocto_Roger
                 // Some terminals (mostly on GNU/Linux) don't support Unicode, and throwing exception, but supporting UTF-8
                 try { Console.InputEncoding = Encoding.Unicode; } catch { 
                     Console.InputEncoding = Encoding.UTF8;
-                    Send("RogerHubEngine.InputEncoding> Your system doesn't support Unicode!", MessageType.warning);
+                    Send("RogerHubEngine.InputEncoding> Your system doesn't support Unicode! I'll set UTF-8", MessageType.warning);
                 }
                 try { Console.OutputEncoding = Encoding.Unicode; } catch { 
                     Console.OutputEncoding = Encoding.UTF8;
-                    Send("RogerHubEngine.OutputEncoding> Your system doesn't support Unicode!", MessageType.warning);
+                    Send("RogerHubEngine.OutputEncoding> Your system doesn't support Unicode! I'll set UTF-8", MessageType.warning);
                 }
 
                 Parameters param = new();
