@@ -30,6 +30,10 @@ This is a cute little neural network for your robot or your Unity game.
 - Debug mode for developers
 - Ability to choose the number of layers
 
+### Build instructions
++ Just run the script (.sh if you're on linux, bat if you're on windows)
+>[!WARNING]
+>**Make sure you have an installed dotnet 9 (or higher) sdk and runtime**
 
 ### :mailbox: Method of communication and error reporting
 > Discord
